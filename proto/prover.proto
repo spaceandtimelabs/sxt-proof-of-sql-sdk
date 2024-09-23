@@ -1,0 +1,27 @@
+syntax = "proto3";
+package prover;
+
+// Interface exported by the server
+service Prover {
+    rpc queryWithProof(ProverQuery) returns (ProverResponse) {}
+}
+
+message ProverContextRange {
+    uint64 start = 1;
+    repeated uint64 ends = 2;
+}
+
+message ChosenContextRange {
+    uint64 start = 1;
+    uint64 end = 2;
+}
+
+message ProverQuery {
+    bytes proof_plan = 1;
+    map<string, ProverContextRange> query_context = 3;
+}
+
+message ProverResponse {
+    bytes verifiable_result = 1;
+    map<string, ChosenContextRange> chosen_context = 2;
+}
