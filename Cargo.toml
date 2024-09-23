@@ -1,0 +1,8 @@
+[package]
+name = "sxt-proof-of-sql-sdk"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+ark-std = { version = "0.4.0", features = [ "parallel" ] }
+proof-of-sql = { version = "0.22.12", default-features = false, features = ["test"] }
