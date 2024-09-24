@@ -1,9 +1,14 @@
 syntax = "proto3";
-package prover;
+
+package sxt.core;
+
+import "ingest.proto";
+import "google/protobuf/empty.proto";
 
 // Interface exported by the server
 service Prover {
     rpc queryWithProof(ProverQuery) returns (ProverResponse) {}
+    rpc ingest(TableIngest) returns (google.protobuf.Empty) {}
 }
 
 message ProverContextRange {
