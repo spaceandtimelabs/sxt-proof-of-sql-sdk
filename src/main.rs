@@ -1,3 +1,4 @@
+mod substrate;
 mod sxt_chain_runtime;
 
 use ark_std::test_rng;
@@ -6,7 +7,7 @@ use curve25519_dalek::RistrettoPoint;
 use flexbuffers;
 use proof_of_sql::{
     base::{
-        commitment::InnerProductProof,
+        commitment::{InnerProductProof, QueryCommitments},
         database::{owned_table_utility::*, OwnedTableTestAccessor, TestAccessor},
     },
     proof_primitive::dory::{
@@ -15,7 +16,7 @@ use proof_of_sql::{
     },
     sql::{parse::QueryExpr, proof::VerifiableQueryResult},
 };
-use prover::{prover_client::ProverClient, ProverQuery, ProverContextRange};
+use prover::{prover_client::ProverClient, ProverContextRange, ProverQuery};
 use std::collections::HashMap;
 
 mod prover {
@@ -33,19 +34,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // let dory_prover_setup = DoryProverPublicSetup::new(&prover_setup, 3);
     // let dory_verifier_setup = DoryVerifierPublicSetup::new(&verifier_setup, 3);
     // Accessor setup
-    let mut accessor = OwnedTableTestAccessor::<InnerProductProof>::new_empty_with_setup(());
-    let table = owned_table([
-        smallint("smallint_minmax", [i16::MIN, -1, 0, 1, i16::MAX]),
-        int("int_minmax", [i32::MIN, -1, 0, 1, i32::MAX]),
-        bigint("bigint_minmax", [i64::MIN, -1, 0, 1, i64::MAX]),
-        boolean("boolean_minmax", [false, true, false, true, false]),
-        bigint("proof_order", [0_i64, 1, 2, 3, 4]),
-    ]);
-    accessor.add_table(
-        "proofs_smoke_tests.kyucqklhqcmlvuyc".parse()?,
-        table.clone(),
-        0,
-    );
+    let accessor = substrate::query_commitments(
+        &[
+            "proofs_smoke_tests".parse()?,
+            "proofs_smoke_tests.kyucqklhqcmlvuyc".parse()?,
+        ],
+        "<URL>",
+        "dory".parse()?,
+    )?;
     // Parse the SQL query
     let query: QueryExpr<RistrettoPoint> =
         QueryExpr::try_new(sql.parse()?, "proofs_smoke_tests".parse()?, &accessor)?;
@@ -58,7 +54,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         ProverContextRange {
             start: 0,
             ends: vec![5],
-        }
+        },
     );
     let prover_query = ProverQuery {
         proof_plan: serialized_proof_plan,
