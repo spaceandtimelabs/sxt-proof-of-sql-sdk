@@ -1,3 +1,5 @@
+mod sxt_chain_runtime;
+
 use ark_std::test_rng;
 use core::time::Duration;
 use curve25519_dalek::RistrettoPoint;
