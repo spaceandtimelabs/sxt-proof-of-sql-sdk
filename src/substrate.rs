@@ -1,13 +1,16 @@
-use proof_of_sql::base::{commitment::{QueryCommitments, TableCommitment}, database::TableRef};
-use proof_of_sql_parser::{Identifier, ResourceId};
+use crate::sxt_chain_runtime::api::runtime_types::sxt_core::{tables::TableIdentifier, ByteString};
+use proof_of_sql::base::{
+    commitment::{QueryCommitments, TableCommitment},
+    database::TableRef,
+};
 use proof_of_sql_commitment_map::CommitmentScheme;
+use proof_of_sql_parser::{Identifier, ResourceId};
 use subxt::{
     client::OfflineClientT,
     utils::{AccountId32, MultiAddress},
     OnlineClient, PolkadotConfig,
 };
 use subxt_signer::sr25519::dev::{self};
-use crate::sxt_chain_runtime::api::runtime_types::sxt_core::{ByteString, tables::TableIdentifier};
 
 /// Derive the runtime from the metadata
 #[subxt::subxt(runtime_metadata_path = "sxt.scale")]
@@ -39,18 +42,23 @@ pub fn query_commitments(
 ) -> Result<QueryCommitments, Box<dyn std::error::Error>> {
     let api = OnlineClient::<SxtConfig>::from_url(url).await?;
     let mut accessor = QueryCommitments::new();
-    resource_ids.iter().map(|id| -> Result<(TableRef, TableCommitment), Box<dyn std::error::Error>>{
-        let table_id = resource_id_to_table_id(id);
-        let commitments_query = sxt_runtime::storage()
-            .commitments()
-            .commitments(table_id, commitment_scheme);
-        let table_commitments: TableCommitment = api
-            .storage()
-            .at_latest()
-            .await?
-            .fetch(&commitments_query)
-            .await?
-            .unwrap();
-        (TableRef::new(id), commitments)
-    }).collect::<Result<QueryCommitments, Box<dyn std::error::Error>>>()
+    resource_ids
+        .iter()
+        .map(
+            |id| -> Result<(TableRef, TableCommitment), Box<dyn std::error::Error>> {
+                let table_id = resource_id_to_table_id(id);
+                let commitments_query = sxt_runtime::storage()
+                    .commitments()
+                    .commitments(table_id, commitment_scheme);
+                let table_commitments: TableCommitment = api
+                    .storage()
+                    .at_latest()
+                    .await?
+                    .fetch(&commitments_query)
+                    .await?
+                    .unwrap();
+                (TableRef::new(id), commitments)
+            },
+        )
+        .collect::<Result<QueryCommitments, Box<dyn std::error::Error>>>()
 }
