@@ -9,7 +9,7 @@ use proof_of_sql::{
     sql::{parse::QueryExpr, proof::VerifiableQueryResult},
 };
 use prover::{prover_client::ProverClient, ProverContextRange, ProverQuery};
-use std::collections::HashMap;
+use std::{collections::HashMap, path::Path};
 
 mod prover {
     tonic::include_proto!("sxt.core");
@@ -18,16 +18,15 @@ mod prover {
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn core::error::Error>> {
     let sql = "SELECT * FROM ethereum.contract_evt_approvalforall;";
-    let prover_uri = "<URI>";
-    let substrate_node_url = "<URL>";
+    let prover_uri = "<prover-uri>";
+    let substrate_node_url = "<substrate-node-url>";
     // Dory setup
     let sigma = 12;
-    let public_parameters = substrate::try_get_public_parameters(substrate_node_url).await?;
-    let verifier_setup = VerifierSetup::from(&public_parameters);
+    let verifier_setup = VerifierSetup::load_from_file(Path::new("verifier_setup.bin"))?;
     let dory_verifier_setup = DoryVerifierPublicSetup::new(&verifier_setup, sigma);
     // Accessor setup
     let accessor = substrate::query_commitments(
-        &["ETHEREUM".parse()?, "CONTRACT_EVT_APPROVALFORALL".parse()?],
+        &["ETHEREUM.CONTRACT_EVT_APPROVALFORALL".parse()?],
         substrate_node_url,
     )
     .await?;
