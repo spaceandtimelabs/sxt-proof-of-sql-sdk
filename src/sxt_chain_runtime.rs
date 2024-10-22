@@ -6,7 +6,7 @@ pub mod api {
     mod root_mod {
         pub use super::*;
     }
-    pub static PALLETS: [&str; 11usize] = [
+    pub static PALLETS: [&str; 12usize] = [
         "System",
         "Timestamp",
         "Aura",
@@ -18,6 +18,7 @@ pub mod api {
         "Permissions",
         "Tables",
         "Indexing",
+        "Commitments",
     ];
     pub static RUNTIME_APIS: [&str; 12usize] = [
         "Core",
@@ -1427,10 +1428,10 @@ pub mod api {
                         "query_call_info",
                         types::QueryCallInfo { call, len },
                         [
-                            189u8, 180u8, 207u8, 210u8, 127u8, 248u8, 19u8, 0u8, 171u8, 185u8,
-                            189u8, 76u8, 15u8, 138u8, 10u8, 210u8, 169u8, 149u8, 251u8, 157u8,
-                            193u8, 11u8, 176u8, 173u8, 60u8, 152u8, 88u8, 198u8, 90u8, 168u8,
-                            204u8, 47u8,
+                            71u8, 171u8, 240u8, 225u8, 162u8, 9u8, 33u8, 142u8, 188u8, 238u8,
+                            237u8, 122u8, 188u8, 203u8, 140u8, 142u8, 62u8, 184u8, 45u8, 52u8,
+                            212u8, 234u8, 14u8, 144u8, 195u8, 178u8, 161u8, 58u8, 172u8, 27u8,
+                            205u8, 236u8,
                         ],
                     )
                 }
@@ -1448,9 +1449,9 @@ pub mod api {
                         "query_call_fee_details",
                         types::QueryCallFeeDetails { call, len },
                         [
-                            162u8, 97u8, 234u8, 76u8, 245u8, 74u8, 27u8, 7u8, 33u8, 41u8, 213u8,
-                            55u8, 133u8, 83u8, 116u8, 236u8, 209u8, 163u8, 244u8, 61u8, 234u8,
-                            89u8, 27u8, 73u8, 249u8, 214u8, 91u8, 90u8, 11u8, 139u8, 215u8, 32u8,
+                            147u8, 102u8, 223u8, 213u8, 229u8, 168u8, 156u8, 97u8, 108u8, 57u8,
+                            95u8, 120u8, 90u8, 215u8, 61u8, 117u8, 45u8, 84u8, 166u8, 187u8, 104u8,
+                            40u8, 59u8, 214u8, 228u8, 109u8, 79u8, 7u8, 36u8, 13u8, 207u8, 157u8,
                         ],
                     )
                 }
@@ -1844,6 +1845,9 @@ pub mod api {
         pub fn indexing(&self) -> indexing::storage::StorageApi {
             indexing::storage::StorageApi
         }
+        pub fn commitments(&self) -> commitments::storage::StorageApi {
+            commitments::storage::StorageApi
+        }
     }
     pub struct TransactionApi;
     impl TransactionApi {
@@ -1884,9 +1888,9 @@ pub mod api {
             .hash();
         runtime_metadata_hash
             == [
-                168u8, 94u8, 73u8, 24u8, 119u8, 114u8, 45u8, 235u8, 68u8, 1u8, 4u8, 126u8, 85u8,
-                58u8, 98u8, 27u8, 70u8, 161u8, 159u8, 187u8, 172u8, 151u8, 224u8, 100u8, 220u8,
-                139u8, 232u8, 177u8, 111u8, 45u8, 218u8, 12u8,
+                254u8, 6u8, 242u8, 241u8, 79u8, 16u8, 62u8, 211u8, 117u8, 26u8, 36u8, 233u8, 39u8,
+                24u8, 46u8, 252u8, 253u8, 97u8, 199u8, 196u8, 12u8, 106u8, 39u8, 44u8, 60u8, 48u8,
+                227u8, 62u8, 124u8, 250u8, 170u8, 159u8,
             ]
     }
     pub mod system {
@@ -3027,9 +3031,10 @@ pub mod api {
                         "Events",
                         (),
                         [
-                            239u8, 96u8, 77u8, 184u8, 53u8, 47u8, 170u8, 195u8, 213u8, 123u8,
-                            102u8, 138u8, 111u8, 21u8, 148u8, 162u8, 1u8, 64u8, 4u8, 52u8, 227u8,
-                            66u8, 209u8, 147u8, 50u8, 128u8, 40u8, 163u8, 23u8, 119u8, 35u8, 21u8,
+                            183u8, 209u8, 107u8, 114u8, 59u8, 49u8, 222u8, 55u8, 79u8, 251u8,
+                            151u8, 59u8, 186u8, 209u8, 186u8, 91u8, 169u8, 23u8, 154u8, 162u8,
+                            165u8, 102u8, 223u8, 158u8, 97u8, 63u8, 175u8, 0u8, 17u8, 186u8, 165u8,
+                            24u8,
                         ],
                     )
                 }
@@ -6109,9 +6114,9 @@ pub mod api {
                             call: ::subxt::ext::subxt_core::alloc::boxed::Box::new(call),
                         },
                         [
-                            217u8, 220u8, 139u8, 11u8, 112u8, 247u8, 143u8, 94u8, 54u8, 6u8, 120u8,
-                            130u8, 121u8, 85u8, 13u8, 196u8, 213u8, 223u8, 240u8, 56u8, 208u8,
-                            253u8, 126u8, 127u8, 90u8, 9u8, 72u8, 165u8, 201u8, 112u8, 22u8, 228u8,
+                            233u8, 28u8, 3u8, 66u8, 229u8, 154u8, 169u8, 11u8, 176u8, 221u8, 177u8,
+                            110u8, 121u8, 183u8, 161u8, 105u8, 236u8, 85u8, 112u8, 84u8, 106u8,
+                            61u8, 185u8, 196u8, 224u8, 0u8, 177u8, 89u8, 155u8, 92u8, 194u8, 192u8,
                         ],
                     )
                 }
@@ -6134,10 +6139,9 @@ pub mod api {
                             weight,
                         },
                         [
-                            222u8, 115u8, 22u8, 21u8, 16u8, 33u8, 202u8, 151u8, 228u8, 168u8,
-                            147u8, 173u8, 83u8, 237u8, 174u8, 48u8, 167u8, 146u8, 89u8, 163u8,
-                            25u8, 199u8, 118u8, 4u8, 178u8, 209u8, 17u8, 159u8, 39u8, 74u8, 158u8,
-                            141u8,
+                            12u8, 243u8, 153u8, 74u8, 134u8, 197u8, 248u8, 172u8, 15u8, 205u8,
+                            253u8, 77u8, 146u8, 3u8, 156u8, 232u8, 52u8, 37u8, 28u8, 176u8, 56u8,
+                            163u8, 83u8, 223u8, 14u8, 0u8, 250u8, 246u8, 72u8, 69u8, 87u8, 79u8,
                         ],
                     )
                 }
@@ -6177,10 +6181,9 @@ pub mod api {
                             call: ::subxt::ext::subxt_core::alloc::boxed::Box::new(call),
                         },
                         [
-                            210u8, 38u8, 114u8, 213u8, 189u8, 127u8, 248u8, 141u8, 128u8, 107u8,
-                            138u8, 41u8, 22u8, 166u8, 51u8, 28u8, 199u8, 233u8, 212u8, 132u8,
-                            181u8, 24u8, 161u8, 89u8, 162u8, 225u8, 9u8, 86u8, 6u8, 164u8, 220u8,
-                            201u8,
+                            61u8, 123u8, 73u8, 63u8, 140u8, 112u8, 252u8, 31u8, 188u8, 65u8, 85u8,
+                            222u8, 30u8, 223u8, 83u8, 178u8, 126u8, 219u8, 65u8, 9u8, 172u8, 5u8,
+                            61u8, 219u8, 242u8, 20u8, 142u8, 6u8, 84u8, 178u8, 121u8, 145u8,
                         ],
                     )
                 }
@@ -6583,6 +6586,7 @@ pub mod api {
                     crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_encode"
                 )]
                 #[doc = "Set the permissions for an account id"]
+                #[doc = "TODO: add docs"]
                 pub struct SetPermissions {
                     pub who: set_permissions::Who,
                     pub permissions: set_permissions::Permissions,
@@ -6613,6 +6617,7 @@ pub mod api {
                 #[encode_as_type(
                     crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_encode"
                 )]
+                #[doc = "TODO: add docs"]
                 pub struct ClearPermissions {
                     pub who: clear_permissions::Who,
                 }
@@ -6628,6 +6633,7 @@ pub mod api {
             pub struct TransactionApi;
             impl TransactionApi {
                 #[doc = "Set the permissions for an account id"]
+                #[doc = "TODO: add docs"]
                 pub fn set_permissions(
                     &self,
                     who: types::set_permissions::Who,
@@ -6646,6 +6652,7 @@ pub mod api {
                         ],
                     )
                 }
+                #[doc = "TODO: add docs"]
                 pub fn clear_permissions(
                     &self,
                     who: types::clear_permissions::Who,
@@ -6787,6 +6794,7 @@ pub mod api {
                 #[encode_as_type(
                     crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_encode"
                 )]
+                #[doc = "TODO: add docs"]
                 pub struct UpdateTables {
                     pub source_and_mode: update_tables::SourceAndMode,
                     pub tables: update_tables::Tables,
@@ -6806,9 +6814,38 @@ pub mod api {
                     const PALLET: &'static str = "Tables";
                     const CALL: &'static str = "update_tables";
                 }
+                #[derive(
+                    :: subxt :: ext :: subxt_core :: ext :: codec :: Decode,
+                    :: subxt :: ext :: subxt_core :: ext :: codec :: Encode,
+                    :: subxt :: ext :: subxt_core :: ext :: scale_decode :: DecodeAsType,
+                    :: subxt :: ext :: subxt_core :: ext :: scale_encode :: EncodeAsType,
+                    Debug,
+                )]
+                # [codec (crate = :: subxt :: ext :: subxt_core :: ext :: codec)]
+                #[decode_as_type(
+                    crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_decode"
+                )]
+                #[encode_as_type(
+                    crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_encode"
+                )]
+                #[doc = "Create tables with a known commit and snapshot url from which data can be loaded"]
+                pub struct CreateTablesWithSnapshotAndCommitment {
+                    pub source_and_mode: create_tables_with_snapshot_and_commitment::SourceAndMode,
+                    pub tables: create_tables_with_snapshot_and_commitment::Tables,
+                }
+                pub mod create_tables_with_snapshot_and_commitment {
+                    use super::runtime_types;
+                    pub type SourceAndMode = runtime_types::sxt_core::tables::SourceAndMode;
+                    pub type Tables = runtime_types :: bounded_collections :: bounded_vec :: BoundedVec < (runtime_types :: sxt_core :: tables :: TableIdentifier , runtime_types :: bounded_collections :: bounded_vec :: BoundedVec < :: core :: primitive :: u8 > , runtime_types :: proof_of_sql_commitment_map :: commitment_scheme :: PerCommitmentScheme < runtime_types :: proof_of_sql_commitment_map :: generic_over_commitment :: OptionType < runtime_types :: proof_of_sql_commitment_map :: generic_over_commitment :: ConcreteType < runtime_types :: proof_of_sql_commitment_map :: commitment_storage_map :: TableCommitmentBytes > > > , runtime_types :: bounded_collections :: bounded_vec :: BoundedVec < :: core :: primitive :: u8 > ,) > ;
+                }
+                impl ::subxt::ext::subxt_core::blocks::StaticExtrinsic for CreateTablesWithSnapshotAndCommitment {
+                    const PALLET: &'static str = "Tables";
+                    const CALL: &'static str = "create_tables_with_snapshot_and_commitment";
+                }
             }
             pub struct TransactionApi;
             impl TransactionApi {
+                #[doc = "TODO: add docs"]
                 pub fn update_tables(
                     &self,
                     source_and_mode: types::update_tables::SourceAndMode,
@@ -6826,6 +6863,29 @@ pub mod api {
                             4u8, 246u8, 50u8, 247u8, 80u8, 240u8, 247u8, 155u8, 87u8, 164u8, 84u8,
                             205u8, 126u8, 255u8, 250u8, 60u8, 129u8, 165u8, 186u8, 173u8, 252u8,
                             92u8, 42u8, 150u8, 59u8, 144u8, 175u8, 144u8, 50u8, 23u8, 174u8, 138u8,
+                        ],
+                    )
+                }
+                #[doc = "Create tables with a known commit and snapshot url from which data can be loaded"]
+                pub fn create_tables_with_snapshot_and_commitment(
+                    &self,
+                    source_and_mode : types :: create_tables_with_snapshot_and_commitment :: SourceAndMode,
+                    tables: types::create_tables_with_snapshot_and_commitment::Tables,
+                ) -> ::subxt::ext::subxt_core::tx::payload::StaticPayload<
+                    types::CreateTablesWithSnapshotAndCommitment,
+                > {
+                    ::subxt::ext::subxt_core::tx::payload::StaticPayload::new_static(
+                        "Tables",
+                        "create_tables_with_snapshot_and_commitment",
+                        types::CreateTablesWithSnapshotAndCommitment {
+                            source_and_mode,
+                            tables,
+                        },
+                        [
+                            184u8, 9u8, 153u8, 87u8, 182u8, 139u8, 192u8, 35u8, 192u8, 253u8,
+                            150u8, 154u8, 174u8, 102u8, 70u8, 203u8, 62u8, 47u8, 202u8, 97u8, 19u8,
+                            85u8, 159u8, 160u8, 124u8, 215u8, 160u8, 245u8, 198u8, 146u8, 0u8,
+                            246u8,
                         ],
                     )
                 }
@@ -6861,6 +6921,30 @@ pub mod api {
                 const PALLET: &'static str = "Tables";
                 const EVENT: &'static str = "SchemaUpdated";
             }
+            #[derive(
+                :: subxt :: ext :: subxt_core :: ext :: codec :: Decode,
+                :: subxt :: ext :: subxt_core :: ext :: codec :: Encode,
+                :: subxt :: ext :: subxt_core :: ext :: scale_decode :: DecodeAsType,
+                :: subxt :: ext :: subxt_core :: ext :: scale_encode :: EncodeAsType,
+                Debug,
+            )]
+            # [codec (crate = :: subxt :: ext :: subxt_core :: ext :: codec)]
+            #[decode_as_type(crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_decode")]
+            #[encode_as_type(crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_encode")]
+            #[doc = "Tables have been created with known commitments"]
+            pub struct TablesCreatedWithCommitments(
+                pub tables_created_with_commitments::Field0,
+                pub tables_created_with_commitments::Field1,
+            );
+            pub mod tables_created_with_commitments {
+                use super::runtime_types;
+                pub type Field0 = runtime_types::sxt_core::tables::SourceAndMode;
+                pub type Field1 = runtime_types :: bounded_collections :: bounded_vec :: BoundedVec < (runtime_types :: sxt_core :: tables :: TableIdentifier , runtime_types :: bounded_collections :: bounded_vec :: BoundedVec < :: core :: primitive :: u8 > , runtime_types :: proof_of_sql_commitment_map :: commitment_scheme :: PerCommitmentScheme < runtime_types :: proof_of_sql_commitment_map :: generic_over_commitment :: OptionType < runtime_types :: proof_of_sql_commitment_map :: generic_over_commitment :: ConcreteType < runtime_types :: proof_of_sql_commitment_map :: commitment_storage_map :: TableCommitmentBytes > > > , runtime_types :: bounded_collections :: bounded_vec :: BoundedVec < :: core :: primitive :: u8 > ,) > ;
+            }
+            impl ::subxt::ext::subxt_core::events::StaticEvent for TablesCreatedWithCommitments {
+                const PALLET: &'static str = "Tables";
+                const EVENT: &'static str = "TablesCreatedWithCommitments";
+            }
         }
         pub mod storage {
             use super::runtime_types;
@@ -6883,6 +6967,14 @@ pub mod api {
                     pub type Param1 = runtime_types::bounded_collections::bounded_vec::BoundedVec<
                         ::core::primitive::u8,
                     >;
+                }
+                pub mod snapshots {
+                    use super::runtime_types;
+                    pub type Snapshots =
+                        runtime_types::bounded_collections::bounded_vec::BoundedVec<
+                            ::core::primitive::u8,
+                        >;
+                    pub type Param0 = runtime_types::sxt_core::tables::TableIdentifier;
                 }
             }
             pub struct StorageApi;
@@ -7055,6 +7147,51 @@ pub mod api {
                         ],
                     )
                 }
+                pub fn snapshots_iter(
+                    &self,
+                ) -> ::subxt::ext::subxt_core::storage::address::StaticAddress<
+                    (),
+                    types::snapshots::Snapshots,
+                    (),
+                    (),
+                    ::subxt::ext::subxt_core::utils::Yes,
+                > {
+                    ::subxt::ext::subxt_core::storage::address::StaticAddress::new_static(
+                        "Tables",
+                        "Snapshots",
+                        (),
+                        [
+                            252u8, 74u8, 184u8, 56u8, 108u8, 55u8, 121u8, 103u8, 113u8, 153u8,
+                            175u8, 14u8, 154u8, 28u8, 94u8, 25u8, 135u8, 21u8, 101u8, 121u8, 205u8,
+                            98u8, 60u8, 171u8, 87u8, 98u8, 221u8, 34u8, 83u8, 130u8, 117u8, 20u8,
+                        ],
+                    )
+                }
+                pub fn snapshots(
+                    &self,
+                    _0: impl ::core::borrow::Borrow<types::snapshots::Param0>,
+                ) -> ::subxt::ext::subxt_core::storage::address::StaticAddress<
+                    ::subxt::ext::subxt_core::storage::address::StaticStorageKey<
+                        types::snapshots::Param0,
+                    >,
+                    types::snapshots::Snapshots,
+                    ::subxt::ext::subxt_core::utils::Yes,
+                    (),
+                    (),
+                > {
+                    ::subxt::ext::subxt_core::storage::address::StaticAddress::new_static(
+                        "Tables",
+                        "Snapshots",
+                        ::subxt::ext::subxt_core::storage::address::StaticStorageKey::new(
+                            _0.borrow(),
+                        ),
+                        [
+                            252u8, 74u8, 184u8, 56u8, 108u8, 55u8, 121u8, 103u8, 113u8, 153u8,
+                            175u8, 14u8, 154u8, 28u8, 94u8, 25u8, 135u8, 21u8, 101u8, 121u8, 205u8,
+                            98u8, 60u8, 171u8, 87u8, 98u8, 221u8, 34u8, 83u8, 130u8, 117u8, 20u8,
+                        ],
+                    )
+                }
             }
         }
     }
@@ -7149,6 +7286,8 @@ pub mod api {
             # [codec (crate = :: subxt :: ext :: subxt_core :: ext :: codec)]
             #[decode_as_type(crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_decode")]
             #[encode_as_type(crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_encode")]
+            #[doc = "This event is emitted every time data is submitted by an indexer."]
+            #[doc = "It can be used to verify that the data was successfully processed and received."]
             pub struct DataSubmitted {
                 pub who: data_submitted::Who,
                 pub submission: data_submitted::Submission,
@@ -7156,7 +7295,9 @@ pub mod api {
             pub mod data_submitted {
                 use super::runtime_types;
                 pub type Who = ::subxt::ext::subxt_core::utils::AccountId32;
-                pub type Submission = runtime_types::pallet_indexing::types::DataSubmission;
+                pub type Submission = runtime_types::sxt_core::indexing::DataSubmission<
+                    ::subxt::ext::subxt_core::utils::H256,
+                >;
             }
             impl ::subxt::ext::subxt_core::events::StaticEvent for DataSubmitted {
                 const PALLET: &'static str = "Indexing";
@@ -7172,14 +7313,20 @@ pub mod api {
             # [codec (crate = :: subxt :: ext :: subxt_core :: ext :: codec)]
             #[decode_as_type(crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_decode")]
             #[encode_as_type(crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_encode")]
+            #[doc = "This event is emitted when a quorum is reached amongst submissions and the"]
+            #[doc = "data is finalized."]
             pub struct QuorumReached {
                 pub quorum: quorum_reached::Quorum,
+                pub data: quorum_reached::Data,
             }
             pub mod quorum_reached {
                 use super::runtime_types;
-                pub type Quorum = runtime_types::pallet_indexing::types::DataQuorum<
+                pub type Quorum = runtime_types::sxt_core::indexing::DataQuorum<
                     ::subxt::ext::subxt_core::utils::AccountId32,
                     ::subxt::ext::subxt_core::utils::H256,
+                >;
+                pub type Data = runtime_types::bounded_collections::bounded_vec::BoundedVec<
+                    ::core::primitive::u8,
                 >;
             }
             impl ::subxt::ext::subxt_core::events::StaticEvent for QuorumReached {
@@ -7204,7 +7351,7 @@ pub mod api {
                 }
                 pub mod final_data {
                     use super::runtime_types;
-                    pub type FinalData = runtime_types::pallet_indexing::types::DataQuorum<
+                    pub type FinalData = runtime_types::sxt_core::indexing::DataQuorum<
                         ::subxt::ext::subxt_core::utils::AccountId32,
                         ::subxt::ext::subxt_core::utils::H256,
                     >;
@@ -7352,6 +7499,162 @@ pub mod api {
                             85u8, 107u8, 78u8, 34u8, 19u8, 220u8, 175u8, 129u8, 249u8, 202u8,
                             182u8, 183u8, 170u8, 170u8, 202u8, 92u8, 113u8, 97u8, 168u8, 151u8,
                             150u8,
+                        ],
+                    )
+                }
+            }
+        }
+    }
+    pub mod commitments {
+        use super::root_mod;
+        use super::runtime_types;
+        #[doc = "The errors that can occur within this pallet."]
+        pub type Error = runtime_types::pallet_commitments::pallet::Error;
+        pub mod storage {
+            use super::runtime_types;
+            pub mod types {
+                use super::runtime_types;
+                pub mod commitment_storage_map {
+                    use super::runtime_types;
+                    pub type CommitmentStorageMap = runtime_types :: proof_of_sql_commitment_map :: commitment_storage_map :: TableCommitmentBytes ;
+                    pub type Param0 = runtime_types::sxt_core::tables::TableIdentifier;
+                    pub type Param1 = runtime_types :: proof_of_sql_commitment_map :: commitment_scheme :: CommitmentScheme ;
+                }
+                pub mod stored_public_parameters {
+                    use super::runtime_types;
+                    pub type StoredPublicParameters =
+                        runtime_types::sxt_core::commitments::PublicParametersBytes;
+                }
+                pub mod default_commitment_schemes {
+                    use super::runtime_types;
+                    pub type DefaultCommitmentSchemes = runtime_types :: proof_of_sql_commitment_map :: commitment_scheme :: CommitmentSchemeFlags ;
+                }
+            }
+            pub struct StorageApi;
+            impl StorageApi {
+                #[doc = " Mapping of tables to their current commitments, stored on chain."]
+                pub fn commitment_storage_map_iter(
+                    &self,
+                ) -> ::subxt::ext::subxt_core::storage::address::StaticAddress<
+                    (),
+                    types::commitment_storage_map::CommitmentStorageMap,
+                    (),
+                    (),
+                    ::subxt::ext::subxt_core::utils::Yes,
+                > {
+                    ::subxt::ext::subxt_core::storage::address::StaticAddress::new_static(
+                        "Commitments",
+                        "CommitmentStorageMap",
+                        (),
+                        [
+                            105u8, 72u8, 0u8, 32u8, 172u8, 20u8, 52u8, 253u8, 15u8, 22u8, 29u8,
+                            150u8, 22u8, 15u8, 250u8, 117u8, 42u8, 65u8, 206u8, 36u8, 87u8, 110u8,
+                            141u8, 24u8, 154u8, 208u8, 83u8, 213u8, 138u8, 34u8, 160u8, 145u8,
+                        ],
+                    )
+                }
+                #[doc = " Mapping of tables to their current commitments, stored on chain."]
+                pub fn commitment_storage_map_iter1(
+                    &self,
+                    _0: impl ::core::borrow::Borrow<types::commitment_storage_map::Param0>,
+                ) -> ::subxt::ext::subxt_core::storage::address::StaticAddress<
+                    ::subxt::ext::subxt_core::storage::address::StaticStorageKey<
+                        types::commitment_storage_map::Param0,
+                    >,
+                    types::commitment_storage_map::CommitmentStorageMap,
+                    (),
+                    (),
+                    ::subxt::ext::subxt_core::utils::Yes,
+                > {
+                    ::subxt::ext::subxt_core::storage::address::StaticAddress::new_static(
+                        "Commitments",
+                        "CommitmentStorageMap",
+                        ::subxt::ext::subxt_core::storage::address::StaticStorageKey::new(
+                            _0.borrow(),
+                        ),
+                        [
+                            105u8, 72u8, 0u8, 32u8, 172u8, 20u8, 52u8, 253u8, 15u8, 22u8, 29u8,
+                            150u8, 22u8, 15u8, 250u8, 117u8, 42u8, 65u8, 206u8, 36u8, 87u8, 110u8,
+                            141u8, 24u8, 154u8, 208u8, 83u8, 213u8, 138u8, 34u8, 160u8, 145u8,
+                        ],
+                    )
+                }
+                #[doc = " Mapping of tables to their current commitments, stored on chain."]
+                pub fn commitment_storage_map(
+                    &self,
+                    _0: impl ::core::borrow::Borrow<types::commitment_storage_map::Param0>,
+                    _1: impl ::core::borrow::Borrow<types::commitment_storage_map::Param1>,
+                ) -> ::subxt::ext::subxt_core::storage::address::StaticAddress<
+                    (
+                        ::subxt::ext::subxt_core::storage::address::StaticStorageKey<
+                            types::commitment_storage_map::Param0,
+                        >,
+                        ::subxt::ext::subxt_core::storage::address::StaticStorageKey<
+                            types::commitment_storage_map::Param1,
+                        >,
+                    ),
+                    types::commitment_storage_map::CommitmentStorageMap,
+                    ::subxt::ext::subxt_core::utils::Yes,
+                    (),
+                    (),
+                > {
+                    ::subxt::ext::subxt_core::storage::address::StaticAddress::new_static(
+                        "Commitments",
+                        "CommitmentStorageMap",
+                        (
+                            ::subxt::ext::subxt_core::storage::address::StaticStorageKey::new(
+                                _0.borrow(),
+                            ),
+                            ::subxt::ext::subxt_core::storage::address::StaticStorageKey::new(
+                                _1.borrow(),
+                            ),
+                        ),
+                        [
+                            105u8, 72u8, 0u8, 32u8, 172u8, 20u8, 52u8, 253u8, 15u8, 22u8, 29u8,
+                            150u8, 22u8, 15u8, 250u8, 117u8, 42u8, 65u8, 206u8, 36u8, 87u8, 110u8,
+                            141u8, 24u8, 154u8, 208u8, 83u8, 213u8, 138u8, 34u8, 160u8, 145u8,
+                        ],
+                    )
+                }
+                #[doc = " Proof of sql public parameters storage."]
+                pub fn stored_public_parameters(
+                    &self,
+                ) -> ::subxt::ext::subxt_core::storage::address::StaticAddress<
+                    (),
+                    types::stored_public_parameters::StoredPublicParameters,
+                    ::subxt::ext::subxt_core::utils::Yes,
+                    (),
+                    (),
+                > {
+                    ::subxt::ext::subxt_core::storage::address::StaticAddress::new_static(
+                        "Commitments",
+                        "StoredPublicParameters",
+                        (),
+                        [
+                            96u8, 104u8, 7u8, 248u8, 218u8, 40u8, 235u8, 187u8, 41u8, 106u8, 153u8,
+                            170u8, 55u8, 33u8, 192u8, 189u8, 220u8, 205u8, 167u8, 35u8, 5u8, 223u8,
+                            88u8, 61u8, 253u8, 39u8, 18u8, 193u8, 59u8, 190u8, 236u8, 174u8,
+                        ],
+                    )
+                }
+                #[doc = " Default schemes used when committing to new tables."]
+                pub fn default_commitment_schemes(
+                    &self,
+                ) -> ::subxt::ext::subxt_core::storage::address::StaticAddress<
+                    (),
+                    types::default_commitment_schemes::DefaultCommitmentSchemes,
+                    ::subxt::ext::subxt_core::utils::Yes,
+                    (),
+                    (),
+                > {
+                    ::subxt::ext::subxt_core::storage::address::StaticAddress::new_static(
+                        "Commitments",
+                        "DefaultCommitmentSchemes",
+                        (),
+                        [
+                            20u8, 77u8, 203u8, 254u8, 27u8, 52u8, 134u8, 198u8, 49u8, 40u8, 88u8,
+                            241u8, 18u8, 71u8, 80u8, 114u8, 120u8, 255u8, 239u8, 78u8, 8u8, 134u8,
+                            112u8, 171u8, 14u8, 86u8, 114u8, 89u8, 92u8, 133u8, 248u8, 66u8,
                         ],
                     )
                 }
@@ -8534,6 +8837,95 @@ pub mod api {
                 }
             }
         }
+        pub mod pallet_commitments {
+            use super::runtime_types;
+            pub mod pallet {
+                use super::runtime_types;
+                #[derive(
+                    :: subxt :: ext :: subxt_core :: ext :: codec :: Decode,
+                    :: subxt :: ext :: subxt_core :: ext :: codec :: Encode,
+                    :: subxt :: ext :: subxt_core :: ext :: scale_decode :: DecodeAsType,
+                    :: subxt :: ext :: subxt_core :: ext :: scale_encode :: EncodeAsType,
+                    Debug,
+                )]
+                # [codec (crate = :: subxt :: ext :: subxt_core :: ext :: codec)]
+                #[decode_as_type(
+                    crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_decode"
+                )]
+                #[encode_as_type(
+                    crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_encode"
+                )]
+                #[doc = "The errors that can occur within this pallet."]
+                pub enum Error {
+                    #[codec(index = 0)]
+                    #[doc = "Failed to deserialize proof-of-sql public parameters from storage."]
+                    DeserializePublicParameters,
+                    #[codec(index = 1)]
+                    #[doc = "Proof-of-sql commitment has too many columns."]
+                    CommitmentWithTooManyColumns,
+                    #[codec(index = 2)]
+                    #[doc = "Failed to serialize proof-of-sql commitment."]
+                    SerializeCommitment,
+                    #[codec(index = 3)]
+                    #[doc = "Failed to deserialize proof-of-sql commitment."]
+                    DeserializeCommitment,
+                    #[codec(index = 4)]
+                    #[doc = "Snapshot commitments don't match table definition."]
+                    InappropriateSnapshotCommitments,
+                    #[codec(index = 5)]
+                    #[doc = "Table must have at least one column."]
+                    CreateTableWithNoColumns,
+                    #[codec(index = 6)]
+                    #[doc = "Table has invalid identifier."]
+                    CreateTableWithInvalidIdentifier,
+                    #[codec(index = 7)]
+                    #[doc = "Table has duplicate identifiers."]
+                    CreateTableWithDuplicateIdentifiers,
+                    #[codec(index = 8)]
+                    #[doc = "Table uses reserved metadata prefix."]
+                    CreateTableWithReservedMetadataPrefix,
+                    #[codec(index = 9)]
+                    #[doc = "Timestamp column precision should be 0, 3, or 6."]
+                    TimestampColumnWithInvalidPrecision,
+                    #[codec(index = 10)]
+                    #[doc = "Timestamp columns should be timestamp-aware."]
+                    TimestampColumnWithoutTimezone,
+                    #[codec(index = 11)]
+                    #[doc = "Decimal/numeric columns should have constrained precision and scale."]
+                    DecimalColumnWithoutPrecision,
+                    #[codec(index = 12)]
+                    #[doc = "Decimal/numeric columns should have precision between 1 and 75."]
+                    DecimalColumnWithInvalidPrecision,
+                    #[codec(index = 13)]
+                    #[doc = "Decimal/numeric columns should have scale between 0 and 127."]
+                    DecimalColumnWithInvalidScale,
+                    #[codec(index = 14)]
+                    #[doc = "Column type not supported."]
+                    ColumnWithUnsupportedDataType,
+                    #[codec(index = 15)]
+                    #[doc = "Column should be NOT NULL."]
+                    ColumnWithoutNotNull,
+                    #[codec(index = 16)]
+                    #[doc = "Column option not supported."]
+                    ColumnWithUnsupportedOption,
+                    #[codec(index = 17)]
+                    #[doc = "Existing commitments of different schemes don't agree on table range."]
+                    ExistingCommitmentsRangeMismatch,
+                    #[codec(index = 18)]
+                    #[doc = "Cannot update table with no existing commitments."]
+                    NoExistingCommitments,
+                    #[codec(index = 19)]
+                    #[doc = "Insert data contains values out of bounds of scalar field."]
+                    InsertDataOutOfBounds,
+                    #[codec(index = 20)]
+                    #[doc = "Insert data does not match existing commitments."]
+                    InsertDataDoesntMatchExistingCommitments,
+                    #[codec(index = 21)]
+                    #[doc = "Table identifier already exists in commitment storage."]
+                    TableAlreadyExists,
+                }
+            }
+        }
         pub mod pallet_grandpa {
             use super::runtime_types;
             pub mod pallet {
@@ -8786,11 +9178,14 @@ pub mod api {
                     #[doc = "Invalid Table identifier was supplied"]
                     InvalidTable,
                     #[codec(index = 6)]
-                    #[doc = "There is an error with the internal state of the Substrate node"]
-                    InternalError,
-                    #[codec(index = 7)]
                     #[doc = "This user has already submitted data for this batch id"]
                     AlreadySubmitted,
+                    #[codec(index = 7)]
+                    #[doc = "Error parsing the table to an arrow record batch"]
+                    ParseTableError,
+                    #[codec(index = 8)]
+                    #[doc = "Error deserializing the table as an OnChainTable"]
+                    TableDeserializationError,
                 }
                 #[derive(
                     :: subxt :: ext :: subxt_core :: ext :: codec :: Decode,
@@ -8809,67 +9204,26 @@ pub mod api {
                 #[doc = "The `Event` enum of this pallet"]
                 pub enum Event {
                     #[codec(index = 0)]
+                    #[doc = "This event is emitted every time data is submitted by an indexer."]
+                    #[doc = "It can be used to verify that the data was successfully processed and received."]
                     DataSubmitted {
                         who: ::subxt::ext::subxt_core::utils::AccountId32,
-                        submission: runtime_types::pallet_indexing::types::DataSubmission,
-                    },
-                    #[codec(index = 1)]
-                    QuorumReached {
-                        quorum: runtime_types::pallet_indexing::types::DataQuorum<
-                            ::subxt::ext::subxt_core::utils::AccountId32,
+                        submission: runtime_types::sxt_core::indexing::DataSubmission<
                             ::subxt::ext::subxt_core::utils::H256,
                         >,
                     },
-                }
-            }
-            pub mod types {
-                use super::runtime_types;
-                #[derive(
-                    :: subxt :: ext :: subxt_core :: ext :: codec :: Decode,
-                    :: subxt :: ext :: subxt_core :: ext :: codec :: Encode,
-                    :: subxt :: ext :: subxt_core :: ext :: scale_decode :: DecodeAsType,
-                    :: subxt :: ext :: subxt_core :: ext :: scale_encode :: EncodeAsType,
-                    Debug,
-                )]
-                # [codec (crate = :: subxt :: ext :: subxt_core :: ext :: codec)]
-                #[decode_as_type(
-                    crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_decode"
-                )]
-                #[encode_as_type(
-                    crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_encode"
-                )]
-                pub struct DataQuorum<_0, _1> {
-                    pub table: runtime_types::sxt_core::tables::TableIdentifier,
-                    pub batch_id: runtime_types::bounded_collections::bounded_vec::BoundedVec<
-                        ::core::primitive::u8,
-                    >,
-                    pub data_hash: _1,
-                    pub block_number: runtime_types::primitive_types::U256,
-                    pub agreements: runtime_types::bounded_collections::bounded_vec::BoundedVec<_0>,
-                    pub dissents: runtime_types::bounded_collections::bounded_vec::BoundedVec<_0>,
-                }
-                #[derive(
-                    :: subxt :: ext :: subxt_core :: ext :: codec :: Decode,
-                    :: subxt :: ext :: subxt_core :: ext :: codec :: Encode,
-                    :: subxt :: ext :: subxt_core :: ext :: scale_decode :: DecodeAsType,
-                    :: subxt :: ext :: subxt_core :: ext :: scale_encode :: EncodeAsType,
-                    Debug,
-                )]
-                # [codec (crate = :: subxt :: ext :: subxt_core :: ext :: codec)]
-                #[decode_as_type(
-                    crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_decode"
-                )]
-                #[encode_as_type(
-                    crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_encode"
-                )]
-                pub struct DataSubmission {
-                    pub table: runtime_types::sxt_core::tables::TableIdentifier,
-                    pub batch_id: runtime_types::bounded_collections::bounded_vec::BoundedVec<
-                        ::core::primitive::u8,
-                    >,
-                    pub data: runtime_types::bounded_collections::bounded_vec::BoundedVec<
-                        ::core::primitive::u8,
-                    >,
+                    #[codec(index = 1)]
+                    #[doc = "This event is emitted when a quorum is reached amongst submissions and the"]
+                    #[doc = "data is finalized."]
+                    QuorumReached {
+                        quorum: runtime_types::sxt_core::indexing::DataQuorum<
+                            ::subxt::ext::subxt_core::utils::AccountId32,
+                            ::subxt::ext::subxt_core::utils::H256,
+                        >,
+                        data: runtime_types::bounded_collections::bounded_vec::BoundedVec<
+                            ::core::primitive::u8,
+                        >,
+                    },
                 }
             }
         }
@@ -8895,6 +9249,7 @@ pub mod api {
                 pub enum Call {
                     #[codec(index = 0)]
                     #[doc = "Set the permissions for an account id"]
+                    #[doc = "TODO: add docs"]
                     set_permissions {
                         who: ::subxt::ext::subxt_core::utils::AccountId32,
                         permissions: runtime_types::bounded_collections::bounded_vec::BoundedVec<
@@ -8902,6 +9257,7 @@ pub mod api {
                         >,
                     },
                     #[codec(index = 1)]
+                    #[doc = "TODO: add docs"]
                     clear_permissions {
                         who: ::subxt::ext::subxt_core::utils::AccountId32,
                     },
@@ -9110,17 +9466,7 @@ pub mod api {
                 )]
                 #[doc = "Contains a variant per dispatchable extrinsic that this pallet has."]
                 pub enum Call {
-                    #[codec(index = 0)]
-                    update_tables {
-                        source_and_mode: runtime_types::sxt_core::tables::SourceAndMode,
-                        tables: runtime_types::bounded_collections::bounded_vec::BoundedVec<(
-                            runtime_types::sxt_core::tables::TableIdentifier,
-                            runtime_types::bounded_collections::bounded_vec::BoundedVec<
-                                ::core::primitive::u8,
-                            >,
-                        )>,
-                    },
-                }
+                    # [codec (index = 0)] # [doc = "TODO: add docs"] update_tables { source_and_mode : runtime_types :: sxt_core :: tables :: SourceAndMode , tables : runtime_types :: bounded_collections :: bounded_vec :: BoundedVec < (runtime_types :: sxt_core :: tables :: TableIdentifier , runtime_types :: bounded_collections :: bounded_vec :: BoundedVec < :: core :: primitive :: u8 > ,) > , } , # [codec (index = 1)] # [doc = "Create tables with a known commit and snapshot url from which data can be loaded"] create_tables_with_snapshot_and_commitment { source_and_mode : runtime_types :: sxt_core :: tables :: SourceAndMode , tables : runtime_types :: bounded_collections :: bounded_vec :: BoundedVec < (runtime_types :: sxt_core :: tables :: TableIdentifier , runtime_types :: bounded_collections :: bounded_vec :: BoundedVec < :: core :: primitive :: u8 > , runtime_types :: proof_of_sql_commitment_map :: commitment_scheme :: PerCommitmentScheme < runtime_types :: proof_of_sql_commitment_map :: generic_over_commitment :: OptionType < runtime_types :: proof_of_sql_commitment_map :: generic_over_commitment :: ConcreteType < runtime_types :: proof_of_sql_commitment_map :: commitment_storage_map :: TableCommitmentBytes > > > , runtime_types :: bounded_collections :: bounded_vec :: BoundedVec < :: core :: primitive :: u8 > ,) > , } , }
                 #[derive(
                     :: subxt :: ext :: subxt_core :: ext :: codec :: Decode,
                     :: subxt :: ext :: subxt_core :: ext :: codec :: Encode,
@@ -9140,6 +9486,9 @@ pub mod api {
                     #[codec(index = 0)]
                     #[doc = "There was an error deserializing the Arrow schema"]
                     ArrowDeserializationError,
+                    #[codec(index = 1)]
+                    #[doc = "Existing commit for this table identifier"]
+                    IdentifierAlreadyExists,
                 }
                 #[derive(
                     :: subxt :: ext :: subxt_core :: ext :: codec :: Decode,
@@ -9157,18 +9506,7 @@ pub mod api {
                 )]
                 #[doc = "The `Event` enum of this pallet"]
                 pub enum Event {
-                    #[codec(index = 0)]
-                    #[doc = "The schema for a table has been updated"]
-                    SchemaUpdated(
-                        runtime_types::sxt_core::tables::SourceAndMode,
-                        runtime_types::bounded_collections::bounded_vec::BoundedVec<(
-                            runtime_types::sxt_core::tables::TableIdentifier,
-                            runtime_types::bounded_collections::bounded_vec::BoundedVec<
-                                ::core::primitive::u8,
-                            >,
-                        )>,
-                    ),
-                }
+                    # [codec (index = 0)] # [doc = "The schema for a table has been updated"] SchemaUpdated (runtime_types :: sxt_core :: tables :: SourceAndMode , runtime_types :: bounded_collections :: bounded_vec :: BoundedVec < (runtime_types :: sxt_core :: tables :: TableIdentifier , runtime_types :: bounded_collections :: bounded_vec :: BoundedVec < :: core :: primitive :: u8 > ,) > ,) , # [codec (index = 1)] # [doc = "Tables have been created with known commitments"] TablesCreatedWithCommitments (runtime_types :: sxt_core :: tables :: SourceAndMode , runtime_types :: bounded_collections :: bounded_vec :: BoundedVec < (runtime_types :: sxt_core :: tables :: TableIdentifier , runtime_types :: bounded_collections :: bounded_vec :: BoundedVec < :: core :: primitive :: u8 > , runtime_types :: proof_of_sql_commitment_map :: commitment_scheme :: PerCommitmentScheme < runtime_types :: proof_of_sql_commitment_map :: generic_over_commitment :: OptionType < runtime_types :: proof_of_sql_commitment_map :: generic_over_commitment :: ConcreteType < runtime_types :: proof_of_sql_commitment_map :: commitment_storage_map :: TableCommitmentBytes > > > , runtime_types :: bounded_collections :: bounded_vec :: BoundedVec < :: core :: primitive :: u8 > ,) > ,) , }
             }
         }
         pub mod pallet_template {
@@ -9468,6 +9806,120 @@ pub mod api {
             #[decode_as_type(crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_decode")]
             #[encode_as_type(crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_encode")]
             pub struct U256(pub [::core::primitive::u64; 4usize]);
+        }
+        pub mod proof_of_sql_commitment_map {
+            use super::runtime_types;
+            pub mod commitment_scheme {
+                use super::runtime_types;
+                #[derive(
+                    :: subxt :: ext :: subxt_core :: ext :: codec :: Decode,
+                    :: subxt :: ext :: subxt_core :: ext :: codec :: Encode,
+                    :: subxt :: ext :: subxt_core :: ext :: scale_decode :: DecodeAsType,
+                    :: subxt :: ext :: subxt_core :: ext :: scale_encode :: EncodeAsType,
+                    Debug,
+                )]
+                # [codec (crate = :: subxt :: ext :: subxt_core :: ext :: codec)]
+                #[decode_as_type(
+                    crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_decode"
+                )]
+                #[encode_as_type(
+                    crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_encode"
+                )]
+                pub enum CommitmentScheme {
+                    #[codec(index = 0)]
+                    Ipa,
+                    #[codec(index = 1)]
+                    Dory,
+                }
+                #[derive(
+                    :: subxt :: ext :: subxt_core :: ext :: codec :: Decode,
+                    :: subxt :: ext :: subxt_core :: ext :: codec :: Encode,
+                    :: subxt :: ext :: subxt_core :: ext :: scale_decode :: DecodeAsType,
+                    :: subxt :: ext :: subxt_core :: ext :: scale_encode :: EncodeAsType,
+                    Debug,
+                )]
+                # [codec (crate = :: subxt :: ext :: subxt_core :: ext :: codec)]
+                #[decode_as_type(
+                    crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_decode"
+                )]
+                #[encode_as_type(
+                    crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_encode"
+                )]
+                pub struct CommitmentSchemeFlags {
+                    pub ipa: ::core::primitive::bool,
+                    pub dory: ::core::primitive::bool,
+                }
+                #[derive(
+                    :: subxt :: ext :: subxt_core :: ext :: codec :: Decode,
+                    :: subxt :: ext :: subxt_core :: ext :: codec :: Encode,
+                    :: subxt :: ext :: subxt_core :: ext :: scale_decode :: DecodeAsType,
+                    :: subxt :: ext :: subxt_core :: ext :: scale_encode :: EncodeAsType,
+                    Debug,
+                )]
+                # [codec (crate = :: subxt :: ext :: subxt_core :: ext :: codec)]
+                #[decode_as_type(
+                    crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_decode"
+                )]
+                #[encode_as_type(
+                    crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_encode"
+                )]
+                pub struct PerCommitmentScheme < _0 > { pub ipa : :: core :: option :: Option < runtime_types :: proof_of_sql_commitment_map :: commitment_storage_map :: TableCommitmentBytes > , pub dory : :: core :: option :: Option < runtime_types :: proof_of_sql_commitment_map :: commitment_storage_map :: TableCommitmentBytes > , # [codec (skip)] pub __ignore : :: core :: marker :: PhantomData < _0 > }
+            }
+            pub mod commitment_storage_map {
+                use super::runtime_types;
+                #[derive(
+                    :: subxt :: ext :: subxt_core :: ext :: codec :: Decode,
+                    :: subxt :: ext :: subxt_core :: ext :: codec :: Encode,
+                    :: subxt :: ext :: subxt_core :: ext :: scale_decode :: DecodeAsType,
+                    :: subxt :: ext :: subxt_core :: ext :: scale_encode :: EncodeAsType,
+                    Debug,
+                )]
+                # [codec (crate = :: subxt :: ext :: subxt_core :: ext :: codec)]
+                #[decode_as_type(
+                    crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_decode"
+                )]
+                #[encode_as_type(
+                    crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_encode"
+                )]
+                pub struct TableCommitmentBytes {
+                    pub data: runtime_types::bounded_collections::bounded_vec::BoundedVec<
+                        ::core::primitive::u8,
+                    >,
+                }
+            }
+            pub mod generic_over_commitment {
+                use super::runtime_types;
+                #[derive(
+                    :: subxt :: ext :: subxt_core :: ext :: codec :: Decode,
+                    :: subxt :: ext :: subxt_core :: ext :: codec :: Encode,
+                    :: subxt :: ext :: subxt_core :: ext :: scale_decode :: DecodeAsType,
+                    :: subxt :: ext :: subxt_core :: ext :: scale_encode :: EncodeAsType,
+                    Debug,
+                )]
+                # [codec (crate = :: subxt :: ext :: subxt_core :: ext :: codec)]
+                #[decode_as_type(
+                    crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_decode"
+                )]
+                #[encode_as_type(
+                    crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_encode"
+                )]
+                pub struct ConcreteType<_0>(pub ::core::marker::PhantomData<_0>);
+                #[derive(
+                    :: subxt :: ext :: subxt_core :: ext :: codec :: Decode,
+                    :: subxt :: ext :: subxt_core :: ext :: codec :: Encode,
+                    :: subxt :: ext :: subxt_core :: ext :: scale_decode :: DecodeAsType,
+                    :: subxt :: ext :: subxt_core :: ext :: scale_encode :: EncodeAsType,
+                    Debug,
+                )]
+                # [codec (crate = :: subxt :: ext :: subxt_core :: ext :: codec)]
+                #[decode_as_type(
+                    crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_decode"
+                )]
+                #[encode_as_type(
+                    crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_encode"
+                )]
+                pub struct OptionType<_0>(pub ::core::marker::PhantomData<_0>);
+            }
         }
         pub mod sp_arithmetic {
             use super::runtime_types;
@@ -10704,6 +11156,76 @@ pub mod api {
         }
         pub mod sxt_core {
             use super::runtime_types;
+            pub mod commitments {
+                use super::runtime_types;
+                #[derive(
+                    :: subxt :: ext :: subxt_core :: ext :: codec :: Decode,
+                    :: subxt :: ext :: subxt_core :: ext :: codec :: Encode,
+                    :: subxt :: ext :: subxt_core :: ext :: scale_decode :: DecodeAsType,
+                    :: subxt :: ext :: subxt_core :: ext :: scale_encode :: EncodeAsType,
+                    Debug,
+                )]
+                # [codec (crate = :: subxt :: ext :: subxt_core :: ext :: codec)]
+                #[decode_as_type(
+                    crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_decode"
+                )]
+                #[encode_as_type(
+                    crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_encode"
+                )]
+                pub struct PublicParametersBytes {
+                    pub data: runtime_types::bounded_collections::bounded_vec::BoundedVec<
+                        ::core::primitive::u8,
+                    >,
+                }
+            }
+            pub mod indexing {
+                use super::runtime_types;
+                #[derive(
+                    :: subxt :: ext :: subxt_core :: ext :: codec :: Decode,
+                    :: subxt :: ext :: subxt_core :: ext :: codec :: Encode,
+                    :: subxt :: ext :: subxt_core :: ext :: scale_decode :: DecodeAsType,
+                    :: subxt :: ext :: subxt_core :: ext :: scale_encode :: EncodeAsType,
+                    Debug,
+                )]
+                # [codec (crate = :: subxt :: ext :: subxt_core :: ext :: codec)]
+                #[decode_as_type(
+                    crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_decode"
+                )]
+                #[encode_as_type(
+                    crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_encode"
+                )]
+                pub struct DataQuorum<_0, _1> {
+                    pub table: runtime_types::sxt_core::tables::TableIdentifier,
+                    pub batch_id: runtime_types::bounded_collections::bounded_vec::BoundedVec<
+                        ::core::primitive::u8,
+                    >,
+                    pub data_hash: _1,
+                    pub block_number: runtime_types::primitive_types::U256,
+                    pub agreements: runtime_types::bounded_collections::bounded_vec::BoundedVec<_0>,
+                    pub dissents: runtime_types::bounded_collections::bounded_vec::BoundedVec<_0>,
+                }
+                #[derive(
+                    :: subxt :: ext :: subxt_core :: ext :: codec :: Decode,
+                    :: subxt :: ext :: subxt_core :: ext :: codec :: Encode,
+                    :: subxt :: ext :: subxt_core :: ext :: scale_decode :: DecodeAsType,
+                    :: subxt :: ext :: subxt_core :: ext :: scale_encode :: EncodeAsType,
+                    Debug,
+                )]
+                # [codec (crate = :: subxt :: ext :: subxt_core :: ext :: codec)]
+                #[decode_as_type(
+                    crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_decode"
+                )]
+                #[encode_as_type(
+                    crate_path = ":: subxt :: ext :: subxt_core :: ext :: scale_encode"
+                )]
+                pub struct DataSubmission<_0> {
+                    pub table: runtime_types::sxt_core::tables::TableIdentifier,
+                    pub batch_id: runtime_types::bounded_collections::bounded_vec::BoundedVec<
+                        ::core::primitive::u8,
+                    >,
+                    pub data_hash: _0,
+                }
+            }
             pub mod permissions {
                 use super::runtime_types;
                 #[derive(
@@ -10975,6 +11497,8 @@ pub mod api {
                 Tables(runtime_types::pallet_tables::pallet::Error),
                 #[codec(index = 10)]
                 Indexing(runtime_types::pallet_indexing::pallet::Error),
+                #[codec(index = 11)]
+                Commitments(runtime_types::pallet_commitments::pallet::Error),
             }
             #[derive(
                 :: subxt :: ext :: subxt_core :: ext :: codec :: Decode,
