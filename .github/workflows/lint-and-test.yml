@@ -18,7 +18,7 @@ jobs:
   # Run cargo check (with various feature permutations)
   check:
     name: Check Package
-    runs-on: large-8-core-32gb-22-04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
         uses: actions/checkout@v3
@@ -41,7 +41,7 @@ jobs:
 
   clippy:
     name: Clippy
-    runs-on: large-8-core-32gb-22-04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
         uses: actions/checkout@v3
