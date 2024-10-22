@@ -3,7 +3,7 @@ use std::{env, fs, path::Path};
 fn main() {
     let pwd = env::var("CARGO_MANIFEST_DIR").expect("CARGO_MANIFEST_DIR env variable unset");
 
-    let proto_path = Path::new(&pwd).join("proto/".to_owned());
+    let proto_path = Path::new(&pwd).join("proto/");
 
     let proto_defs = fs::read_dir(&proto_path)
         .unwrap()
