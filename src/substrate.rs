@@ -1,5 +1,4 @@
 use crate::sxt_chain_runtime::api::{
-    commitments::storage::types::stored_public_parameters::StoredPublicParameters,
     runtime_types::{
         bounded_collections::bounded_vec::BoundedVec,
         proof_of_sql_commitment_map::{
@@ -9,14 +8,13 @@ use crate::sxt_chain_runtime::api::{
     },
     storage,
 };
-use ark_serialize::{CanonicalDeserialize, Compress, Validate};
 use futures::future::try_join_all;
 use proof_of_sql::{
     base::{
         commitment::{QueryCommitments, TableCommitment},
         database::TableRef,
     },
-    proof_primitive::dory::{DoryCommitment, PublicParameters},
+    proof_primitive::dory::DoryCommitment,
 };
 use proof_of_sql_parser::{Identifier, ResourceId};
 use subxt::{OnlineClient, PolkadotConfig};
@@ -42,7 +40,7 @@ pub async fn query_commitments(
     resource_ids: &[ResourceId],
     url: &str,
 ) -> Result<QueryCommitments<DoryCommitment>, Box<dyn core::error::Error>> {
-    let api = OnlineClient::<SxtConfig>::from_url(url).await?;
+    let api = OnlineClient::<SxtConfig>::from_insecure_url(url).await?;
 
     // Create a collection of futures
     let futures = resource_ids.iter().map(|id| {
@@ -74,24 +72,4 @@ pub async fn query_commitments(
         .into_iter()
         .collect::<QueryCommitments<DoryCommitment>>();
     Ok(results)
-}
-
-/// Obtain stored [`PublicParameters`] from the commitments pallet
-pub async fn try_get_public_parameters(
-    url: &str,
-) -> Result<PublicParameters, Box<dyn core::error::Error>> {
-    let api = OnlineClient::<SxtConfig>::from_url(url).await?;
-    let public_parameters_query = storage().commitments().stored_public_parameters();
-    let public_parameters_bytes: StoredPublicParameters = api
-        .storage()
-        .at_latest()
-        .await?
-        .fetch(&public_parameters_query)
-        .await?
-        .ok_or("Commitment not found")?;
-    Ok(PublicParameters::deserialize_with_mode(
-        &*public_parameters_bytes.data.0,
-        Compress::No,
-        Validate::No,
-    )?)
 }
