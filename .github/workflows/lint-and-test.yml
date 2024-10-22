@@ -35,7 +35,7 @@ jobs:
       - name: Install stable toolchain
         run: curl https://sh.rustup.rs -sSf | bash -s -- -y --profile minimal && source ~/.cargo/env
       - name: Install Dependencies
-        run: export DEBIAN_FRONTEND=non-interactive && sudo apt-get update && sudo apt-get install -y clang lld     
+        run: export DEBIAN_FRONTEND=non-interactive && sudo apt-get update && sudo apt-get install -y clang lld protobuf-compiler
       - name: Run cargo check (default features)
         run: cargo check --all-targets
 
@@ -60,7 +60,7 @@ jobs:
           curl https://sh.rustup.rs -sSf | bash -s -- -y --profile minimal && source ~/.cargo/env
           rustup component add clippy
       - name: Install Dependencies
-        run: export DEBIAN_FRONTEND=non-interactive && sudo apt-get update && sudo apt-get install -y clang lld
+        run: export DEBIAN_FRONTEND=non-interactive && sudo apt-get update && sudo apt-get install -y clang lld protobuf-compiler
       - name: Run clippy
         run: cargo clippy --all-targets --all-features -- -D warnings
  
@@ -88,5 +88,7 @@ jobs:
         run: |
           curl https://sh.rustup.rs -sSf | bash -s -- -y --profile minimal && source ~/.cargo/env && rustup default nightly
           cargo install cargo-udeps --locked
+      - name: Install Dependencies
+        run: export DEBIAN_FRONTEND=non-interactive && sudo apt-get update && sudo apt-get install -y clang lld protobuf-compiler
       - name: Run cargo udeps
         run: cargo +nightly udeps --all-targets
