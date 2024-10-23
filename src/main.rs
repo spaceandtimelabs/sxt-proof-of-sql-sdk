@@ -19,9 +19,10 @@ mod prover {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn core::error::Error>> {
+    // Load environment variables
     dotenv().ok();
     let sql = "SELECT * FROM ETHEREUM.CONTRACT_EVT_APPROVALFORALL;";
-    let prover_url = std::env::var("PROVER_URL")?;
+    let prover_root_url = std::env::var("PROVER_ROOT_URL")?;
     let substrate_node_url = std::env::var("SUBSTRATE_NODE_URL")?;
     // Dory setup
     let sigma = 12;
@@ -54,15 +55,24 @@ async fn main() -> Result<(), Box<dyn core::error::Error>> {
     };
     let client = Client::new();
     let apikey = std::env::var("SXT_API_KEY")?;
-    let access_token = auth::get_access_token(&apikey, &prover_url).await?;
-    let request = client
-        .post(format!("{}/v1/prove", prover_url))
+    // Usually it is the same as the prover root URL
+    let auth_root_url = std::env::var("AUTH_ROOT_URL")?;
+    let access_token = auth::get_access_token(&apikey, &auth_root_url).await?;
+    let response = client
+        .post(format!("https://{}/v1/prove", prover_root_url))
         .bearer_auth(&access_token)
         .json(&prover_query)
         .send()
         .await?
         .error_for_status()?;
-    let prover_response = request.json::<ProverResponse>().await?;
+    let serialized_prover_response = response.text().await?;
+    let prover_response = serde_json::from_str::<ProverResponse>(&serialized_prover_response)
+        .map_err(|_e| {
+            format!(
+                "Failed to parse prover response: {}",
+                &serialized_prover_response
+            )
+        })?;
     let stringified_verifiable_result = prover_response.verifiable_result.clone();
     let verifiable_result: VerifiableQueryResult<DoryEvaluationProof> =
         flexbuffers::from_slice(&stringified_verifiable_result)?;

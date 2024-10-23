@@ -24,7 +24,7 @@ type SxtConfig = PolkadotConfig;
 
 /// Convert PoSQL `Identifier` to SxT Core `BoundedVec<u8>`
 fn identifier_to_byte_string(identifier: &Identifier) -> BoundedVec<u8> {
-    BoundedVec::<u8>(identifier.as_str().as_bytes().to_vec())
+    BoundedVec::<u8>(identifier.as_str().to_uppercase().as_bytes().to_vec())
 }
 
 /// Convert PoSQL resource IDs to SxT Core table identifiers
