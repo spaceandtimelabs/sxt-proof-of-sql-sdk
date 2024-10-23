@@ -11,6 +11,13 @@ service Prover {
     rpc ingest(TableIngest) returns (google.protobuf.Empty) {}
 }
 
+// First value of enum is default value, so if no commitment
+// scheme is specified in ProverQuery, IPA is chosen by default
+enum CommitmentScheme {
+    IPA = 0;
+    DORY = 1;
+}
+
 message ProverContextRange {
     uint64 start = 1;
     repeated uint64 ends = 2;
@@ -24,6 +31,7 @@ message ChosenContextRange {
 message ProverQuery {
     bytes proof_plan = 1;
     map<string, ProverContextRange> query_context = 3;
+    CommitmentScheme commitment_scheme = 4;
 }
 
 message ProverResponse {
