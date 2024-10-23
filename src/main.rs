@@ -2,7 +2,6 @@ mod auth;
 mod substrate;
 mod sxt_chain_runtime;
 
-use core::time::Duration;
 use dotenv::dotenv;
 use proof_of_sql::{
     proof_primitive::dory::{
@@ -10,7 +9,8 @@ use proof_of_sql::{
     },
     sql::{parse::QueryExpr, proof::VerifiableQueryResult},
 };
-use prover::{prover_client::ProverClient, ProverContextRange, ProverQuery};
+use prover::{ProverContextRange, ProverQuery, ProverResponse};
+use reqwest::Client;
 use std::{collections::HashMap, path::Path};
 
 mod prover {
@@ -50,16 +50,20 @@ async fn main() -> Result<(), Box<dyn core::error::Error>> {
     let prover_query = ProverQuery {
         proof_plan: serialized_proof_plan,
         query_context,
+        commitment_scheme: 1,
     };
-    let mut client = ProverClient::connect(prover_url).await?;
-    let mut request = tonic::Request::new(prover_query);
-    request.set_timeout(Duration::from_secs(60));
-    let stringified_verifiable_result = client
-        .query_with_proof(request)
+    let client = Client::new();
+    let apikey = std::env::var("SXT_API_KEY")?;
+    let access_token = auth::get_access_token(&apikey, &prover_url).await?;
+    let request = client
+        .post(format!("{}/v1/prove", prover_url))
+        .bearer_auth(&access_token)
+        .json(&prover_query)
+        .send()
         .await?
-        .get_ref()
-        .verifiable_result
-        .clone();
+        .error_for_status()?;
+    let prover_response = request.json::<ProverResponse>().await?;
+    let stringified_verifiable_result = prover_response.verifiable_result.clone();
     let verifiable_result: VerifiableQueryResult<DoryEvaluationProof> =
         flexbuffers::from_slice(&stringified_verifiable_result)?;
     // Verify the proof
