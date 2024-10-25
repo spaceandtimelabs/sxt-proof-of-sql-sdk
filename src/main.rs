@@ -4,6 +4,7 @@ mod sxt_chain_runtime;
 
 use dotenv::dotenv;
 use proof_of_sql::{
+    base::database::TableRef,
     proof_primitive::dory::{
         DoryCommitment, DoryEvaluationProof, DoryVerifierPublicSetup, VerifierSetup,
     },
@@ -26,6 +27,7 @@ async fn main() -> Result<(), Box<dyn core::error::Error>> {
     let substrate_node_url = std::env::var("SUBSTRATE_NODE_URL")?;
     // Dory setup
     let sigma = 12;
+    //let verifier_setup = VerifierSetup::from(&public_parameters);
     let verifier_setup = VerifierSetup::load_from_file(Path::new("verifier_setup.bin"))?;
     let dory_verifier_setup = DoryVerifierPublicSetup::new(&verifier_setup, sigma);
     // Accessor setup
@@ -41,11 +43,13 @@ async fn main() -> Result<(), Box<dyn core::error::Error>> {
     let serialized_proof_plan = flexbuffers::to_vec(proof_plan)?;
     // Send the query to the prover
     let mut query_context = HashMap::new();
+    let table_ref = TableRef::new("ETHEREUM.CONTRACT_EVT_APPROVALFORALL".parse()?);
+    let commitment_range = accessor[&table_ref].range();
     query_context.insert(
         "ETHEREUM.CONTRACT_EVT_APPROVALFORALL".to_string(),
         ProverContextRange {
-            start: 0,
-            ends: vec![5],
+            start: commitment_range.start as u64,
+            ends: vec![commitment_range.end as u64],
         },
     );
     let prover_query = ProverQuery {

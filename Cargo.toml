@@ -9,8 +9,8 @@ dotenv = "0.15"
 flexbuffers = { version = "2.0.0" }
 futures = { version = "0.3.31"}
 postcard = { version = "1.0.10", default-features = false }
-proof-of-sql = { version = "0.33.5"}
-proof-of-sql-parser = { version = "0.33.5" }
+proof-of-sql = { version = "0.33.15" }
+proof-of-sql-parser = { version = "0.33.15" }
 prost = "0.12"
 reqwest = { version = "0.12", features = ["json"] }
 serde = { version = "1.0", features = ["serde_derive"] }
