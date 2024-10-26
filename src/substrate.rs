@@ -14,7 +14,7 @@ use proof_of_sql::{
         commitment::{QueryCommitments, TableCommitment},
         database::TableRef,
     },
-    proof_primitive::dory::DoryCommitment,
+    proof_primitive::dory::DynamicDoryCommitment,
 };
 use proof_of_sql_parser::{Identifier, ResourceId};
 use subxt::{OnlineClient, PolkadotConfig};
@@ -39,7 +39,7 @@ fn resource_id_to_table_id(resource_id: &ResourceId) -> TableIdentifier {
 pub async fn query_commitments(
     resource_ids: &[ResourceId],
     url: &str,
-) -> Result<QueryCommitments<DoryCommitment>, Box<dyn core::error::Error>> {
+) -> Result<QueryCommitments<DynamicDoryCommitment>, Box<dyn core::error::Error>> {
     let api = OnlineClient::<SxtConfig>::from_insecure_url(url).await?;
 
     // Create a collection of futures
@@ -59,7 +59,7 @@ pub async fn query_commitments(
                 .await?
                 .ok_or("Commitment not found")?;
             let table_commitments = postcard::from_bytes(&table_commitment_bytes.data.0)?;
-            Ok::<(TableRef, TableCommitment<DoryCommitment>), Box<dyn core::error::Error>>((
+            Ok::<(TableRef, TableCommitment<DynamicDoryCommitment>), Box<dyn core::error::Error>>((
                 TableRef::new(id),
                 table_commitments,
             ))
@@ -70,6 +70,6 @@ pub async fn query_commitments(
     let results = try_join_all(futures)
         .await?
         .into_iter()
-        .collect::<QueryCommitments<DoryCommitment>>();
+        .collect::<QueryCommitments<DynamicDoryCommitment>>();
     Ok(results)
 }
