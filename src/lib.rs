@@ -1,8 +1,9 @@
+mod args;
+pub use args::SdkArgs;
 mod auth;
 mod substrate;
 mod sxt_chain_runtime;
 
-use dotenv::dotenv;
 use proof_of_sql::{
     base::database::{OwnedTable, TableRef},
     proof_primitive::dory::{
@@ -22,20 +23,19 @@ mod prover {
 ///
 /// Run a SQL query and verify the result using Dynamic Dory.
 pub async fn query_and_verify(
-    sql: &str,
-    table_ref: TableRef,
+    args: &SdkArgs,
 ) -> Result<OwnedTable<DoryScalar>, Box<dyn core::error::Error>> {
-    dotenv().ok();
+    // Parse table_ref into TableRef struct
+    let table_ref = TableRef::new(args.table_ref.parse()?);
     let schema = table_ref.schema_id();
-    let prover_root_url = std::env::var("PROVER_ROOT_URL")?;
-    let substrate_node_url = std::env::var("SUBSTRATE_NODE_URL")?;
-    let verifier_setup = VerifierSetup::load_from_file(Path::new("verifier_setup.bin"))?;
+    let verifier_setup_path = Path::new(&args.verifier_setup);
+    let verifier_setup = VerifierSetup::load_from_file(&verifier_setup_path)?;
     // Accessor setup
     let accessor =
-        substrate::query_commitments(&[table_ref.resource_id()], &substrate_node_url).await?;
+        substrate::query_commitments(&[table_ref.resource_id()], &args.substrate_node_url).await?;
     // Parse the SQL query
     let query: QueryExpr<DynamicDoryCommitment> =
-        QueryExpr::try_new(sql.parse()?, schema, &accessor)?;
+        QueryExpr::try_new(args.query.parse()?, schema, &accessor)?;
     let proof_plan = query.proof_expr();
     let serialized_proof_plan = flexbuffers::to_vec(proof_plan)?;
     // Send the query to the prover
@@ -54,12 +54,9 @@ pub async fn query_and_verify(
         commitment_scheme: 1,
     };
     let client = Client::new();
-    let apikey = std::env::var("SXT_API_KEY")?;
-    // Usually it is the same as the prover root URL
-    let auth_root_url = std::env::var("AUTH_ROOT_URL")?;
-    let access_token = auth::get_access_token(&apikey, &auth_root_url).await?;
+    let access_token = auth::get_access_token(&args.sxt_api_key, &args.auth_root_url).await?;
     let response = client
-        .post(format!("https://{}/v1/prove", prover_root_url))
+        .post(format!("https://{}/v1/prove", &args.prover_root_url))
         .bearer_auth(&access_token)
         .json(&prover_query)
         .send()
