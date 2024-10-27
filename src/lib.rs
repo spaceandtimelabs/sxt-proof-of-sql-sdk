@@ -28,8 +28,9 @@ pub async fn query_and_verify(
     // Parse table_ref into TableRef struct
     let table_ref = TableRef::new(args.table_ref.parse()?);
     let schema = table_ref.schema_id();
+    // Load verifier setup
     let verifier_setup_path = Path::new(&args.verifier_setup);
-    let verifier_setup = VerifierSetup::load_from_file(&verifier_setup_path)?;
+    let verifier_setup = VerifierSetup::load_from_file(verifier_setup_path)?;
     // Accessor setup
     let accessor =
         substrate::query_commitments(&[table_ref.resource_id()], &args.substrate_node_url).await?;
