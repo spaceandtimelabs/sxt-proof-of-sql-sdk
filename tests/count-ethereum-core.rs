@@ -1,11 +1,7 @@
-use std::env;
-use std::fs::File;
-use std::path::Path;
-
-use clap::Parser;
 use futures::StreamExt;
 use indexmap::IndexMap;
 use proof_of_sql::base::database::{OwnedColumn, OwnedTable};
+use std::{env, fs::File, io::BufReader};
 use sxt_proof_of_sql_sdk::{query_and_verify, SdkArgs};
 
 const ETHEREUM_CORE_COUNTS_FILE: &str = "ethereum-core-counts.json";
@@ -44,6 +40,7 @@ async fn count_table(
         query,
         ..base_args
     };
+    dbg!("args: {args:?}");
 
     let table = query_and_verify(&args).await?;
     assert_eq!(table.num_columns(), 1);
@@ -57,16 +54,35 @@ async fn count_table(
     Ok(int_column[0])
 }
 
+/// Load the previous counts file
+async fn load_from_file() -> IndexMap<String, i64> {
+    let file = File::open(ETHEREUM_CORE_COUNTS_FILE).expect("failed to open file");
+    let mut reader = BufReader::new(&file);
+    serde_json::from_reader(&mut reader).expect("failed to parse file")
+}
+
+/// Save the current counts to a file
+async fn save_to_file(counts: IndexMap<String, i64>) {
+    let file = File::create(ETHEREUM_CORE_COUNTS_FILE).expect("failed to create file");
+    serde_json::to_writer(&file, &counts).expect("failed to write file");
+}
+
 #[tokio::test]
 async fn count_ethereum_tables() {
-    env::set_var("QUERY", "SELECT COUNT(*) FROM ETHEREUM.PLACEHOLDER");
-    env::set_var("TABLE_REF", "ETHEREUM.PLACEHOLDER");
-
     dotenv::dotenv().unwrap();
 
-    let base_args = SdkArgs::parse();
+    let base_args = SdkArgs {
+        prover_root_url: env::var("PROVER_ROOT_URL").unwrap_or("api.spaceandtime.dev".to_string()),
+        auth_root_url: env::var("AUTH_ROOT_URL").unwrap_or("api.spaceandtime.dev".to_string()),
+        substrate_node_url: env::var("SUBSTRATE_NODE_URL")
+            .unwrap_or("foo.bar.spaceandtime.dev".to_string()),
+        verifier_setup: env::var("VERIFIER_SETUP").unwrap_or("verifier_setup.bin".to_string()),
+        sxt_api_key: env::var("SXT_API_KEY").expect("SXT_API_KEY is required"),
+        query: "SELECT COUNT(*) FROM PLACEHOLDER".to_string(),
+        table_ref: "PLACEHOLDER".to_string(),
+    };
 
-    let current_counts: IndexMap<&str, i64> = futures::stream::iter(ETHEREUM_CORE_TABLES)
+    let current_counts: IndexMap<String, i64> = futures::stream::iter(ETHEREUM_CORE_TABLES)
         .filter_map(|table_ref| {
             let base_args = base_args.clone();
             async move {
@@ -76,9 +92,10 @@ async fn count_ethereum_tables() {
                     .inspect_err(|e| log::error!("failed to query count for {table_ref}: {e}"))
                     .ok()?;
 
-                Some((table_ref, count))
+                Some((table_ref.to_string(), count))
             }
         })
         .collect()
         .await;
+    println!("current_counts: {current_counts:?}");
 }
