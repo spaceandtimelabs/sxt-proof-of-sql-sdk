@@ -20,6 +20,11 @@ subxt = "0.37.0"
 tokio = { version = "1.0", features = ["rt-multi-thread", "macros"] }
 tonic = { version = "0.11", features = ["tls", "tls-roots"] }
 
+[dev-dependencies]
+log = "0.4.22"
+indexmap = "2.6.0"
+futures = "0.3.31"
+
 [build-dependencies]
 prost-build = "0.12"
 tonic-build = { version = "0.11" }
