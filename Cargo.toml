@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 ark-serialize = { version = "0.4.0", default-features = false }
+clap = { version = "4.5.20", features = ["derive", "env"] }
 dotenv = "0.15"
 flexbuffers = { version = "2.0.0" }
 futures = { version = "0.3.31"}
