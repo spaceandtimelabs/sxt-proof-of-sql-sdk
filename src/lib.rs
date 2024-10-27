@@ -18,29 +18,31 @@ mod prover {
     tonic::include_proto!("sxt.core");
 }
 
+/// Query and verify a SQL query
+///
+/// Run a SQL query and verify the result using Dynamic Dory.
 pub async fn query_and_verify(
     sql: &str,
-    table_id: TableRef,
+    table_ref: TableRef,
 ) -> Result<OwnedTable<DoryScalar>, Box<dyn core::error::Error>> {
     dotenv().ok();
+    let schema = table_ref.schema_id();
     let prover_root_url = std::env::var("PROVER_ROOT_URL")?;
     let substrate_node_url = std::env::var("SUBSTRATE_NODE_URL")?;
-    //let verifier_setup = VerifierSetup::from(&public_parameters);
     let verifier_setup = VerifierSetup::load_from_file(Path::new("verifier_setup.bin"))?;
     // Accessor setup
     let accessor =
-        substrate::query_commitments(&[table_id.resource_id()], &substrate_node_url).await?;
+        substrate::query_commitments(&[table_ref.resource_id()], &substrate_node_url).await?;
     // Parse the SQL query
     let query: QueryExpr<DynamicDoryCommitment> =
-        QueryExpr::try_new(sql.parse()?, "ETHEREUM".parse()?, &accessor)?;
+        QueryExpr::try_new(sql.parse()?, schema, &accessor)?;
     let proof_plan = query.proof_expr();
     let serialized_proof_plan = flexbuffers::to_vec(proof_plan)?;
     // Send the query to the prover
     let mut query_context = HashMap::new();
-    let table_ref = TableRef::new("ETHEREUM.CONTRACT_EVT_APPROVALFORALL".parse()?);
     let commitment_range = accessor[&table_ref].range();
     query_context.insert(
-        table_id.to_string().to_uppercase(),
+        table_ref.to_string().to_uppercase(),
         ProverContextRange {
             start: commitment_range.start as u64,
             ends: vec![commitment_range.end as u64],
