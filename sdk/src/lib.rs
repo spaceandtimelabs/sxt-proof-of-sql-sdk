@@ -42,6 +42,7 @@ pub async fn query_and_verify(
     // Send the query to the prover
     let mut query_context = HashMap::new();
     let commitment_range = accessor[&table_ref].range();
+
     query_context.insert(
         table_ref.to_string().to_uppercase(),
         ProverContextRange {

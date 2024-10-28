@@ -5,7 +5,7 @@ use clap::Parser;
 /// Supports environment variables and defaults for certain options.
 /// Environment variables are prioritized only if the argument is not passed
 /// via the command line.
-#[derive(Parser, Debug)]
+#[derive(Parser, Debug, Clone, PartialEq, Eq)]
 #[command(
     name = "Proof of SQL Client",
     version = "1.0",
