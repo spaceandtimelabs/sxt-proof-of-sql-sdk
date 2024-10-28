@@ -4,7 +4,7 @@ use proof_of_sql::{
     proof_primitive::dory::{
         DoryScalar, DynamicDoryCommitment, DynamicDoryEvaluationProof, VerifierSetup,
     },
-    sql::{parse::QueryExpr, proof::VerifiableQueryResult},
+    sql::{parse::QueryExpr, postprocessing::apply_postprocessing_steps, proof::VerifiableQueryResult},
 };
 use prover::{ProverContextRange, ProverQuery, ProverResponse};
 use reqwest::Client;
@@ -117,6 +117,15 @@ impl SxTClient {
         let owned_table_result = proof
             .verify(proof_plan, &accessor, &serialized_result, &&verifier_setup)?
             .table;
-        Ok(owned_table_result)
+        // Apply postprocessing steps
+        let postprocessing = query_expr.postprocessing();
+        if postprocessing.is_empty() {
+            Ok(owned_table_result)
+        } else {
+            println!("Postprocessing required");
+            let transformed_result: OwnedTable<DoryScalar> =
+                apply_postprocessing_steps(owned_table_result, postprocessing).unwrap();
+            Ok(transformed_result)
+        }
     }
 }
