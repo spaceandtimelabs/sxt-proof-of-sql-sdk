@@ -1,7 +1,10 @@
+use std::env;
+use std::fs::File;
+use std::io::BufReader;
+
 use futures::StreamExt;
 use indexmap::IndexMap;
-use proof_of_sql::base::database::{OwnedColumn, OwnedTable};
-use std::{env, fs::File, io::BufReader};
+use proof_of_sql::base::database::OwnedColumn;
 use sxt_proof_of_sql_sdk::{query_and_verify, SdkArgs};
 
 const ETHEREUM_CORE_COUNTS_FILE: &str = "ethereum-core-counts.json";
@@ -34,13 +37,12 @@ async fn count_table(
     table_ref: String,
     base_args: SdkArgs,
 ) -> Result<i64, Box<dyn core::error::Error>> {
-    let query = format!("SELECT COUNT(*) FROM {table_ref}");
+    let query = format!("SELECT * FROM {table_ref}");
     let args = SdkArgs {
         table_ref,
         query,
         ..base_args
     };
-    dbg!("args: {args:?}");
 
     let table = query_and_verify(&args).await?;
     assert_eq!(table.num_columns(), 1);
@@ -67,8 +69,9 @@ async fn save_to_file(counts: IndexMap<String, i64>) {
     serde_json::to_writer(&file, &counts).expect("failed to write file");
 }
 
-#[tokio::test]
-async fn count_ethereum_tables() {
+#[tokio::main]
+async fn main() {
+    env_logger::init();
     dotenv::dotenv().unwrap();
 
     let base_args = SdkArgs {
@@ -87,7 +90,7 @@ async fn count_ethereum_tables() {
             let base_args = base_args.clone();
             async move {
                 log::info!("querying count of {table_ref}");
-                let count = count_table(table_ref.to_string(), base_args)
+                let count = count_table(table_ref.to_string().to_uppercase(), base_args)
                     .await
                     .inspect_err(|e| log::error!("failed to query count for {table_ref}: {e}"))
                     .ok()?;
