@@ -1,6 +1,6 @@
 use clap::Parser;
 use dotenv::dotenv;
-use sxt_proof_of_sql_sdk::{query_and_verify, SdkArgs};
+use sxt_proof_of_sql_sdk::{SdkArgs, SxTClient};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn core::error::Error>> {
@@ -9,9 +9,12 @@ async fn main() -> Result<(), Box<dyn core::error::Error>> {
 
     // Parse command-line arguments
     let args = SdkArgs::parse();
+    let client: SxTClient = (&args).into();
 
     // Execute the query and verify the result
-    let result = query_and_verify(&args).await?;
+    let result = client
+        .query_and_verify(&args.query, &args.table_ref)
+        .await?;
 
     // Print the result of the query
     println!("Query result: {:?}", result);
