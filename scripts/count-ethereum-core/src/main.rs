@@ -1,12 +1,10 @@
-use std::env;
-use std::fs::File;
-use std::io::BufReader;
-
 use futures::StreamExt;
 use indexmap::IndexMap;
 use proof_of_sql::base::database::OwnedColumn;
+use std::{env, fs::File, io::BufReader};
 use sxt_proof_of_sql_sdk::{query_and_verify, SdkArgs};
 
+#[allow(dead_code)]
 const ETHEREUM_CORE_COUNTS_FILE: &str = "ethereum-core-counts.json";
 
 const ETHEREUM_CORE_TABLES: [&str; 21] = [
@@ -57,6 +55,7 @@ async fn count_table(
 }
 
 /// Load the previous counts file
+#[allow(dead_code)]
 async fn load_from_file() -> IndexMap<String, i64> {
     let file = File::open(ETHEREUM_CORE_COUNTS_FILE).expect("failed to open file");
     let mut reader = BufReader::new(&file);
@@ -64,6 +63,7 @@ async fn load_from_file() -> IndexMap<String, i64> {
 }
 
 /// Save the current counts to a file
+#[allow(dead_code)]
 async fn save_to_file(counts: IndexMap<String, i64>) {
     let file = File::create(ETHEREUM_CORE_COUNTS_FILE).expect("failed to create file");
     serde_json::to_writer(&file, &counts).expect("failed to write file");

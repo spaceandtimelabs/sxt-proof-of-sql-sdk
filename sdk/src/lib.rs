@@ -4,20 +4,16 @@ mod auth;
 mod substrate;
 mod sxt_chain_runtime;
 
-use std::collections::HashMap;
-use std::path::Path;
-
-use proof_of_sql::base::database::{OwnedTable, TableRef};
-use proof_of_sql::proof_primitive::dory::{
-    DoryScalar,
-    DynamicDoryCommitment,
-    DynamicDoryEvaluationProof,
-    VerifierSetup,
+use proof_of_sql::{
+    base::database::{OwnedTable, TableRef},
+    proof_primitive::dory::{
+        DoryScalar, DynamicDoryCommitment, DynamicDoryEvaluationProof, VerifierSetup,
+    },
+    sql::{parse::QueryExpr, proof::VerifiableQueryResult},
 };
-use proof_of_sql::sql::parse::QueryExpr;
-use proof_of_sql::sql::proof::VerifiableQueryResult;
 use prover::{ProverContextRange, ProverQuery, ProverResponse};
 use reqwest::Client;
+use std::{collections::HashMap, path::Path};
 
 mod prover {
     tonic::include_proto!("sxt.core");
