@@ -4,16 +4,20 @@ mod auth;
 mod substrate;
 mod sxt_chain_runtime;
 
-use proof_of_sql::{
-    base::database::{OwnedTable, TableRef},
-    proof_primitive::dory::{
-        DoryScalar, DynamicDoryCommitment, DynamicDoryEvaluationProof, VerifierSetup,
-    },
-    sql::{parse::QueryExpr, proof::VerifiableQueryResult},
+use std::collections::HashMap;
+use std::path::Path;
+
+use proof_of_sql::base::database::{OwnedTable, TableRef};
+use proof_of_sql::proof_primitive::dory::{
+    DoryScalar,
+    DynamicDoryCommitment,
+    DynamicDoryEvaluationProof,
+    VerifierSetup,
 };
+use proof_of_sql::sql::parse::QueryExpr;
+use proof_of_sql::sql::proof::VerifiableQueryResult;
 use prover::{ProverContextRange, ProverQuery, ProverResponse};
 use reqwest::Client;
-use std::{collections::HashMap, path::Path};
 
 mod prover {
     tonic::include_proto!("sxt.core");
@@ -42,6 +46,7 @@ pub async fn query_and_verify(
     // Send the query to the prover
     let mut query_context = HashMap::new();
     let commitment_range = accessor[&table_ref].range();
+
     query_context.insert(
         table_ref.to_string().to_uppercase(),
         ProverContextRange {
