@@ -12,7 +12,7 @@ use proof_of_sql::{
 };
 use prover::{ProverContextRange, ProverQuery, ProverResponse};
 use reqwest::Client;
-use std::{collections::HashMap, path::Path};
+use std::{collections::HashMap, path::Path, str::FromStr};
 
 mod prover {
     tonic::include_proto!("sxt.core");
@@ -21,7 +21,7 @@ mod prover {
 /// Level of postprocessing allowed
 ///
 /// Some postprocessing steps are expensive so we allow the user to control the level of postprocessing.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum PostprocessingLevel {
     /// No postprocessing allowed
     None,
@@ -29,6 +29,33 @@ pub enum PostprocessingLevel {
     Cheap,
     /// All postprocessing allowed
     All,
+}
+
+impl FromStr for PostprocessingLevel {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s.to_lowercase().as_str() {
+            "none" => Ok(PostprocessingLevel::None),
+            "cheap" => Ok(PostprocessingLevel::Cheap),
+            "all" => Ok(PostprocessingLevel::All),
+            _ => Err(format!("Invalid value for PostprocessingLevel: {}", s)),
+        }
+    }
+}
+
+impl std::fmt::Display for PostprocessingLevel {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            PostprocessingLevel::None => write!(f, "none"),
+            PostprocessingLevel::Cheap => write!(f, "cheap"),
+            PostprocessingLevel::All => write!(f, "expensive"),
+        }
+    }
+}
+
+pub(crate) fn parse_postprocessing_level(s: &str) -> Result<PostprocessingLevel, String> {
+    s.parse()
 }
 
 /// Space and Time (SxT) client
@@ -76,7 +103,7 @@ impl SxTClient {
     }
 
     /// Set the level of postprocessing allowed
-    pub fn with_postprocessing(&mut self, postprocessing_level: PostprocessingLevel) -> &mut Self {
+    pub fn with_postprocessing(mut self, postprocessing_level: PostprocessingLevel) -> Self {
         self.postprocessing_level = postprocessing_level;
         self
     }
@@ -146,9 +173,11 @@ impl SxTClient {
             .table;
         // Apply postprocessing steps
         let postprocessing = query_expr.postprocessing();
-        let is_postprocessing_expensive = postprocessing.iter().any(|step| match step {
-            OwnedTablePostprocessing::Slice(_) | OwnedTablePostprocessing::GroupBy(_) => true,
-            _ => false,
+        let is_postprocessing_expensive = postprocessing.iter().any(|step| {
+            matches!(
+                step,
+                OwnedTablePostprocessing::Slice(_) | OwnedTablePostprocessing::GroupBy(_)
+            )
         });
         match (self.postprocessing_level, postprocessing.len(), is_postprocessing_expensive) {
             (_, 0, false) => Ok(owned_table_result),
@@ -157,7 +186,7 @@ impl SxTClient {
                     apply_postprocessing_steps(owned_table_result, postprocessing)?;
                 Ok(transformed_result)
             }
-            _ => Err("Required postprocessing is not allowed. Please examine your query or change `PostprocessingLevel` using `client.with_postprocessing`".into()),
+            _ => Err("Required postprocessing is not allowed. Please examine your query or change `PostprocessingLevel` using `SxTClient::with_postprocessing`".into()),
         }
     }
 }

@@ -1,4 +1,4 @@
-use crate::{PostprocessingLevel, SxTClient};
+use crate::{parse_postprocessing_level, PostprocessingLevel, SxTClient};
 use clap::Parser;
 
 /// Struct to define and parse command-line arguments for Proof of SQL Client.
@@ -84,8 +84,8 @@ pub struct SdkArgs {
     #[arg(
         long,
         value_name = "POSTPROCESSING_LEVEL",
-        default_value = "PostprocessingLevel::Cheap",
-        value_enum,
+        default_value = "cheap",
+        value_parser = parse_postprocessing_level,
         help = "Level of postprocessing allowed, default is `Cheap`"
     )]
     pub postprocessing_level: PostprocessingLevel,
