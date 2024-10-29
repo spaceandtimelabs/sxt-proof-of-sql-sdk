@@ -72,9 +72,9 @@ async fn main() {
     dotenv::dotenv().unwrap();
 
     let client = Arc::new(SxTClient::new(
-        env::var("PROVER_ROOT_URL").unwrap_or("api.spaceandtime.dev".to_string()),
-        env::var("AUTH_ROOT_URL").unwrap_or("api.spaceandtime.dev".to_string()),
-        env::var("SUBSTRATE_NODE_URL").unwrap_or("foo.bar.spaceandtime.dev".to_string()),
+        env::var("PROVER_ROOT_URL").unwrap_or("https://api.spaceandtime.dev".to_string()),
+        env::var("AUTH_ROOT_URL").unwrap_or("https://proxy.api.spaceandtime.dev".to_string()),
+        env::var("SUBSTRATE_NODE_URL").unwrap_or("https://rpc.testnet.sxt.network".to_string()),
         env::var("SXT_API_KEY").expect("SXT_API_KEY is required"),
         env::var("VERIFIER_SETUP").unwrap_or("verifier_setup.bin".to_string()),
     ));

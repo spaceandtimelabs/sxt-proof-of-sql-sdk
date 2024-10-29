@@ -18,28 +18,21 @@ mod prover {
 #[derive(Debug, Clone)]
 pub struct SxTClient {
     /// Root URL for the Prover service
-    ///
-    /// This URL is used for interacting with the prover service.
     pub prover_root_url: String,
 
     /// Root URL for the Auth service
-    ///
-    /// Used for authentication requests. Generally the same as the Prover Root URL.
     pub auth_root_url: String,
 
     /// URL for the Substrate node service
-    ///
-    /// Specifies the Substrate node endpoint used for accessing commitment data.
     pub substrate_node_url: String,
 
     /// API Key for Space and Time (SxT) services
     ///
-    /// The API key required for authorization with Space and Time services.
+    /// Please visit [Space and Time Studio](https://app.spaceandtime.ai/) to obtain an API key
+    /// if you do not have one.
     pub sxt_api_key: String,
 
     /// Path to the verifier setup binary file
-    ///
-    /// Specifies the path to the `verifier_setup.bin` file required for verification.
     pub verifier_setup: String,
 }
 
@@ -101,7 +94,7 @@ impl SxTClient {
         let client = Client::new();
         let access_token = get_access_token(&self.sxt_api_key, &self.auth_root_url).await?;
         let response = client
-            .post(format!("https://{}/v1/prove", &self.prover_root_url))
+            .post(format!("{}/v1/prove", &self.prover_root_url))
             .bearer_auth(&access_token)
             .json(&prover_query)
             .send()
