@@ -1,5 +1,5 @@
-use crate::{PostprocessingLevel, SxTClient};
 use clap::Parser;
+use sxt_proof_of_sql_sdk::{PostprocessingLevel, SxTClient};
 
 /// Struct to define and parse command-line arguments for Proof of SQL Client.
 ///
