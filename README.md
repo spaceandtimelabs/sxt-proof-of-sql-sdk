@@ -1,7 +1,8 @@
 # Space and Time (SxT) Proof of SQL SDK
 
 An SDK to help users interact with the Space and Time (SxT) TestNet and execute Proof of SQL queries.
-Introduction
+
+## Introduction
 
 The Space and Time Proof of SQL SDK is a Rust crate designed to simplify the process of running SQL queries against the Space and Time TestNet and verifying the results using cryptographic proofs. It leverages the [Proof of SQL](https://github.com/spaceandtimelabs/sxt-proof-of-sql) framework to ensure the integrity and correctness of query results.
 
@@ -58,11 +59,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 ```
 
-Note: Replace "your_sxt_api_key" with your actual SxT API key, and ensure the `verifier_setup.bin` file is correctly specified.
+Note: Replace "your_sxt_api_key" with your actual SxT API key, and ensure the `verifier_setup.bin` file is correctly specified. You can use the [file here](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/blob/main/verifier_setup.bin) or fetch the files [here](https://github.com/spaceandtimelabs/sxt-proof-of-sql/releases/tag/dory-prover-params-nu-16).
 
 ## Getting an API Key
 
-To obtain an API key for accessing SxT services, please visit the [Space and Time Studio](https://app.spaceandtime.ai/).
+To obtain an API key for accessing SxT services, please visit the [Space and Time Studio](https://docs.spaceandtime.io/docs/accreditation-use-api-keys).
 
 ## License
 
