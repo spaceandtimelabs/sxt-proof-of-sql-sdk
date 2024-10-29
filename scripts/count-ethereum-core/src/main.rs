@@ -36,7 +36,7 @@ async fn count_table(
     table_ref: &str,
 ) -> Result<i64, Box<dyn core::error::Error>> {
     let uppercased_table_ref = table_ref.to_uppercase();
-    let query = format!("SELECT * FROM {uppercased_table_ref}");
+    let query = format!("SELECT COUNT(*) FROM {uppercased_table_ref}");
     let table = client
         .query_and_verify(&query, &uppercased_table_ref)
         .await?;
