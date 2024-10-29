@@ -1,5 +1,5 @@
 use crate::{PostprocessingLevel, SxTClient};
-use clap::{Parser, ValueEnum};
+use clap::Parser;
 
 /// Struct to define and parse command-line arguments for Proof of SQL Client.
 ///
@@ -88,30 +88,7 @@ pub struct SdkArgs {
         value_enum,
         help = "Level of postprocessing allowed, default is `Cheap`"
     )]
-    pub postprocessing_level: PostprocessingLevelArg,
-}
-
-/// Level of postprocessing allowed.
-///
-/// We have it as a separate enum from `PostprocessingLevel` so that the core of the lib won't depend on `clap`.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, ValueEnum)]
-pub enum PostprocessingLevelArg {
-    /// No postprocessing allowed
-    None,
-    /// Only cheap postprocessing allowed
-    Cheap,
-    /// All postprocessing allowed
-    All,
-}
-
-impl From<PostprocessingLevelArg> for PostprocessingLevel {
-    fn from(arg: PostprocessingLevelArg) -> Self {
-        match arg {
-            PostprocessingLevelArg::None => PostprocessingLevel::None,
-            PostprocessingLevelArg::Cheap => PostprocessingLevel::Cheap,
-            PostprocessingLevelArg::All => PostprocessingLevel::All,
-        }
-    }
+    pub postprocessing_level: PostprocessingLevel,
 }
 
 impl From<&SdkArgs> for SxTClient {
