@@ -1,38 +1,69 @@
-# Sxt Proof Of Sql Sdk
+# Space and Time (SxT) Proof of SQL SDK
 
-sxt-node
+An SDK to help users interact with the Space and Time (SxT) TestNet and execute Proof of SQL queries.
+Introduction
 
-## 📑 Table of Contents
+The Space and Time Proof of SQL SDK is a Rust crate designed to simplify the process of running SQL queries against the Space and Time TestNet and verifying the results using cryptographic proofs. It leverages the [Proof of SQL](https://github.com/spaceandtimelabs/sxt-proof-of-sql) framework to ensure the integrity and correctness of query results.
 
-- [🛠️ Installation](#installation)
-- [🚀 Usage](#usage)
-- [🤝 Contributing](#contributing)
-  - [📝 Commit Messages](#commit-messages)
-- [📧 Contact](#contact)
-- [📚 Additional Resources](#additional-resources)
+## Installation
 
-## <a name="installation"></a>🛠️ Installation
+Add the following to your `Cargo.toml`:
 
-Provide instructions on how to install or set up the project. Include any dependencies that need to be installed and how to install them.
+```toml
+[dependencies]
+sxt-proof-of-sql-sdk = "0.1.0"
+```
+Then, run:
 
-## <a name="usage"></a>🚀 Usage
+```bash
+cargo build
+```
 
-Explain how to use the project. Provide examples if applicable. This could include command line instructions, code snippets, or screenshots.
+## Usage
+### Running Examples
 
-## <a name="contributing"></a>🤝 Contributing
+To run the provided example that counts entries in the Ethereum core table:
 
-If you would like others to contribute to your project, provide guidelines for how they can do so. This could include information on how to report bugs, suggest enhancements, or submit pull requests.
+```bash
 
-#### <a name="commit-messages"></a>📝 Commit Messages
+cargo run --example cli -- -q "select * from ethereum.blocks" --table-ref "ethereum.blocks"
+```
 
-Please ensure your commits follow the [Conventional Commit](https://www.conventionalcommits.org/en/v1.0.0/) standards. Doing so allows our CI system to properly categorize changes during the release process.
+### Basic Usage in Code
 
-## <a name="contact"></a>📧 Contact
+Here's how you can use the `SxTClient` in your Rust application:
 
-For questions on this repository, please reach out to [JayWhite2357](https://github.com/JayWhite2357).
+```rust
 
-## <a name="additional-resources"></a>📚 Additional Resources
+use sxt_proof_of_sql_sdk::SxTClient;
 
-- [📋 Changelog](CHANGELOG.md)
-- [📜 License](LICENSE)
-- [👨‍💻 Code Owners](CODEOWNERS)
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Initialize the SxT client with necessary URLs and API key
+    let client = SxTClient::new(
+        "https://api.spaceandtime.dev".to_string(),
+        "https://proxy.api.spaceandtime.dev".to_string(),
+        "https://rpc.testnet.sxt.network".to_string(),
+        "your_sxt_api_key".to_string(),
+        "path/to/verifier_setup.bin".to_string(),
+    );
+
+    // Execute and verify a SQL query
+    let result = client
+        .query_and_verify("SELECT COUNT(*) FROM ethereum.transactions", "ethereum.transactions")
+        .await?;
+
+    println!("Query Result: {:?}", result);
+    Ok(())
+}
+```
+
+Note: Replace "your_sxt_api_key" with your actual SxT API key, and ensure the `verifier_setup.bin` file is correctly specified.
+
+## Getting an API Key
+
+To obtain an API key for accessing SxT services, please visit the [Space and Time Studio](https://app.spaceandtime.ai/).
+
+## License
+
+This project is licensed under the terms of the [Cryptographic Open Software License 1.0](https://github.com/spaceandtimelabs/sxt-proof-of-sql/blob/main/LICENSE).
