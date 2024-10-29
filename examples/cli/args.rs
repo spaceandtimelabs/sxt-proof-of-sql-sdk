@@ -100,6 +100,6 @@ impl From<&SdkArgs> for SxTClient {
             args.sxt_api_key.clone(),
             args.verifier_setup.clone(),
         )
-        .with_postprocessing(args.postprocessing_level.into())
+        .with_postprocessing(args.postprocessing_level)
     }
 }
