@@ -1,5 +1,5 @@
-use crate::SxTClient;
 use clap::Parser;
+use sxt_proof_of_sql_sdk::{PostprocessingLevel, SxTClient};
 
 /// Struct to define and parse command-line arguments for Proof of SQL Client.
 ///
@@ -44,7 +44,7 @@ pub struct SdkArgs {
     #[arg(
         long,
         value_name = "SUBSTRATE_NODE_URL",
-        default_value = "https://rpc.testnet.sxt.network",
+        default_value = "wss://rpc.testnet.sxt.network",
         env = "SUBSTRATE_NODE_URL"
     )]
     pub substrate_node_url: String,
@@ -79,6 +79,16 @@ pub struct SdkArgs {
         default_value = "verifier_setup.bin"
     )]
     pub verifier_setup: String,
+
+    /// Level of postprocessing allowed. Default is `Cheap`.
+    #[arg(
+        long,
+        value_name = "POSTPROCESSING_LEVEL",
+        default_value = "cheap",
+        value_enum,
+        help = "Level of postprocessing allowed, default is `Cheap`"
+    )]
+    pub postprocessing_level: PostprocessingLevel,
 }
 
 impl From<&SdkArgs> for SxTClient {
@@ -90,5 +100,6 @@ impl From<&SdkArgs> for SxTClient {
             args.sxt_api_key.clone(),
             args.verifier_setup.clone(),
         )
+        .with_postprocessing(args.postprocessing_level)
     }
 }

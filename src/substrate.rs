@@ -50,7 +50,7 @@ pub async fn query_commitments(
             let table_id = resource_id_to_table_id(&id);
             let commitments_query = storage()
                 .commitments()
-                .commitment_storage_map(&table_id, &CommitmentScheme::Dory);
+                .commitment_storage_map(&table_id, &CommitmentScheme::DynamicDory);
             let table_commitment_bytes: TableCommitmentBytes = api
                 .storage()
                 .at_latest()

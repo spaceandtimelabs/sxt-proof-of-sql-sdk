@@ -1,10 +1,15 @@
 use crate::{get_access_token, query_commitments};
+use clap::ValueEnum;
 use proof_of_sql::{
     base::database::{OwnedTable, TableRef},
     proof_primitive::dory::{
         DoryScalar, DynamicDoryCommitment, DynamicDoryEvaluationProof, VerifierSetup,
     },
-    sql::{parse::QueryExpr, proof::VerifiableQueryResult},
+    sql::{
+        parse::QueryExpr,
+        postprocessing::{apply_postprocessing_steps, OwnedTablePostprocessing},
+        proof::VerifiableQueryResult,
+    },
 };
 use prover::{ProverContextRange, ProverQuery, ProverResponse};
 use reqwest::Client;
@@ -12,6 +17,19 @@ use std::{collections::HashMap, path::Path};
 
 mod prover {
     tonic::include_proto!("sxt.core");
+}
+
+/// Level of postprocessing allowed
+///
+/// Some postprocessing steps are expensive so we allow the user to control the level of postprocessing.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, ValueEnum)]
+pub enum PostprocessingLevel {
+    /// No postprocessing allowed
+    None,
+    /// Only cheap postprocessing allowed
+    Cheap,
+    /// All postprocessing allowed
+    All,
 }
 
 /// Space and Time (SxT) client
@@ -34,6 +52,9 @@ pub struct SxTClient {
 
     /// Path to the verifier setup binary file
     pub verifier_setup: String,
+
+    /// Level of postprocessing allowed. Default is [`PostprocessingLevel::Cheap`].
+    pub postprocessing_level: PostprocessingLevel,
 }
 
 impl SxTClient {
@@ -51,7 +72,14 @@ impl SxTClient {
             substrate_node_url,
             sxt_api_key,
             verifier_setup,
+            postprocessing_level: PostprocessingLevel::Cheap,
         }
+    }
+
+    /// Set the level of postprocessing allowed
+    pub fn with_postprocessing(mut self, postprocessing_level: PostprocessingLevel) -> Self {
+        self.postprocessing_level = postprocessing_level;
+        self
     }
 
     /// Query and verify a SQL query
@@ -117,6 +145,22 @@ impl SxTClient {
         let owned_table_result = proof
             .verify(proof_plan, &accessor, &serialized_result, &&verifier_setup)?
             .table;
-        Ok(owned_table_result)
+        // Apply postprocessing steps
+        let postprocessing = query_expr.postprocessing();
+        let is_postprocessing_expensive = postprocessing.iter().any(|step| {
+            matches!(
+                step,
+                OwnedTablePostprocessing::Slice(_) | OwnedTablePostprocessing::GroupBy(_)
+            )
+        });
+        match (self.postprocessing_level, postprocessing.len(), is_postprocessing_expensive) {
+            (_, 0, false) => Ok(owned_table_result),
+            (PostprocessingLevel::All, _, _) | (PostprocessingLevel::Cheap, _, false) => {
+                let transformed_result: OwnedTable<DoryScalar> =
+                    apply_postprocessing_steps(owned_table_result, postprocessing)?;
+                Ok(transformed_result)
+            }
+            _ => Err("Required postprocessing is not allowed. Please examine your query or change `PostprocessingLevel` using `SxTClient::with_postprocessing`".into()),
+        }
     }
 }
