@@ -63,7 +63,7 @@ Note: Replace "your_sxt_api_key" with your actual SxT API key, and ensure the `v
 
 ## Getting an API Key
 
-To obtain an API key for accessing SxT services, please visit the [Space and Time Studio](https://docs.spaceandtime.io/docs/accreditation-use-api-keys).
+To obtain an API key for accessing SxT services, please refer to the [Space and Time docs](https://docs.spaceandtime.io/docs/accreditation-use-api-keys).
 
 ## License
 
