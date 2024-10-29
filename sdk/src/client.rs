@@ -12,7 +12,7 @@ use proof_of_sql::{
 };
 use prover::{ProverContextRange, ProverQuery, ProverResponse};
 use reqwest::Client;
-use std::{collections::HashMap, path::Path, str::FromStr};
+use std::{collections::HashMap, path::Path};
 
 mod prover {
     tonic::include_proto!("sxt.core");
@@ -29,33 +29,6 @@ pub enum PostprocessingLevel {
     Cheap,
     /// All postprocessing allowed
     All,
-}
-
-impl FromStr for PostprocessingLevel {
-    type Err = String;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s.to_lowercase().as_str() {
-            "none" => Ok(PostprocessingLevel::None),
-            "cheap" => Ok(PostprocessingLevel::Cheap),
-            "all" => Ok(PostprocessingLevel::All),
-            _ => Err(format!("Invalid value for PostprocessingLevel: {}", s)),
-        }
-    }
-}
-
-impl std::fmt::Display for PostprocessingLevel {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            PostprocessingLevel::None => write!(f, "none"),
-            PostprocessingLevel::Cheap => write!(f, "cheap"),
-            PostprocessingLevel::All => write!(f, "expensive"),
-        }
-    }
-}
-
-pub(crate) fn parse_postprocessing_level(s: &str) -> Result<PostprocessingLevel, String> {
-    s.parse()
 }
 
 /// Space and Time (SxT) client

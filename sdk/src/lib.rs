@@ -1,9 +1,8 @@
 mod args;
-pub use args::SdkArgs;
+pub use args::{PostprocessingLevelArg, SdkArgs};
 mod auth;
 pub use auth::get_access_token;
 mod client;
-pub(crate) use client::parse_postprocessing_level;
 pub use client::{PostprocessingLevel, SxTClient};
 mod substrate;
 pub use substrate::query_commitments;
