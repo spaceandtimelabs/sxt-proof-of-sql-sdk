@@ -1227,22 +1227,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "773648b94d0e5d620f64f280777445740e61fe701025087ec8b57f45c791888b"
 
 [[package]]
-name = "count-ethereum-core"
-version = "0.1.0"
-dependencies = [
- "clap",
- "dotenv",
- "env_logger",
- "futures",
- "indexmap 2.6.0",
- "log",
- "proof-of-sql",
- "serde_json",
- "sxt-proof-of-sql-sdk",
- "tokio",
-]
-
-[[package]]
 name = "cpufeatures"
 version = "0.2.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4730,8 +4714,11 @@ dependencies = [
  "ark-serialize",
  "clap",
  "dotenv",
+ "env_logger",
  "flexbuffers",
  "futures",
+ "indexmap 2.6.0",
+ "log",
  "postcard",
  "proof-of-sql",
  "proof-of-sql-parser",

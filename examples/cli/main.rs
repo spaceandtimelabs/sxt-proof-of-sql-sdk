@@ -1,6 +1,9 @@
+mod args;
+
+use crate::args::SdkArgs;
 use clap::Parser;
 use dotenv::dotenv;
-use sxt_proof_of_sql_sdk::{SdkArgs, SxTClient};
+use sxt_proof_of_sql_sdk::SxTClient;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn core::error::Error>> {

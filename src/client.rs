@@ -1,4 +1,5 @@
 use crate::{get_access_token, query_commitments};
+use clap::ValueEnum;
 use proof_of_sql::{
     base::database::{OwnedTable, TableRef},
     proof_primitive::dory::{
@@ -21,7 +22,7 @@ mod prover {
 /// Level of postprocessing allowed
 ///
 /// Some postprocessing steps are expensive so we allow the user to control the level of postprocessing.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, ValueEnum)]
 pub enum PostprocessingLevel {
     /// No postprocessing allowed
     None,
