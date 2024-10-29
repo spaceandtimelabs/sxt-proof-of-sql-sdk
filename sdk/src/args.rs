@@ -1,3 +1,4 @@
+use crate::SxTClient;
 use clap::Parser;
 
 /// Struct to define and parse command-line arguments for Proof of SQL Client.
@@ -19,19 +20,19 @@ pub struct SdkArgs {
     #[arg(
         long,
         value_name = "PROVER_ROOT_URL",
-        default_value = "api.spaceandtime.dev",
+        default_value = "https://api.spaceandtime.dev",
         env = "PROVER_ROOT_URL"
     )]
     pub prover_root_url: String,
 
     /// Root URL for the Auth service
     ///
-    /// Used for authentication requests. Generally the same as the Prover Root URL.
+    /// Used for authentication requests.
     /// Can be set via AUTH_ROOT_URL environment variable.
     #[arg(
         long,
         value_name = "AUTH_ROOT_URL",
-        default_value = "api.spaceandtime.dev",
+        default_value = "https://proxy.api.spaceandtime.dev",
         env = "AUTH_ROOT_URL"
     )]
     pub auth_root_url: String,
@@ -43,7 +44,7 @@ pub struct SdkArgs {
     #[arg(
         long,
         value_name = "SUBSTRATE_NODE_URL",
-        default_value = "foo.bar.spaceandtime.dev",
+        default_value = "https://rpc.testnet.sxt.network",
         env = "SUBSTRATE_NODE_URL"
     )]
     pub substrate_node_url: String,
@@ -78,4 +79,16 @@ pub struct SdkArgs {
         default_value = "verifier_setup.bin"
     )]
     pub verifier_setup: String,
+}
+
+impl From<&SdkArgs> for SxTClient {
+    fn from(args: &SdkArgs) -> Self {
+        Self::new(
+            args.prover_root_url.clone(),
+            args.auth_root_url.clone(),
+            args.substrate_node_url.clone(),
+            args.sxt_api_key.clone(),
+            args.verifier_setup.clone(),
+        )
+    }
 }

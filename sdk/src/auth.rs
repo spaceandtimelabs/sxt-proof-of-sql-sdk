@@ -9,7 +9,7 @@ pub async fn get_access_token(
     url: &str,
 ) -> Result<String, Box<dyn core::error::Error>> {
     let client = Client::new();
-    let auth_url = format!("https://proxy.{}/auth/apikey", url);
+    let auth_url = format!("{}/auth/apikey", url);
     let response = client
         .post(auth_url)
         .header("apikey", apikey)
