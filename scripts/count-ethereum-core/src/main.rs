@@ -1,7 +1,7 @@
 use futures::StreamExt;
 use indexmap::IndexMap;
 use proof_of_sql::base::database::OwnedColumn;
-use std::{env, fs::File, io::BufReader, path::Path, sync::Arc};
+use std::{cmp::Ordering, env, fs::File, io::BufReader, path::Path, sync::Arc};
 use sxt_proof_of_sql_sdk::SxTClient;
 
 const ETHEREUM_CORE_COUNTS_FILE: &str = "ethereum-core-counts.json";
@@ -58,22 +58,21 @@ fn compare_counts(
     table_names: &[&str],
 ) {
     for table_name in table_names {
-        let current_count = current_counts.get(*table_name);
-        let previous_count = previous_counts.get(*table_name);
-        match (current_count, previous_count) {
-            (Some(current), Some(previous)) => {
-                if current < previous {
-                    log::warn!("count of {table_name} decreased from {previous} to {current}");
-                }
+        let current_count = current_counts.get(*table_name).unwrap_or(&0);
+        let previous_count = previous_counts.get(*table_name).unwrap_or(&0);
+        match previous_count.cmp(current_count) {
+            Ordering::Less => {
+                log::info!(
+                    "count of {table_name} increased from {previous_count} to {current_count}"
+                );
             }
-            (None, Some(previous)) => {
-                log::warn!("count of {table_name} decreased from {previous} to 0");
+            Ordering::Equal => {
+                log::warn!("count of {table_name} was and remains {current_count}");
             }
-            (Some(current), None) => {
-                log::info!("count of {table_name} increased from 0 to {current}");
-            }
-            (None, None) => {
-                log::info!("count of {table_name} is 0");
+            Ordering::Greater => {
+                log::error!(
+                    "count of {table_name} decreased from {previous_count} to {current_count}"
+                );
             }
         }
     }
