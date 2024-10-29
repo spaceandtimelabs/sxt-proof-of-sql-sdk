@@ -66,4 +66,4 @@ To obtain an API key for accessing SxT services, please visit the [Space and Tim
 
 ## License
 
-This project is licensed under the terms of the [Cryptographic Open Software License 1.0](https://github.com/spaceandtimelabs/sxt-proof-of-sql/blob/main/LICENSE).
+This project is licensed under the terms of the [Cryptographic Open Software License 1.0](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/blob/main/LICENSE).
