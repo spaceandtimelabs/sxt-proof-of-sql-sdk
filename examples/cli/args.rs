@@ -44,7 +44,7 @@ pub struct SdkArgs {
     #[arg(
         long,
         value_name = "SUBSTRATE_NODE_URL",
-        default_value = "https://rpc.testnet.sxt.network",
+        default_value = "wss://rpc.testnet.sxt.network",
         env = "SUBSTRATE_NODE_URL"
     )]
     pub substrate_node_url: String,
