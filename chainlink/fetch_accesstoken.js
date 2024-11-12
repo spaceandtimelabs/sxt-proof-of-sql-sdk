@@ -1,8 +1,15 @@
 // This code constructs a payload to fetch an accesstoken to be used for
 // api access to the prover. It is a required component of the payload to 
 // receive a proof.
+//
 // This code can be run at https://functions.chain.link/playground
-// Set the secrets field to an apiKey that you own for your sxt account.
+// Set the secrets field to: 
+// apiKey
+// and set the value to a key 
+// that you own for an sxt account.
+import { Functions } from "./common.js";
+import { secrets } from "./secrets.js";
+
 
 // Ensure the API key is available
 if (!secrets.apiKey) {
