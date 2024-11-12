@@ -1,4 +1,8 @@
-use crate::{get_access_token, query_commitments};
+use crate::{
+    get_access_token,
+    prover::{ProverContextRange, ProverQuery, ProverResponse},
+    query_commitments,
+};
 use clap::ValueEnum;
 use proof_of_sql::{
     base::database::{OwnedTable, TableRef},
@@ -11,13 +15,8 @@ use proof_of_sql::{
         proof::VerifiableQueryResult,
     },
 };
-use prover::{ProverContextRange, ProverQuery, ProverResponse};
 use reqwest::Client;
 use std::{collections::HashMap, path::Path};
-
-mod prover {
-    tonic::include_proto!("sxt.core");
-}
 
 /// Level of postprocessing allowed
 ///
