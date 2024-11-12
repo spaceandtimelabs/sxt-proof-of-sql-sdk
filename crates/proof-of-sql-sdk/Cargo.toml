@@ -1,0 +1,39 @@
+[package]
+name = "sxt-proof-of-sql-sdk"
+version = { workspace = true }
+edition = { workspace = true }
+repository = { workspace = true }
+license-file = { workspace = true }
+
+[dependencies]
+ark-serialize = { workspace = true, default-features = false }
+clap = { workspace = true, features = ["derive", "env"] }
+dotenv.workspace = true
+env_logger.workspace = true
+flexbuffers = { workspace = true }
+futures = { workspace = true}
+log.workspace = true
+indexmap.workspace = true
+postcard = { workspace = true, default-features = false }
+proof-of-sql = { workspace = true }
+proof-of-sql-parser = { workspace = true }
+prost.workspace = true
+reqwest = { workspace = true, features = ["json"] }
+serde = { workspace = true, features = ["serde_derive"] }
+serde_json.workspace = true
+snafu = { workspace = true, default-features = false }
+subxt.workspace = true
+tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }
+tonic = { workspace = true, features = ["tls", "tls-roots"] }
+
+[build-dependencies]
+prost-build.workspace = true
+tonic-build = { workspace = true }
+
+[[example]]
+name = "cli"
+path = "examples/cli/main.rs"
+
+[[example]]
+name = "count-ethereum-core"
+path = "examples/count-ethereum-core/main.rs"
