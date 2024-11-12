@@ -27,5 +27,7 @@ const apiResponse = await Functions.makeHttpRequest({
 });
 
 // Return the result property from the response data as an encoded string
+// Note: this is truncated only for testing, the playground gives an error if the output is 
+// greater than 256 bytes
 const truncatedResult = apiResponse.data.result.slice(0, 256);
 return Functions.encodeString(truncatedResult);

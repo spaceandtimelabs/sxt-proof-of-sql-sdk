@@ -27,5 +27,7 @@ const apiResponse = await Functions.makeHttpRequest({
 });
 
 // Extract the access token, truncate it to 256 characters, and return it as an encoded string
+// Note: this is truncated only for testing, the playground gives an error if the output is 
+// greater than 256 bytes
 const truncatedAccessToken = apiResponse.data.accessToken.slice(0, 256);
 return Functions.encodeString(truncatedAccessToken);
