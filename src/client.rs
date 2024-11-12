@@ -1,5 +1,5 @@
 use crate::{
-    get_access_token,
+    get_access_token, plan_prover_query_dory,
     prover::{ProverContextRange, ProverQuery, ProverResponse},
     query_commitments,
 };
@@ -91,33 +91,16 @@ impl SxTClient {
     ) -> Result<OwnedTable<DoryScalar>, Box<dyn core::error::Error>> {
         // Parse table_ref into TableRef struct
         let table_ref = TableRef::new(table.parse()?);
-        let schema = table_ref.schema_id();
+
         // Load verifier setup
         let verifier_setup_path = Path::new(&self.verifier_setup);
         let verifier_setup = VerifierSetup::load_from_file(verifier_setup_path)?;
         // Accessor setup
         let accessor =
             query_commitments(&[table_ref.resource_id()], &self.substrate_node_url).await?;
-        // Parse the SQL query
-        let query_expr: QueryExpr<DynamicDoryCommitment> =
-            QueryExpr::try_new(query.parse()?, schema, &accessor)?;
-        let proof_plan = query_expr.proof_expr();
-        let serialized_proof_plan = flexbuffers::to_vec(proof_plan)?;
-        // Send the query to the prover
-        let mut query_context = HashMap::new();
-        let commitment_range = accessor[&table_ref].range();
-        query_context.insert(
-            table_ref.to_string().to_uppercase(),
-            ProverContextRange {
-                start: commitment_range.start as u64,
-                ends: vec![commitment_range.end as u64],
-            },
-        );
-        let prover_query = ProverQuery {
-            proof_plan: serialized_proof_plan,
-            query_context,
-            commitment_scheme: 1,
-        };
+
+        let (prover_query, query_expr) = plan_prover_query_dory(query, &accessor)?;
+
         let client = Client::new();
         let access_token = get_access_token(&self.sxt_api_key, &self.auth_root_url).await?;
         let response = client
