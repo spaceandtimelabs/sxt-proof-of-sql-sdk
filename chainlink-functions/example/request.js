@@ -34,7 +34,7 @@ const makeRequestSepolia = async () => {
     .toString();
 
   const args = [];
-  const secrets = { apiKey: "TODO" }; // NOTE: be sure to modify source.js to use this secret properly when actually adding a secret.
+  const secrets = { apiKey: process.env.SXT_API_KEY };
   const slotIdNumber = 0; // slot ID where to upload the secrets
   const expirationTimeMinutes = 15; // expiration time in minutes of the secrets
   const gasLimit = 300000;
