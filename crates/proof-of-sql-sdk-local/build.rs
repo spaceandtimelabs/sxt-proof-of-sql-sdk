@@ -13,6 +13,8 @@ fn main() {
     tonic_build::configure()
         .type_attribute(".", "#[derive(serde::Serialize,serde::Deserialize)]")
         .type_attribute(".", "#[allow(clippy::all)]")
+        .build_client(cfg!(feature = "prover-client"))
+        .build_server(false)
         .compile(&proto_defs, &[&proto_path])
         .unwrap();
 }

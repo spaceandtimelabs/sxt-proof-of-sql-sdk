@@ -1,10 +1,14 @@
-[package]
-name = "sxt-proof-of-sql-sdk"
-version = "0.1.0"
-edition = "2021"
+[workspace]
 resolver = "2"
+members = ["crates/proof-of-sql-sdk-local", "crates/proof-of-sql-sdk/"]
 
-[dependencies]
+[workspace.package]
+edition = "2021"
+repository = "https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk"
+version = "0.1.0"
+license-file = "LICENSE"
+
+[workspace.dependencies]
 ark-serialize = { version = "0.4.0", default-features = false }
 clap = { version = "4.5.20", features = ["derive", "env"] }
 dotenv = "0.15"
@@ -14,24 +18,16 @@ futures = { version = "0.3.31"}
 log = "0.4.22"
 indexmap = "2.6.0"
 postcard = { version = "1.0.10", default-features = false }
-proof-of-sql = { version = "0.34.1" }
-proof-of-sql-parser = { version = "0.34.1" }
+proof-of-sql = { version = "0.34.1", default-features = false }
+proof-of-sql-parser = { version = "0.34.1", default-features = false }
 prost = "0.12"
+prost-build = "0.12"
 reqwest = { version = "0.12", features = ["json"] }
 serde = { version = "1.0", features = ["serde_derive"] }
 serde_json = "1.0"
-subxt = "0.37.0"
+snafu = { version = "0.8.5", default-features = false }
+subxt = { version = "0.37.0", default-features = false }
+sxt-proof-of-sql-sdk-local = { path = "crates/proof-of-sql-sdk-local", default-features = false }
 tokio = { version = "1.0", features = ["rt-multi-thread", "macros"] }
-tonic = { version = "0.11", features = ["tls", "tls-roots"] }
-
-[build-dependencies]
-prost-build = "0.12"
+tonic = { version = "0.11", default-features = false }
 tonic-build = { version = "0.11" }
-
-[[example]]
-name = "cli"
-path = "examples/cli/main.rs"
-
-[[example]]
-name = "count-ethereum-core"
-path = "examples/count-ethereum-core/main.rs"
