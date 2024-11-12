@@ -1,7 +1,7 @@
 use crate::{
     get_access_token, plan_prover_query_dory,
     prover::{ProverContextRange, ProverQuery, ProverResponse},
-    query_commitments,
+    query_commitments, verify_prover_response,
 };
 use clap::ValueEnum;
 use proof_of_sql::{
@@ -118,15 +118,14 @@ impl SxTClient {
                 &serialized_prover_response
             )
         })?;
-        let stringified_verifiable_result = prover_response.verifiable_result.clone();
-        let verifiable_result: VerifiableQueryResult<DynamicDoryEvaluationProof> =
-            flexbuffers::from_slice(&stringified_verifiable_result)?;
-        // Verify the proof
-        let proof = verifiable_result.proof.unwrap();
-        let serialized_result = verifiable_result.provable_result.unwrap();
-        let owned_table_result = proof
-            .verify(proof_plan, &accessor, &serialized_result, &&verifier_setup)?
-            .table;
+
+        let verified_table_result = verify_prover_response::<DynamicDoryEvaluationProof>(
+            &prover_response,
+            &query_expr,
+            &accessor,
+            &&verifier_setup,
+        )?;
+
         // Apply postprocessing steps
         let postprocessing = query_expr.postprocessing();
         let is_postprocessing_expensive = postprocessing.iter().any(|step| {
@@ -136,10 +135,10 @@ impl SxTClient {
             )
         });
         match (self.postprocessing_level, postprocessing.len(), is_postprocessing_expensive) {
-            (_, 0, false) => Ok(owned_table_result),
+            (_, 0, false) => Ok(verified_table_result),
             (PostprocessingLevel::All, _, _) | (PostprocessingLevel::Cheap, _, false) => {
                 let transformed_result: OwnedTable<DoryScalar> =
-                    apply_postprocessing_steps(owned_table_result, postprocessing)?;
+                    apply_postprocessing_steps(verified_table_result, postprocessing)?;
                 Ok(transformed_result)
             }
             _ => Err("Required postprocessing is not allowed. Please examine your query or change `PostprocessingLevel` using `SxTClient::with_postprocessing`".into()),
