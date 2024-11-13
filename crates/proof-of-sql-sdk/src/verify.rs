@@ -14,18 +14,21 @@ use snafu::Snafu;
 
 #[derive(Snafu, Debug)]
 pub enum VerifyProverResponseError {
-    #[snafu(
-        display("unable to deserialize verifiable query result: {source}"),
-        context(false)
-    )]
+    #[snafu(display("unable to deserialize verifiable query result: {error}"))]
     VerifiableResultDeserialization {
-        source: flexbuffers::DeserializationError,
+        error: flexbuffers::DeserializationError,
     },
     #[snafu(
         display("failed to interpret or verify query results: {source}"),
         context(false)
     )]
     Verification { source: QueryError },
+}
+
+impl From<flexbuffers::DeserializationError> for VerifyProverResponseError {
+    fn from(error: flexbuffers::DeserializationError) -> Self {
+        VerifyProverResponseError::VerifiableResultDeserialization { error }
+    }
 }
 
 pub fn verify_prover_response<'de, 's, CP: CommitmentEvaluationProof + Deserialize<'de>>(
