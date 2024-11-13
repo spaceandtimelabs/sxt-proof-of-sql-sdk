@@ -22,7 +22,7 @@ reqwest = { workspace = true, features = ["json"], optional = true }
 serde = { workspace = true, features = ["serde_derive"] }
 serde_json.workspace = true
 snafu = { workspace = true, default-features = false }
-subxt = { workspace = true, optional = true }
+subxt = { workspace = true }
 tokio = { workspace = true, features = ["rt-multi-thread", "macros"], optional = true }
 tonic = { workspace = true, features = ["codegen"] }
 
@@ -36,12 +36,13 @@ client = [
     "dep:log",
     "dep:reqwest",
     "dep:tokio",
-    "dep:subxt",
+    "subxt/native",
     "proof-of-sql/std",
     "tonic/default",
     "tonic/tls",
     "tonic/tls-roots"
 ]
+web = ["subxt/web"]
 
 [build-dependencies]
 prost-build.workspace = true

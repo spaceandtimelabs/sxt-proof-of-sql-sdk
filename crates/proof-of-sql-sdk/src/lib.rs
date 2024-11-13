@@ -13,8 +13,7 @@ mod substrate;
 #[cfg(feature = "client")]
 pub use substrate::query_commitments;
 
-#[cfg(feature = "client")]
-mod sxt_chain_runtime;
+pub mod sxt_chain_runtime;
 
 mod prover_query;
 pub use prover_query::{plan_prover_query_dory, PlanProverQueryError};

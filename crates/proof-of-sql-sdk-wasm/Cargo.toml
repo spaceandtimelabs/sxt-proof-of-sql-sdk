@@ -13,9 +13,9 @@ ark-serialize = { workspace = true }
 gloo-utils = { workspace = true }
 hex = { workspace = true, features = ["serde", "alloc"] }
 lazy_static = { workspace = true }
-parity-scale-codec = { workspace = true, features = ["derive"] }
 proof-of-sql = { workspace = true }
 postcard = { workspace = true }
 serde = { workspace = true }
-sxt-proof-of-sql-sdk.workspace = true
+subxt = { workspace = true }
+sxt-proof-of-sql-sdk = { workspace = true, features = ["web"] }
 wasm-bindgen = { workspace = true }

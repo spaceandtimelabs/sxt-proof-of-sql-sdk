@@ -1,11 +1,10 @@
 use ark_serialize::{CanonicalDeserialize, Compress, Validate};
 use gloo_utils::format::JsValueSerdeExt;
-use parity_scale_codec::Decode;
-use proof_of_sql::{
-    base::commitment::{Commitment, QueryCommitments},
-    proof_primitive::dory::{DynamicDoryEvaluationProof, VerifierSetup},
-};
+use proof_of_sql::base::commitment::{Commitment, QueryCommitments};
+use proof_of_sql::proof_primitive::dory::{DynamicDoryEvaluationProof, VerifierSetup};
 use serde::Deserialize;
+use subxt::ext::codec::Decode;
+use sxt_proof_of_sql_sdk::sxt_chain_runtime::api::runtime_types::proof_of_sql_commitment_map::commitment_storage_map::TableCommitmentBytes;
 use wasm_bindgen::prelude::*;
 
 const VERIFIER_SETUP_BYTES: &[u8; 47472] = include_bytes!("../../../verifier_setup.bin");
@@ -23,11 +22,6 @@ lazy_static::lazy_static! {
 pub struct ProverQueryAndQueryExpr {
     pub prover_query_json: JsValue,
     pub query_expr_json: JsValue,
-}
-
-#[derive(Decode)]
-struct TableCommitmentBytes {
-    data: Vec<u8>,
 }
 
 #[wasm_bindgen]
@@ -67,7 +61,7 @@ where
                 .expect("TODO");
 
                 let table_commitment =
-                    postcard::from_bytes(&table_commitment_bytes.data.as_slice()).expect("TODO");
+                    postcard::from_bytes(&table_commitment_bytes.data.0.as_slice()).expect("TODO");
 
                 (table_ref, table_commitment)
             },
