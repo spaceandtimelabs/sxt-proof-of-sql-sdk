@@ -4751,6 +4751,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "sxt-proof-of-sql-sdk-wasm"
+version = "0.1.0"
+dependencies = [
+ "ark-serialize",
+ "arrow",
+ "gloo-utils",
+ "hex",
+ "lazy_static",
+ "postcard",
+ "proof-of-sql",
+ "serde",
+ "subxt",
+ "sxt-proof-of-sql-sdk",
+ "wasm-bindgen",
+]
+
+[[package]]
 name = "syn"
 version = "1.0.109"
 source = "registry+https://github.com/rust-lang/crates.io-index"
