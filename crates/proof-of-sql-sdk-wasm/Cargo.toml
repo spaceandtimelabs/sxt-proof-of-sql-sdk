@@ -10,13 +10,14 @@ crate-type = ["cdylib"]
 
 [dependencies]
 ark-serialize = { workspace = true }
-arrow = { workspace = true }
+arrow-array = { workspace = true }
+arrow-ipc = { workspace = true }
 gloo-utils = { workspace = true }
-hex = { workspace = true, features = ["serde"] }
+hex = { workspace = true, features = ["serde", "alloc"] }
 lazy_static = { workspace = true }
-proof-of-sql = { workspace = true }
+parity-scale-codec = { workspace = true, features = ["derive"] }
+proof-of-sql = { workspace = true, features = ["arrow"] }
 postcard = { workspace = true }
-subxt = { workspace = true }
 serde = { workspace = true }
 sxt-proof-of-sql-sdk.workspace = true
 wasm-bindgen = { workspace = true }

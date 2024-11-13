@@ -7,24 +7,40 @@ license-file = { workspace = true }
 
 [dependencies]
 ark-serialize = { workspace = true, default-features = false }
-clap = { workspace = true, features = ["derive", "env"] }
-dotenv.workspace = true
-env_logger.workspace = true
+clap = { workspace = true, features = ["derive", "env"], optional = true }
+dotenv = { workspace = true, optional = true }
+env_logger = { workspace = true, optional = true }
 flexbuffers = { workspace = true }
-futures = { workspace = true}
-log.workspace = true
+futures = { workspace = true, optional = true }
+log = { workspace = true, optional = true }
 indexmap.workspace = true
 postcard = { workspace = true, default-features = false }
 proof-of-sql = { workspace = true }
 proof-of-sql-parser = { workspace = true }
 prost.workspace = true
-reqwest = { workspace = true, features = ["json"] }
+reqwest = { workspace = true, features = ["json"], optional = true }
 serde = { workspace = true, features = ["serde_derive"] }
 serde_json.workspace = true
 snafu = { workspace = true, default-features = false }
-subxt.workspace = true
-tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }
-tonic = { workspace = true, features = ["tls", "tls-roots"] }
+subxt = { workspace = true, optional = true }
+tokio = { workspace = true, features = ["rt-multi-thread", "macros"], optional = true }
+tonic = { workspace = true, features = ["codegen"] }
+
+[features]
+default = ["client"]
+client = [
+    "dep:clap",
+    "dep:dotenv",
+    "dep:env_logger",
+    "dep:futures",
+    "dep:log",
+    "dep:reqwest",
+    "dep:tokio",
+    "dep:subxt",
+    "tonic/default", 
+    "tonic/tls", 
+    "tonic/tls-roots"
+]
 
 [build-dependencies]
 prost-build.workspace = true
@@ -33,7 +49,9 @@ tonic-build = { workspace = true }
 [[example]]
 name = "cli"
 path = "examples/cli/main.rs"
+required-features = ["client"]
 
 [[example]]
 name = "count-ethereum-core"
 path = "examples/count-ethereum-core/main.rs"
+required-features = ["client"]
