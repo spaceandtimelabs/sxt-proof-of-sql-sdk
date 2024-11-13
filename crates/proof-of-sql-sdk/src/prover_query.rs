@@ -18,10 +18,16 @@ pub enum PlanProverQueryError {
         context(false)
     )]
     ProvableAst { source: ConversionError },
-    #[snafu(display("unable to serialize proof plan: {source}"), context(false))]
+    #[snafu(display("unable to serialize proof plan: {error}"))]
     ProofPlanSerialization {
-        source: flexbuffers::SerializationError,
+        error: flexbuffers::SerializationError,
     },
+}
+
+impl From<flexbuffers::SerializationError> for PlanProverQueryError {
+    fn from(error: flexbuffers::SerializationError) -> Self {
+        PlanProverQueryError::ProofPlanSerialization { error }
+    }
 }
 
 pub fn plan_prover_query_dory(
