@@ -1,6 +1,4 @@
 use ark_serialize::{CanonicalDeserialize, Compress, Validate};
-use arrow_array::RecordBatch;
-use arrow_ipc::writer::StreamWriter;
 use gloo_utils::format::JsValueSerdeExt;
 use parity_scale_codec::Decode;
 use proof_of_sql::{
@@ -105,7 +103,7 @@ pub fn verify_prover_response_dory(
     prover_response_json: JsValue,
     query_expr_json: JsValue,
     commitments: Vec<TableRefAndCommitment>,
-) -> Result<Vec<u8>, String> {
+) -> Result<JsValue, String> {
     let prover_response = prover_response_json.into_serde().expect("TODO");
 
     let query_expr = query_expr_json.into_serde().expect("TODO");
@@ -122,18 +120,7 @@ pub fn verify_prover_response_dory(
         )
         .expect("TODO");
 
-    let verified_batch = RecordBatch::try_from(verified_table_result).expect("TODO");
+    let verified_table_result_json = JsValue::from_serde(&verified_table_result).expect("TODO");
 
-    let mut batch_buffer = Vec::new();
-
-    let mut batch_writer =
-        StreamWriter::try_new(&mut batch_buffer, &verified_batch.schema()).expect("TODO");
-
-    batch_writer.write(&verified_batch).expect("TODO");
-
-    batch_writer.finish().expect("TODO");
-
-    batch_writer.into_inner().expect("TODO");
-
-    Ok(batch_buffer)
+    Ok(verified_table_result_json)
 }

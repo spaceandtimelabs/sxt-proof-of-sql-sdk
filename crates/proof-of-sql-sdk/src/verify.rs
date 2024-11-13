@@ -33,7 +33,7 @@ impl From<flexbuffers::DeserializationError> for VerifyProverResponseError {
 
 pub fn verify_prover_response<'de, 's, CP: CommitmentEvaluationProof + Deserialize<'de>>(
     prover_response: &'de ProverResponse,
-    query_expr: &QueryExpr<CP::Commitment>,
+    query_expr: &QueryExpr,
     accessor: &impl CommitmentAccessor<CP::Commitment>,
     verifier_setup: &CP::VerifierPublicSetup<'s>,
 ) -> Result<OwnedTable<CP::Scalar>, VerifyProverResponseError> {
