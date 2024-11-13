@@ -37,8 +37,8 @@ client = [
     "dep:reqwest",
     "dep:tokio",
     "dep:subxt",
-    "tonic/default", 
-    "tonic/tls", 
+    "tonic/default",
+    "tonic/tls",
     "tonic/tls-roots"
 ]
 
