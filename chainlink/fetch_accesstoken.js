@@ -7,9 +7,6 @@
 // apiKey
 // and set the value to a key 
 // that you own for an sxt account.
-import { Functions } from "./common.js";
-import { secrets } from "./secrets.js";
-
 
 // Ensure the API key is available
 if (!secrets.apiKey) {
