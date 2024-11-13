@@ -40,8 +40,8 @@ impl From<flexbuffers::SerializationError> for PlanProverQueryError {
 pub fn plan_prover_query_dory(
     query: &str,
     commitments: &QueryCommitments<DynamicDoryCommitment>,
-) -> Result<(ProverQuery, QueryExpr<DynamicDoryCommitment>), PlanProverQueryError> {
-    let query_expr: QueryExpr<DynamicDoryCommitment> =
+) -> Result<(ProverQuery, QueryExpr), PlanProverQueryError> {
+    let query_expr: QueryExpr =
         QueryExpr::try_new(query.parse()?, DEFAULT_SCHEMA.parse()?, commitments)?;
     let proof_plan = query_expr.proof_expr();
     let serialized_proof_plan = flexbuffers::to_vec(proof_plan)?;
