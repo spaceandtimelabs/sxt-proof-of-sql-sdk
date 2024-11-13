@@ -10,11 +10,15 @@ license-file = "LICENSE"
 
 [workspace.dependencies]
 ark-serialize = { version = "0.4.0", default-features = false }
+arrow = { version = "51.0.0" }
 clap = { version = "4.5.20", features = ["derive", "env"] }
 dotenv = "0.15"
 env_logger = "0.11.5"
 flexbuffers = { version = "2.0.0" }
 futures = { version = "0.3.31"}
+gloo-utils = { version = "0.2.0" }
+hex = { version = "0.4.3", default-features = false }
+lazy_static = { version = "1.5.0" }
 log = "0.4.22"
 indexmap = "2.6.0"
 postcard = { version = "1.0.10", default-features = false }
