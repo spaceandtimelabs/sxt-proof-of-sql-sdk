@@ -9,17 +9,18 @@ const {
   decodeResult,
   FulfillmentCode,
 } = require("@chainlink/functions-toolkit");
-const functionsConsumerAbi = require("../../abi/functionsClient.json");
+const functionsConsumerAbi = require("../smart-contract/FunctionsConsumerAbi.json");
 const ethers = require("ethers");
+require('dotenv').config(); // This will load from .env file in addition to env-enc file.
 require("@chainlink/env-enc").config();
 
-const consumerAddress = "0x8dFf78B7EE3128D00E90611FBeD20A71397064D9"; // REPLACE this with your Functions consumer address
-const subscriptionId = 3; // REPLACE this with your subscription ID
+const consumerAddress = process.env.CONSUMER_ADDRESS;
+const subscriptionId = process.env.SUBSCRIPTION_ID;
 
 const makeRequestSepolia = async () => {
   // hardcoded for Ethereum Sepolia
   const routerAddress = "0xb83E47C2bC239B3bf370bc41e1459A34b41238D0";
-  const linkTokenAddress = "0x779877A7B0D9E8603169DdbD7836e478b4624789";
+  const linkTokenAddress = process.env.LINK_TOKEN_ADDRESS;
   const donId = "fun-ethereum-sepolia-1";
   const explorerUrl = "https://sepolia.etherscan.io";
   const gatewayUrls = [
@@ -32,8 +33,8 @@ const makeRequestSepolia = async () => {
     .readFileSync(path.resolve(__dirname, "source.js"))
     .toString();
 
-  const args = ["1", "USD"];
-  const secrets = { apiKey: process.env.COINMARKETCAP_API_KEY };
+  const args = [];
+  const secrets = { apiKey: "TODO" }; // NOTE: be sure to modify source.js to use this secret properly when actually adding a secret.
   const slotIdNumber = 0; // slot ID where to upload the secrets
   const expirationTimeMinutes = 15; // expiration time in minutes of the secrets
   const gasLimit = 300000;
