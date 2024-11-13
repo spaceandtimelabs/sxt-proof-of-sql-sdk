@@ -141,15 +141,11 @@ export function plan_prover_query_dory(query, commitments) {
     }
 }
 
-function getArrayU8FromWasm0(ptr, len) {
-    ptr = ptr >>> 0;
-    return getUint8ArrayMemory0().subarray(ptr / 1, ptr / 1 + len);
-}
 /**
  * @param {any} prover_response_json
  * @param {any} query_expr_json
  * @param {(TableRefAndCommitment)[]} commitments
- * @returns {Uint8Array}
+ * @returns {any}
  */
 export function verify_prover_response_dory(prover_response_json, query_expr_json, commitments) {
     try {
@@ -160,13 +156,10 @@ export function verify_prover_response_dory(prover_response_json, query_expr_jso
         var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
         var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
         var r2 = getDataViewMemory0().getInt32(retptr + 4 * 2, true);
-        var r3 = getDataViewMemory0().getInt32(retptr + 4 * 3, true);
-        if (r3) {
-            throw takeObject(r2);
+        if (r2) {
+            throw takeObject(r1);
         }
-        var v2 = getArrayU8FromWasm0(r0, r1).slice();
-        wasm.__wbindgen_free(r0, r1 * 1, 1);
-        return v2;
+        return takeObject(r0);
     } finally {
         wasm.__wbindgen_add_to_stack_pointer(16);
     }
@@ -278,17 +271,17 @@ const imports = {
         __wbindgen_object_drop_ref: function(arg0) {
             takeObject(arg0);
         },
-        __wbindgen_object_clone_ref: function(arg0) {
-            const ret = getObject(arg0);
-            return addHeapObject(ret);
+        __wbindgen_is_undefined: function(arg0) {
+            const ret = getObject(arg0) === undefined;
+            return ret;
         },
         __wbg_tablerefandcommitment_unwrap: function(arg0) {
             const ret = TableRefAndCommitment.__unwrap(takeObject(arg0));
             return ret;
         },
-        __wbindgen_is_undefined: function(arg0) {
-            const ret = getObject(arg0) === undefined;
-            return ret;
+        __wbindgen_object_clone_ref: function(arg0) {
+            const ret = getObject(arg0);
+            return addHeapObject(ret);
         },
         __wbindgen_string_get: function(arg0, arg1) {
             const obj = getObject(arg1);
