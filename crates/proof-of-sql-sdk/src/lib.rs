@@ -4,7 +4,7 @@ mod client;
 pub use client::{PostprocessingLevel, SxTClient};
 mod substrate;
 pub use substrate::query_commitments;
-mod sxt_chain_runtime;
+pub mod sxt_chain_runtime;
 
 mod prover_query;
 pub use prover_query::{plan_prover_query_dory, PlanProverQueryError};
