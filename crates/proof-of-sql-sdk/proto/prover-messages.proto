@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package sxt.messages;
+
+// First value of enum is default value, so if no commitment
+// scheme is specified in ProverQuery, IPA is chosen by default
+enum CommitmentScheme {
+    IPA = 0;
+    DYNAMIC_DORY = 1;
+}
+
+message ProverContextRange {
+    uint64 start = 1;
+    repeated uint64 ends = 2;
+}
+
+message ChosenContextRange {
+    uint64 start = 1;
+    uint64 end = 2;
+}
+
+message ProverQuery {
+    bytes proof_plan = 1;
+    map<string, ProverContextRange> query_context = 3;
+    CommitmentScheme commitment_scheme = 4;
+}
+
+message ProverResponse {
+    bytes verifiable_result = 1;
+    map<string, ChosenContextRange> chosen_context = 2;
+}
