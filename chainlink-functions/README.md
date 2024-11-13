@@ -8,5 +8,6 @@ This example is heavily borrowed from https://docs.chain.link/chainlink-function
     LINK_TOKEN_ADDRESS=0x779877A7B0D9E8603169DdbD7836e478b4624789 # REPLACE this with your wallet address
     ETHEREUM_SEPOLIA_RPC_URL=
     PRIVATE_KEY=
+    SXT_API_KEY=
     ```
 4. Run `node example/request.js` to upload the secrets, run a simulation, and then submit a chainlink job.
