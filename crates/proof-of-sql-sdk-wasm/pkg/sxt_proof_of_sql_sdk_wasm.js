@@ -268,20 +268,20 @@ export class TableRefAndCommitment {
 
 const imports = {
     __wbindgen_placeholder__: {
-        __wbindgen_object_drop_ref: function(arg0) {
-            takeObject(arg0);
-        },
         __wbindgen_is_undefined: function(arg0) {
             const ret = getObject(arg0) === undefined;
             return ret;
         },
-        __wbg_tablerefandcommitment_unwrap: function(arg0) {
-            const ret = TableRefAndCommitment.__unwrap(takeObject(arg0));
-            return ret;
+        __wbindgen_object_drop_ref: function(arg0) {
+            takeObject(arg0);
         },
         __wbindgen_object_clone_ref: function(arg0) {
             const ret = getObject(arg0);
             return addHeapObject(ret);
+        },
+        __wbg_tablerefandcommitment_unwrap: function(arg0) {
+            const ret = TableRefAndCommitment.__unwrap(takeObject(arg0));
+            return ret;
         },
         __wbindgen_string_get: function(arg0, arg1) {
             const obj = getObject(arg1);
