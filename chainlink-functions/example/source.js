@@ -347,4 +347,28 @@ const apiResponse = await Functions.makeHttpRequest({
 
 // Extract the access token, truncate it to 256 characters, and return it as an encoded string
 const accessToken = apiResponse.data.accessToken;
+
+// TODO: make this not be hardcoded:
+const commitmentKey = "0xca407206ec1ab726b2636c4b145ac28749505e273536fae35330b966dac69e86a4832a125c0464e066dd20add960efb518424c4f434b5320455448455245554d4a9e6f9b8d43f6ad008f8c291929dee201";
+
+const commitmentApiResponse = await Functions.makeHttpRequest({
+  url: "https://rpc.testnet.sxt.network/",
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  data: {
+    id: 1,
+    jsonrpc: "2.0",
+    method: "state_getStorage",
+    params: [commitmentKey]
+  }
+});
+
+let commitment = commitmentApiResponse.data.result.slice(2); // remove the 0x prefix
+const commitments = [new TableRefAndCommitment("ETHEREUM.BLOCKS", commitment)];
+const proverQueryAndQueryExpr = plan_prover_query_dory("SELECT SUM(BLOCK_NUMBER), COUNT(*) FROM ETHEREUM.BLOCKS", commitments);
+const proverQuery = proverQueryAndQueryExpr.prover_query_json;
+const queryExpr = proverQueryAndQueryExpr.query_expr_json;
+
 return Functions.encodeString("TODO");
