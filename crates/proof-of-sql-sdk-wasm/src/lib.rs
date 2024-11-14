@@ -1,10 +1,19 @@
 use ark_serialize::{CanonicalDeserialize, Compress, Validate};
 use gloo_utils::format::JsValueSerdeExt;
-use proof_of_sql::base::commitment::{Commitment, QueryCommitments};
-use proof_of_sql::proof_primitive::dory::{DynamicDoryEvaluationProof, VerifierSetup};
+use proof_of_sql::{
+    base::commitment::{Commitment, QueryCommitments},
+    proof_primitive::dory::{DynamicDoryEvaluationProof, VerifierSetup},
+};
+use proof_of_sql_parser::ResourceId;
 use serde::Deserialize;
-use subxt::ext::codec::Decode;
-use sxt_proof_of_sql_sdk::sxt_chain_runtime::api::runtime_types::proof_of_sql_commitment_map::commitment_storage_map::TableCommitmentBytes;
+use sp_crypto_hashing::{blake2_128, twox_128};
+use subxt::ext::codec::{Decode, Encode};
+use sxt_proof_of_sql_sdk::{
+    resource_id_to_table_id,
+    sxt_chain_runtime::api::runtime_types::proof_of_sql_commitment_map::{
+        commitment_scheme::CommitmentScheme, commitment_storage_map::TableCommitmentBytes,
+    },
+};
 use wasm_bindgen::prelude::*;
 
 const VERIFIER_SETUP_BYTES: &[u8; 47472] = include_bytes!("../../../verifier_setup.bin");
@@ -70,6 +79,28 @@ where
 }
 
 #[wasm_bindgen]
+pub fn commitment_storage_key_dory(table_ref: &str) -> Result<String, String> {
+    let resource_id: ResourceId = table_ref.parse().expect("TODO");
+
+    let table_id = resource_id_to_table_id(&resource_id);
+
+    let encoded_table_id = table_id.encode();
+
+    let encoded_commitment_scheme = CommitmentScheme::DynamicDory.encode();
+
+    let storage_key = twox_128(b"Commitments")
+        .into_iter()
+        .chain(twox_128(b"CommitmentStorageMap"))
+        .chain(blake2_128(&encoded_table_id))
+        .chain(encoded_table_id)
+        .chain(blake2_128(&encoded_commitment_scheme))
+        .chain(encoded_commitment_scheme)
+        .collect::<Vec<_>>();
+
+    Ok(hex::encode(storage_key))
+}
+
+#[wasm_bindgen]
 pub fn plan_prover_query_dory(
     query: &str,
     commitments: Vec<TableRefAndCommitment>,
@@ -117,4 +148,18 @@ pub fn verify_prover_response_dory(
     let verified_table_result_json = JsValue::from_serde(&verified_table_result).expect("TODO");
 
     Ok(verified_table_result_json)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn storage_key_is_correct() {
+        let expected = "ca407206ec1ab726b2636c4b145ac28749505e273536fae35330b966dac69e86a4832a125c0464e066dd20add960efb518424c4f434b5320455448455245554d4a9e6f9b8d43f6ad008f8c291929dee201";
+
+        let actual = commitment_storage_key_dory("ETHEREUM.BLOCKS").unwrap();
+
+        assert_eq!(actual, expected);
+    }
 }

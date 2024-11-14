@@ -14,8 +14,10 @@ gloo-utils = { workspace = true }
 hex = { workspace = true, features = ["serde", "alloc"] }
 lazy_static = { workspace = true }
 proof-of-sql = { workspace = true }
+proof-of-sql-parser = { workspace = true }
 postcard = { workspace = true }
 serde = { workspace = true }
 subxt = { workspace = true }
+sp-crypto-hashing = { workspace = true }
 sxt-proof-of-sql-sdk = { workspace = true, features = ["web"] }
 wasm-bindgen = { workspace = true }
