@@ -111,6 +111,8 @@ const makeRequestSepolia = async () => {
     )} LINK`
   );
 
+  // process.exit(0); // Uncomment to stop the script after simulation
+
   //////// MAKE REQUEST ////////
 
   console.log("\nMake request...");
