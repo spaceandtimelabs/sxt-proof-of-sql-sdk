@@ -8,10 +8,10 @@ mod client;
 #[cfg(feature = "client")]
 pub use client::{PostprocessingLevel, SxTClient};
 
-#[cfg(feature = "client")]
 mod substrate;
 #[cfg(feature = "client")]
 pub use substrate::query_commitments;
+pub use substrate::resource_id_to_table_id;
 
 pub mod sxt_chain_runtime;
 

@@ -1,25 +1,27 @@
+use crate::sxt_chain_runtime::api::runtime_types::{
+    bounded_collections::bounded_vec::BoundedVec, sxt_core::tables::TableIdentifier,
+};
+#[cfg(feature = "client")]
 use crate::sxt_chain_runtime::api::{
-    runtime_types::{
-        bounded_collections::bounded_vec::BoundedVec,
-        proof_of_sql_commitment_map::{
-            commitment_scheme::CommitmentScheme, commitment_storage_map::TableCommitmentBytes,
-        },
-        sxt_core::tables::TableIdentifier,
+    runtime_types::proof_of_sql_commitment_map::{
+        commitment_scheme::CommitmentScheme, commitment_storage_map::TableCommitmentBytes,
     },
     storage,
 };
+#[cfg(feature = "client")]
 use futures::future::try_join_all;
-use proof_of_sql::{
-    base::{
-        commitment::{QueryCommitments, TableCommitment},
-        database::TableRef,
-    },
-    proof_primitive::dory::DynamicDoryCommitment,
-};
+#[cfg(feature = "client")]
+use proof_of_sql::base::commitment::{QueryCommitments, TableCommitment};
+#[cfg(feature = "client")]
+use proof_of_sql::base::database::TableRef;
+#[cfg(feature = "client")]
+use proof_of_sql::proof_primitive::dory::DynamicDoryCommitment;
 use proof_of_sql_parser::{Identifier, ResourceId};
+#[cfg(feature = "client")]
 use subxt::{OnlineClient, PolkadotConfig};
 
 /// Use the standard PolkadotConfig
+#[cfg(feature = "client")]
 type SxtConfig = PolkadotConfig;
 
 /// Convert PoSQL `Identifier` to SxT Core `BoundedVec<u8>`
@@ -28,7 +30,7 @@ fn identifier_to_byte_string(identifier: &Identifier) -> BoundedVec<u8> {
 }
 
 /// Convert PoSQL resource IDs to SxT Core table identifiers
-fn resource_id_to_table_id(resource_id: &ResourceId) -> TableIdentifier {
+pub fn resource_id_to_table_id(resource_id: &ResourceId) -> TableIdentifier {
     TableIdentifier {
         name: identifier_to_byte_string(&resource_id.object_name()),
         namespace: identifier_to_byte_string(&resource_id.schema()),
@@ -36,6 +38,7 @@ fn resource_id_to_table_id(resource_id: &ResourceId) -> TableIdentifier {
 }
 
 /// Query the commitments pallet to find which commitments
+#[cfg(feature = "client")]
 pub async fn query_commitments(
     resource_ids: &[ResourceId],
     url: &str,
