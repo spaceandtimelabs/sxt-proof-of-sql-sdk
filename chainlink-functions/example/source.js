@@ -121,7 +121,7 @@ function passArrayJsValueToWasm0(array, malloc) {
  * @param {(TableRefAndCommitment)[]} commitments
  * @returns {ProverQueryAndQueryExpr}
  */
-export function plan_prover_query_dory(query, commitments) {
+function plan_prover_query_dory(query, commitments) {
     try {
         const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
         const ptr0 = passStringToWasm0(query, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
@@ -147,7 +147,7 @@ export function plan_prover_query_dory(query, commitments) {
  * @param {(TableRefAndCommitment)[]} commitments
  * @returns {any}
  */
-export function verify_prover_response_dory(prover_response_json, query_expr_json, commitments) {
+function verify_prover_response_dory(prover_response_json, query_expr_json, commitments) {
     try {
         const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
         const ptr0 = passArrayJsValueToWasm0(commitments, wasm.__wbindgen_malloc);
@@ -177,7 +177,7 @@ const ProverQueryAndQueryExprFinalization = (typeof FinalizationRegistry === 'un
     ? { register: () => {}, unregister: () => {} }
     : new FinalizationRegistry(ptr => wasm.__wbg_proverqueryandqueryexpr_free(ptr >>> 0, 1));
 
-export class ProverQueryAndQueryExpr {
+class ProverQueryAndQueryExpr {
 
     static __wrap(ptr) {
         ptr = ptr >>> 0;
@@ -230,7 +230,7 @@ const TableRefAndCommitmentFinalization = (typeof FinalizationRegistry === 'unde
     ? { register: () => {}, unregister: () => {} }
     : new FinalizationRegistry(ptr => wasm.__wbg_tablerefandcommitment_free(ptr >>> 0, 1));
 
-export class TableRefAndCommitment {
+class TableRefAndCommitment {
 
     static __unwrap(jsValue) {
         if (!(jsValue instanceof TableRefAndCommitment)) {
@@ -306,23 +306,23 @@ const imports = {
 
 };
 
-const wasm_url = new URL('sxt_proof_of_sql_sdk_wasm_bg.wasm', import.meta.url);
-let wasmCode = '';
-switch (wasm_url.protocol) {
-    case 'file:':
-    wasmCode = await Deno.readFile(wasm_url);
-    break
-    case 'https:':
-    case 'http:':
-    wasmCode = await (await fetch(wasm_url)).arrayBuffer();
-    break
-    default:
-    throw new Error(`Unsupported protocol: ${wasm_url.protocol}`);
+const wasmRequest = await Functions.makeHttpRequest({
+  url: "https://raw.githubusercontent.com/spaceandtimelabs/sxt-proof-of-sql-sdk/feat/wasm-bindgen/crates/proof-of-sql-sdk-wasm/pkg/sxt_proof_of_sql_sdk_wasm_bg.wasm",
+  method: "GET",
+  responseType: "arraybuffer",
+});
+
+
+if (wasmRequest.error || wasmRequest.status !== 200) {
+  throw new Error("Error retrieving wasm file");
 }
+
+// Convert the response data to a Uint8Array for WebAssembly instantiation
+const wasmCode = new Uint8Array(wasmRequest.data);
 
 const wasmInstance = (await WebAssembly.instantiate(wasmCode, imports)).instance;
 const wasm = wasmInstance.exports;
-export const __wasm = wasm;
+const __wasm = wasm;
 
 
 // Ensure the API key is available
