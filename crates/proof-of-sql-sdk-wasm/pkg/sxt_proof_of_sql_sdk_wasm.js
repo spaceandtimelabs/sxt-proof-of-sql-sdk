@@ -106,6 +106,36 @@ function getStringFromWasm0(ptr, len) {
     ptr = ptr >>> 0;
     return cachedTextDecoder.decode(getUint8ArrayMemory0().subarray(ptr, ptr + len));
 }
+/**
+ * @param {string} table_ref
+ * @returns {string}
+ */
+export function commitment_storage_key_dory(table_ref) {
+    let deferred3_0;
+    let deferred3_1;
+    try {
+        const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+        const ptr0 = passStringToWasm0(table_ref, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len0 = WASM_VECTOR_LEN;
+        wasm.commitment_storage_key_dory(retptr, ptr0, len0);
+        var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
+        var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
+        var r2 = getDataViewMemory0().getInt32(retptr + 4 * 2, true);
+        var r3 = getDataViewMemory0().getInt32(retptr + 4 * 3, true);
+        var ptr2 = r0;
+        var len2 = r1;
+        if (r3) {
+            ptr2 = 0; len2 = 0;
+            throw takeObject(r2);
+        }
+        deferred3_0 = ptr2;
+        deferred3_1 = len2;
+        return getStringFromWasm0(ptr2, len2);
+    } finally {
+        wasm.__wbindgen_add_to_stack_pointer(16);
+        wasm.__wbindgen_free(deferred3_0, deferred3_1, 1);
+    }
+}
 
 function passArrayJsValueToWasm0(array, malloc) {
     const ptr = malloc(array.length * 4, 4) >>> 0;
@@ -268,12 +298,12 @@ export class TableRefAndCommitment {
 
 const imports = {
     __wbindgen_placeholder__: {
+        __wbindgen_object_drop_ref: function(arg0) {
+            takeObject(arg0);
+        },
         __wbindgen_is_undefined: function(arg0) {
             const ret = getObject(arg0) === undefined;
             return ret;
-        },
-        __wbindgen_object_drop_ref: function(arg0) {
-            takeObject(arg0);
         },
         __wbindgen_object_clone_ref: function(arg0) {
             const ret = getObject(arg0);
