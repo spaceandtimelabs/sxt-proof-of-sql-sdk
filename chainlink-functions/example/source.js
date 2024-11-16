@@ -20,16 +20,18 @@ function takeObject(idx) {
   return ret;
 }
 
-function addHeapObject(obj) {
-  if (heap_next === heap.length) heap.push(heap.length + 1);
-  const idx = heap_next;
-  heap_next = heap[idx];
+const cachedTextDecoder =
+  typeof TextDecoder !== "undefined"
+    ? new TextDecoder("utf-8", { ignoreBOM: true, fatal: true })
+    : {
+        decode: () => {
+          throw Error("TextDecoder not available");
+        },
+      };
 
-  heap[idx] = obj;
-  return idx;
+if (typeof TextDecoder !== "undefined") {
+  cachedTextDecoder.decode();
 }
-
-let WASM_VECTOR_LEN = 0;
 
 let cachedUint8ArrayMemory0 = null;
 
@@ -42,6 +44,24 @@ function getUint8ArrayMemory0() {
   }
   return cachedUint8ArrayMemory0;
 }
+
+function getStringFromWasm0(ptr, len) {
+  ptr = ptr >>> 0;
+  return cachedTextDecoder.decode(
+    getUint8ArrayMemory0().subarray(ptr, ptr + len),
+  );
+}
+
+function addHeapObject(obj) {
+  if (heap_next === heap.length) heap.push(heap.length + 1);
+  const idx = heap_next;
+  heap_next = heap[idx];
+
+  heap[idx] = obj;
+  return idx;
+}
+
+let WASM_VECTOR_LEN = 0;
 
 const cachedTextEncoder =
   typeof TextEncoder !== "undefined"
@@ -114,24 +134,14 @@ function getDataViewMemory0() {
   return cachedDataViewMemory0;
 }
 
-const cachedTextDecoder =
-  typeof TextDecoder !== "undefined"
-    ? new TextDecoder("utf-8", { ignoreBOM: true, fatal: true })
-    : {
-        decode: () => {
-          throw Error("TextDecoder not available");
-        },
-      };
-
-if (typeof TextDecoder !== "undefined") {
-  cachedTextDecoder.decode();
-}
-
-function getStringFromWasm0(ptr, len) {
+function getArrayJsValueFromWasm0(ptr, len) {
   ptr = ptr >>> 0;
-  return cachedTextDecoder.decode(
-    getUint8ArrayMemory0().subarray(ptr, ptr + len),
-  );
+  const mem = getDataViewMemory0();
+  const result = [];
+  for (let i = ptr; i < ptr + 4 * len; i += 4) {
+    result.push(takeObject(mem.getUint32(i, true)));
+  }
+  return result;
 }
 
 function passArrayJsValueToWasm0(array, malloc) {
@@ -144,9 +154,45 @@ function passArrayJsValueToWasm0(array, malloc) {
   return ptr;
 }
 /**
+ * @param {string} table_ref
+ * @returns {string}
+ */
+function commitment_storage_key_dory(table_ref) {
+  let deferred3_0;
+  let deferred3_1;
+  try {
+    const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+    const ptr0 = passStringToWasm0(
+      table_ref,
+      wasm.__wbindgen_malloc,
+      wasm.__wbindgen_realloc,
+    );
+    const len0 = WASM_VECTOR_LEN;
+    wasm.commitment_storage_key_dory(retptr, ptr0, len0);
+    var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
+    var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
+    var r2 = getDataViewMemory0().getInt32(retptr + 4 * 2, true);
+    var r3 = getDataViewMemory0().getInt32(retptr + 4 * 3, true);
+    var ptr2 = r0;
+    var len2 = r1;
+    if (r3) {
+      ptr2 = 0;
+      len2 = 0;
+      throw takeObject(r2);
+    }
+    deferred3_0 = ptr2;
+    deferred3_1 = len2;
+    return getStringFromWasm0(ptr2, len2);
+  } finally {
+    wasm.__wbindgen_add_to_stack_pointer(16);
+    wasm.__wbindgen_free(deferred3_0, deferred3_1, 1);
+  }
+}
+
+/**
  * @param {string} query
  * @param {(TableRefAndCommitment)[]} commitments
- * @returns {ProverQueryAndQueryExpr}
+ * @returns {ProverQueryAndQueryExprAndCommitments}
  */
 function plan_prover_query_dory(query, commitments) {
   try {
@@ -166,7 +212,7 @@ function plan_prover_query_dory(query, commitments) {
     if (r2) {
       throw takeObject(r1);
     }
-    return ProverQueryAndQueryExpr.__wrap(r0);
+    return ProverQueryAndQueryExprAndCommitments.__wrap(r0);
   } finally {
     wasm.__wbindgen_add_to_stack_pointer(16);
   }
@@ -214,47 +260,52 @@ function handleError(f, args) {
   }
 }
 
-const ProverQueryAndQueryExprFinalization =
+const ProverQueryAndQueryExprAndCommitmentsFinalization =
   typeof FinalizationRegistry === "undefined"
     ? { register: () => {}, unregister: () => {} }
     : new FinalizationRegistry((ptr) =>
-        wasm.__wbg_proverqueryandqueryexpr_free(ptr >>> 0, 1),
+        wasm.__wbg_proverqueryandqueryexprandcommitments_free(ptr >>> 0, 1),
       );
 
-class ProverQueryAndQueryExpr {
+class ProverQueryAndQueryExprAndCommitments {
   static __wrap(ptr) {
     ptr = ptr >>> 0;
-    const obj = Object.create(ProverQueryAndQueryExpr.prototype);
+    const obj = Object.create(ProverQueryAndQueryExprAndCommitments.prototype);
     obj.__wbg_ptr = ptr;
-    ProverQueryAndQueryExprFinalization.register(obj, obj.__wbg_ptr, obj);
+    ProverQueryAndQueryExprAndCommitmentsFinalization.register(
+      obj,
+      obj.__wbg_ptr,
+      obj,
+    );
     return obj;
   }
 
   __destroy_into_raw() {
     const ptr = this.__wbg_ptr;
     this.__wbg_ptr = 0;
-    ProverQueryAndQueryExprFinalization.unregister(this);
+    ProverQueryAndQueryExprAndCommitmentsFinalization.unregister(this);
     return ptr;
   }
 
   free() {
     const ptr = this.__destroy_into_raw();
-    wasm.__wbg_proverqueryandqueryexpr_free(ptr, 0);
+    wasm.__wbg_proverqueryandqueryexprandcommitments_free(ptr, 0);
   }
   /**
    * @returns {any}
    */
   get prover_query_json() {
-    const ret = wasm.__wbg_get_proverqueryandqueryexpr_prover_query_json(
-      this.__wbg_ptr,
-    );
+    const ret =
+      wasm.__wbg_get_proverqueryandqueryexprandcommitments_prover_query_json(
+        this.__wbg_ptr,
+      );
     return takeObject(ret);
   }
   /**
    * @param {any} arg0
    */
   set prover_query_json(arg0) {
-    wasm.__wbg_set_proverqueryandqueryexpr_prover_query_json(
+    wasm.__wbg_set_proverqueryandqueryexprandcommitments_prover_query_json(
       this.__wbg_ptr,
       addHeapObject(arg0),
     );
@@ -263,18 +314,50 @@ class ProverQueryAndQueryExpr {
    * @returns {any}
    */
   get query_expr_json() {
-    const ret = wasm.__wbg_get_proverqueryandqueryexpr_query_expr_json(
-      this.__wbg_ptr,
-    );
+    const ret =
+      wasm.__wbg_get_proverqueryandqueryexprandcommitments_query_expr_json(
+        this.__wbg_ptr,
+      );
     return takeObject(ret);
   }
   /**
    * @param {any} arg0
    */
   set query_expr_json(arg0) {
-    wasm.__wbg_set_proverqueryandqueryexpr_query_expr_json(
+    wasm.__wbg_set_proverqueryandqueryexprandcommitments_query_expr_json(
       this.__wbg_ptr,
       addHeapObject(arg0),
+    );
+  }
+  /**
+   * @returns {(TableRefAndCommitment)[]}
+   */
+  get commitments() {
+    try {
+      const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+      wasm.__wbg_get_proverqueryandqueryexprandcommitments_commitments(
+        retptr,
+        this.__wbg_ptr,
+      );
+      var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
+      var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
+      var v1 = getArrayJsValueFromWasm0(r0, r1).slice();
+      wasm.__wbindgen_free(r0, r1 * 4, 4);
+      return v1;
+    } finally {
+      wasm.__wbindgen_add_to_stack_pointer(16);
+    }
+  }
+  /**
+   * @param {(TableRefAndCommitment)[]} arg0
+   */
+  set commitments(arg0) {
+    const ptr0 = passArrayJsValueToWasm0(arg0, wasm.__wbindgen_malloc);
+    const len0 = WASM_VECTOR_LEN;
+    wasm.__wbg_set_proverqueryandqueryexprandcommitments_commitments(
+      this.__wbg_ptr,
+      ptr0,
+      len0,
     );
   }
 }
@@ -287,6 +370,14 @@ const TableRefAndCommitmentFinalization =
       );
 
 class TableRefAndCommitment {
+  static __wrap(ptr) {
+    ptr = ptr >>> 0;
+    const obj = Object.create(TableRefAndCommitment.prototype);
+    obj.__wbg_ptr = ptr;
+    TableRefAndCommitmentFinalization.register(obj, obj.__wbg_ptr, obj);
+    return obj;
+  }
+
   static __unwrap(jsValue) {
     if (!(jsValue instanceof TableRefAndCommitment)) {
       return 0;
@@ -331,15 +422,23 @@ class TableRefAndCommitment {
 
 const imports = {
   __wbindgen_placeholder__: {
+    __wbindgen_object_drop_ref: function (arg0) {
+      takeObject(arg0);
+    },
     __wbindgen_is_undefined: function (arg0) {
       const ret = getObject(arg0) === undefined;
       return ret;
     },
-    __wbindgen_object_drop_ref: function (arg0) {
-      takeObject(arg0);
+    __wbindgen_string_new: function (arg0, arg1) {
+      const ret = getStringFromWasm0(arg0, arg1);
+      return addHeapObject(ret);
     },
     __wbindgen_object_clone_ref: function (arg0) {
       const ret = getObject(arg0);
+      return addHeapObject(ret);
+    },
+    __wbg_tablerefandcommitment_new: function (arg0) {
+      const ret = TableRefAndCommitment.__wrap(arg0);
       return addHeapObject(ret);
     },
     __wbg_tablerefandcommitment_unwrap: function (arg0) {
