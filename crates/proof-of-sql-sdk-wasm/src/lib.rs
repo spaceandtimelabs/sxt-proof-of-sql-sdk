@@ -54,35 +54,41 @@ impl TableRefAndCommitment {
 
 fn query_commitments_from_table_ref_and_commitment_iter<'a, C>(
     iter: impl IntoIterator<Item = &'a TableRefAndCommitment>,
-) -> Result<QueryCommitments<C>, ()>
+) -> Result<QueryCommitments<C>, String>
 where
     for<'de> C: Commitment + Deserialize<'de>,
 {
-    Ok(iter
-        .into_iter()
+    iter.into_iter()
         .map(
             |TableRefAndCommitment {
                  table_ref,
                  table_commitment_hex,
              }| {
-                let table_ref = table_ref.parse().expect("TODO");
+                let table_ref = table_ref
+                    .parse()
+                    .map_err(|e| format!("failed to parse table ref: {e}"))?;
                 let table_commitment_bytes = TableCommitmentBytes::decode(
-                    &mut hex::decode(table_commitment_hex).expect("TODO").as_slice(),
+                    &mut hex::decode(table_commitment_hex)
+                        .map_err(|e| format!("failed to decode table commitment hex: {e}"))?
+                        .as_slice(),
                 )
-                .expect("TODO");
+                .map_err(|e| format!("failed to decode table commitment bytes: {e}"))?;
 
                 let table_commitment =
-                    postcard::from_bytes(&table_commitment_bytes.data.0.as_slice()).expect("TODO");
+                    postcard::from_bytes(&table_commitment_bytes.data.0.as_slice())
+                        .map_err(|e| format!("failed to deserialize table commitment: {e}"))?;
 
-                (table_ref, table_commitment)
+                Ok((table_ref, table_commitment))
             },
         )
-        .collect())
+        .collect()
 }
 
 #[wasm_bindgen]
 pub fn commitment_storage_key_dory(table_ref: &str) -> Result<String, String> {
-    let resource_id: ResourceId = table_ref.parse().expect("TODO");
+    let resource_id: ResourceId = table_ref
+        .parse()
+        .map_err(|e| format!("failed to parse table ref: {e}"))?;
 
     let table_id = resource_id_to_table_id(&resource_id);
 
@@ -107,15 +113,18 @@ pub fn plan_prover_query_dory(
     query: &str,
     commitments: Vec<TableRefAndCommitment>,
 ) -> Result<ProverQueryAndQueryExprAndCommitments, String> {
-    let query_commitments =
-        query_commitments_from_table_ref_and_commitment_iter(&commitments).expect("TODO");
+    let query_commitments = query_commitments_from_table_ref_and_commitment_iter(&commitments)
+        .map_err(|e| format!("failed to construct QueryCommitments: {e}"))?;
 
     let (prover_query, query_expr) =
-        sxt_proof_of_sql_sdk::plan_prover_query_dory(query, &query_commitments).expect("TODO");
+        sxt_proof_of_sql_sdk::plan_prover_query_dory(query, &query_commitments)
+            .map_err(|e| format!("failed to plan prover query: {e}"))?;
 
-    let prover_query_json = JsValue::from_serde(&prover_query).expect("TODO");
+    let prover_query_json = JsValue::from_serde(&prover_query)
+        .map_err(|e| format!("failed to convert prover query to json: {e}"))?;
 
-    let query_expr_json = JsValue::from_serde(&query_expr).expect("TODO");
+    let query_expr_json = JsValue::from_serde(&query_expr)
+        .map_err(|e| format!("failed to convert query expr to json: {e}"))?;
 
     let result = ProverQueryAndQueryExprAndCommitments {
         prover_query_json,
@@ -132,12 +141,16 @@ pub fn verify_prover_response_dory(
     query_expr_json: JsValue,
     commitments: Vec<TableRefAndCommitment>,
 ) -> Result<JsValue, String> {
-    let prover_response = prover_response_json.into_serde().expect("TODO");
+    let prover_response = prover_response_json
+        .into_serde()
+        .map_err(|e| format!("failed to deserialize prover response json: {e}"))?;
 
-    let query_expr = query_expr_json.into_serde().expect("TODO");
+    let query_expr = query_expr_json
+        .into_serde()
+        .map_err(|e| format!("failed to deserialize query expr json: {e}"))?;
 
-    let query_commitments =
-        query_commitments_from_table_ref_and_commitment_iter(&commitments).expect("TODO");
+    let query_commitments = query_commitments_from_table_ref_and_commitment_iter(&commitments)
+        .map_err(|e| format!("failed to construct QueryCommitments: {e}"))?;
 
     let verified_table_result =
         sxt_proof_of_sql_sdk::verify_prover_response::<DynamicDoryEvaluationProof>(
@@ -146,9 +159,10 @@ pub fn verify_prover_response_dory(
             &query_commitments,
             &&*VERIFIER_SETUP,
         )
-        .expect("TODO");
+        .map_err(|e| format!("verification failure: {e}"))?;
 
-    let verified_table_result_json = JsValue::from_serde(&verified_table_result).expect("TODO");
+    let verified_table_result_json = JsValue::from_serde(&verified_table_result)
+        .map_err(|e| format!("failed to convert verified table result to json: {e}"))?;
 
     Ok(verified_table_result_json)
 }
