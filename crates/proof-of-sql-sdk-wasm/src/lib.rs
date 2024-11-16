@@ -28,12 +28,14 @@ lazy_static::lazy_static! {
 }
 
 #[wasm_bindgen(getter_with_clone)]
-pub struct ProverQueryAndQueryExpr {
+pub struct ProverQueryAndQueryExprAndCommitments {
     pub prover_query_json: JsValue,
     pub query_expr_json: JsValue,
+    pub commitments: Vec<TableRefAndCommitment>,
 }
 
 #[wasm_bindgen]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct TableRefAndCommitment {
     table_ref: String,
     table_commitment_hex: String,
@@ -104,7 +106,7 @@ pub fn commitment_storage_key_dory(table_ref: &str) -> Result<String, String> {
 pub fn plan_prover_query_dory(
     query: &str,
     commitments: Vec<TableRefAndCommitment>,
-) -> Result<ProverQueryAndQueryExpr, String> {
+) -> Result<ProverQueryAndQueryExprAndCommitments, String> {
     let query_commitments =
         query_commitments_from_table_ref_and_commitment_iter(&commitments).expect("TODO");
 
@@ -115,9 +117,10 @@ pub fn plan_prover_query_dory(
 
     let query_expr_json = JsValue::from_serde(&query_expr).expect("TODO");
 
-    let result = ProverQueryAndQueryExpr {
+    let result = ProverQueryAndQueryExprAndCommitments {
         prover_query_json,
         query_expr_json,
+        commitments,
     };
 
     Ok(result)
