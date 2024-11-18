@@ -506,7 +506,7 @@ if (!secrets.apiKey) {
 // Set the secrets field to an apiKey that you own for your sxt account.
 
 // Execute the API request using Functions.makeHttpRequest
-const apiResponse = await Functions.makeHttpRequest({
+const authResponse = await Functions.makeHttpRequest({
   url: "https://proxy.api.spaceandtime.dev/auth/apikey",
   method: "POST",
   headers: {
@@ -515,14 +515,18 @@ const apiResponse = await Functions.makeHttpRequest({
   },
 });
 
+if (authResponse.error) {
+  throw new Error("Error querying auth endpoint: " + authResponse.message);
+}
+
 // Extract the access token, truncate it to 256 characters, and return it as an encoded string
-const accessToken = apiResponse.data.accessToken;
+const accessToken = authResponse.data.accessToken;
 
 // TODO: make this not be hardcoded:
 const commitmentKey =
   "0xca407206ec1ab726b2636c4b145ac28749505e273536fae35330b966dac69e86a4832a125c0464e066dd20add960efb518424c4f434b5320455448455245554d4a9e6f9b8d43f6ad008f8c291929dee201";
 
-const commitmentApiResponse = await Functions.makeHttpRequest({
+const commitmentResponse = await Functions.makeHttpRequest({
   url: "https://rpc.testnet.sxt.network/",
   method: "POST",
   headers: {
@@ -536,13 +540,50 @@ const commitmentApiResponse = await Functions.makeHttpRequest({
   },
 });
 
-let commitment = commitmentApiResponse.data.result.slice(2); // remove the 0x prefix
-const commitments = [new TableRefAndCommitment("ETHEREUM.BLOCKS", commitment)];
-const proverQueryAndQueryExpr = plan_prover_query_dory(
+if (commitmentResponse.error) {
+  throw new Error("Error querying RPC node: " + commitmentResponse.message);
+}
+
+let commitment = commitmentResponse.data.result.slice(2); // remove the 0x prefix
+let commitments = [new TableRefAndCommitment("ETHEREUM.BLOCKS", commitment)];
+const plannedProverQuery = plan_prover_query_dory(
   "SELECT SUM(BLOCK_NUMBER), COUNT(*) FROM ETHEREUM.BLOCKS",
   commitments,
 );
-const proverQuery = proverQueryAndQueryExpr.prover_query_json;
-const queryExpr = proverQueryAndQueryExpr.query_expr_json;
+const proverQuery = plannedProverQuery.prover_query_json;
+const queryExpr = plannedProverQuery.query_expr_json;
+commitments = plannedProverQuery.commitments;
 
-return Functions.encodeString("TODO");
+// proverQuery.query_context["ETHEREUM.BLOCKS"].ends = [100];
+
+const proverResponse = await Functions.makeHttpRequest({
+  url: "https://api.spaceandtime.dev/v1/prove",
+  method: "POST",
+  headers: {
+    Authorization: "Bearer " + accessToken,
+    "content-type": "application/json",
+  },
+  data: proverQuery,
+});
+
+if (proverResponse.error) {
+  throw new Error("Error querying prover: " + proverResponse.message);
+}
+
+const proverResponseJson = proverResponse.data;
+
+try {
+  const result = verify_prover_response_dory(
+    proverResponseJson,
+    queryExpr,
+    commitments,
+  );
+  return Functions.encodeString("Verified");
+} catch (e) {
+  if (e instanceof String) {
+    if (e.slice(0, 22) === "verification failure: ") {
+      return Functions.encodeString("Invalid");
+    }
+  }
+  throw e;
+}
