@@ -600,8 +600,6 @@ class SxTProof {
         } catch (e) {
             return Functions.encodeString("Failed: ", e);
         }
-
-
     }
 }
 
