@@ -22,6 +22,6 @@ try {
     console.log("Workflow completed successfully:", result);
     return Functions.encodeString("Verified");
 } catch (error) {
-    console.log("Workflow failed:");
+    console.log("Workflow failed: ", error);
     return Functions.encodeString("Failed: ", error);
 }
