@@ -13,18 +13,15 @@ if (!secrets.apiKey) {
     throw Error("Missing secret: apiKey");
 }
 
-// Step 1: Initialize the SxTProof instance
+// Initialize the SxTProof instance
 const proof = new SxTProof(queryString, commitmentKey, secrets.apiKey);
 
 try {
-    // Step 2: Initialize the wasm module
-    await proof.init();
-
-    // Step 3: Verify the proof
-    const result = await proof.verify();
+    // Kick off the proof and await execution
+    const result = await proof.executeWorkflow();
+    console.log("Workflow completed successfully:", result);
+    return Functions.encodeString("Verified");
 } catch (error) {
-    // Step 4: Handle errors
+    console.log("Workflow failed:");
+    return Functions.encodeString("Failed: ", error);
 }
-
-// Step 5: Final message
-return Functions.encodeString("Verified");
