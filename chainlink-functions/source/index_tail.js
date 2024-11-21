@@ -66,7 +66,8 @@ export class SxTClient {
     return proverResponse.json();
   }
 
-  async queryAndVerify(queryString, table, commitmentKey) {
+  async queryAndVerify(queryString, table) {
+    const commitmentKey = "0x" + commitment_storage_key_dory(table);
     const authResponse = await this.#getAccessToken();
     const accessToken = authResponse.accessToken;
     const commitmentResponse = await this.#getCommitment(commitmentKey);
