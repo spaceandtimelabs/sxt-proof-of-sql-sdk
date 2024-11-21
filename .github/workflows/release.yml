@@ -1,0 +1,124 @@
+name: Release
+on:
+  workflow_dispatch:
+    inputs:
+      git_ref:
+        description: 'The Git reference (branch, tag, or commit SHA) to release from'
+        required: true
+        default: 'main'
+
+jobs:
+  release:
+    name: Run Release Manager
+    if: "!contains(github.event.head_commit.message, 'chore(release):')"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Load Secrets
+        uses: 1password/load-secrets-action@v1
+        with:
+          export-env: true
+        env:
+          OP_CONNECT_HOST: ${{ secrets.OP_CONNECT_HOST }}
+          OP_CONNECT_TOKEN: ${{ secrets.OP_CONNECT_TOKEN }}
+          GITHUB_APP_ID: op://op-github-devops/cosmic-agent-labs/app-id
+          GITHUB_PRIVATE_KEY: op://op-github-devops/cosmic-agent-labs/private-key
+          NODE_AUTH_TOKEN: op://op-github-devops/npmjs-registry/token
+
+      - name: Create GitHub App Token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ env.GITHUB_APP_ID }}
+          private-key: ${{ env.GITHUB_PRIVATE_KEY }}
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          persist-credentials: false
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Conventional Changelog Action
+        id: conventional-changelog
+        uses: TriPSs/conventional-changelog-action@v5
+        with:
+          github-token: ${{ steps.app-token.outputs.token }}
+          skip-git-pull: true
+          skip-version-file: true
+          git-push: false
+          skip-on-empty: false
+
+      - name: Bump package.json Version
+        run: |
+          TAG=${{ steps.conventional-changelog.outputs.tag }}
+          VERSION=${TAG#v}
+          echo "Bumping npm package version to $VERSION"
+          npm version $VERSION --no-git-tag-version
+
+      - name: Commit package.json Version
+        run: |
+          TAG=${{ steps.conventional-changelog.outputs.tag }}
+          VERSION=${TAG#v}
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add package.json
+          git commit -m "chore(release): bump npm package version to $VERSION"
+          git push origin HEAD:$BRANCH_NAME
+
+      - name: Push Conventional Changelog
+        uses: ad-m/github-push-action@master
+        id: push
+        with:
+          github_token: ${{ steps.app-token.outputs.token }}
+          branch: ${{ github.ref_name }}
+
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.conventional-changelog.outputs.tag }}
+          body: ${{ steps.conventional-changelog.outputs.changelog }}
+          token: ${{ steps.app-token.outputs.token }}
+          makeLatest: true
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org/'
+          scope: '@spaceandtimelabs'
+          always-auth: true
+
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Pack Wasm
+        run: |
+          cargo install wasm-pack
+          wasm-pack build --release --target deno --no-typescript crates/sxt-proof-of-sql-sdk-wasm
+
+      - name: Run Build Script
+        run: |
+          chmod +x ./source/build_index.sh
+          ./source/build_index.sh crates/sxt-proof-of-sql-sdk-wasm
+
+      - name: Move Generated Files
+        run: |
+          mkdir -p pkg
+          mv ./index.js ./pkg/
+          mv ./sxt_proof_of_sql_sdk_wasm_bg.wasm ./pkg/
+
+      - name: Update Version in pkg/package.json
+        run: |
+          TAG=${{ steps.conventional-changelog.outputs.tag }}
+          VERSION=${TAG#v}
+          jq '.version = "'$VERSION'"' package.json > pkg/package.json
+
+      - name: Publish to npm
+        env:
+          NODE_AUTH_TOKEN: ${{ env.NODE_AUTH_TOKEN }}
+        run: |
+          cd pkg
+          npm publish --access public --non-interactive
