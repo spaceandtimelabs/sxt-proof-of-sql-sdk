@@ -1,0 +1,25 @@
+[package]
+name = "sxt-proof-of-sql-sdk-local"
+edition.workspace = true
+repository.workspace = true
+version.workspace = true
+license-file.workspace = true
+
+[dependencies]
+flexbuffers = { workspace = true }
+proof-of-sql = { workspace = true }
+proof-of-sql-parser = { workspace = true }
+prost = { workspace = true }
+tonic = { workspace = true, features = ["codegen", "prost"] }
+serde = { workspace = true }
+snafu = { workspace = true }
+subxt = { workspace = true }
+
+[build-dependencies]
+tonic-build = { workspace = true }
+
+[features]
+default = ["native", "prover-client"]
+prover-client = ["tonic/transport"]
+native = ["subxt/native"]
+web = ["subxt/web"]
