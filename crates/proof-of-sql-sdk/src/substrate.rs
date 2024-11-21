@@ -1,13 +1,3 @@
-use crate::sxt_chain_runtime::api::{
-    runtime_types::{
-        bounded_collections::bounded_vec::BoundedVec,
-        proof_of_sql_commitment_map::{
-            commitment_scheme::CommitmentScheme, commitment_storage_map::TableCommitmentBytes,
-        },
-        sxt_core::tables::TableIdentifier,
-    },
-    storage,
-};
 use futures::future::try_join_all;
 use proof_of_sql::{
     base::{
@@ -16,24 +6,20 @@ use proof_of_sql::{
     },
     proof_primitive::dory::DynamicDoryCommitment,
 };
-use proof_of_sql_parser::{Identifier, ResourceId};
+use proof_of_sql_parser::ResourceId;
 use subxt::{OnlineClient, PolkadotConfig};
+use sxt_proof_of_sql_sdk_local::{
+    resource_id_to_table_id,
+    sxt_chain_runtime::api::{
+        runtime_types::proof_of_sql_commitment_map::{
+            commitment_scheme::CommitmentScheme, commitment_storage_map::TableCommitmentBytes,
+        },
+        storage,
+    },
+};
 
 /// Use the standard PolkadotConfig
 type SxtConfig = PolkadotConfig;
-
-/// Convert PoSQL `Identifier` to SxT Core `BoundedVec<u8>`
-fn identifier_to_byte_string(identifier: &Identifier) -> BoundedVec<u8> {
-    BoundedVec::<u8>(identifier.as_str().to_uppercase().as_bytes().to_vec())
-}
-
-/// Convert PoSQL resource IDs to SxT Core table identifiers
-fn resource_id_to_table_id(resource_id: &ResourceId) -> TableIdentifier {
-    TableIdentifier {
-        name: identifier_to_byte_string(&resource_id.object_name()),
-        namespace: identifier_to_byte_string(&resource_id.schema()),
-    }
-}
 
 /// Query the commitments pallet to find which commitments
 pub async fn query_commitments(
