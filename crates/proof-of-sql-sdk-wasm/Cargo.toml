@@ -1,0 +1,24 @@
+[package]
+name = "sxt-proof-of-sql-sdk-wasm"
+edition.workspace = true
+repository.workspace = true
+version.workspace = true
+license-file.workspace = true
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+ark-serialize = { workspace = true }
+gloo-utils = { workspace = true }
+hex = { workspace = true, features = ["serde"] }
+lazy_static = { workspace = true }
+parity-scale-codec = { workspace = true, features = ["derive"] }
+proof-of-sql = { workspace = true }
+proof-of-sql-parser = { workspace = true }
+postcard = { workspace = true }
+serde = { workspace = true }
+subxt = { workspace = true }
+sp-crypto-hashing = { workspace = true }
+sxt-proof-of-sql-sdk-local = { workspace = true, features = ["web"] }
+wasm-bindgen = { workspace = true }

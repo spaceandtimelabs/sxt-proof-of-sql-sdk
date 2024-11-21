@@ -2,22 +2,14 @@ use crate::{get_access_token, query_commitments};
 use clap::ValueEnum;
 use proof_of_sql::{
     base::database::{OwnedTable, TableRef},
-    proof_primitive::dory::{
-        DoryScalar, DynamicDoryCommitment, DynamicDoryEvaluationProof, VerifierSetup,
-    },
-    sql::{
-        parse::QueryExpr,
-        postprocessing::{apply_postprocessing_steps, OwnedTablePostprocessing},
-        proof::VerifiableQueryResult,
-    },
+    proof_primitive::dory::{DoryScalar, DynamicDoryEvaluationProof, VerifierSetup},
+    sql::postprocessing::{apply_postprocessing_steps, OwnedTablePostprocessing},
 };
-use prover::{ProverContextRange, ProverQuery, ProverResponse};
 use reqwest::Client;
-use std::{collections::HashMap, path::Path};
-
-mod prover {
-    tonic::include_proto!("sxt.core");
-}
+use std::path::Path;
+use sxt_proof_of_sql_sdk_local::{
+    plan_prover_query_dory, prover::ProverResponse, verify_prover_response,
+};
 
 /// Level of postprocessing allowed
 ///
@@ -92,33 +84,16 @@ impl SxTClient {
     ) -> Result<OwnedTable<DoryScalar>, Box<dyn core::error::Error>> {
         // Parse table_ref into TableRef struct
         let table_ref = TableRef::new(table.parse()?);
-        let schema = table_ref.schema_id();
+
         // Load verifier setup
         let verifier_setup_path = Path::new(&self.verifier_setup);
         let verifier_setup = VerifierSetup::load_from_file(verifier_setup_path)?;
         // Accessor setup
         let accessor =
             query_commitments(&[table_ref.resource_id()], &self.substrate_node_url).await?;
-        // Parse the SQL query
-        let query_expr: QueryExpr<DynamicDoryCommitment> =
-            QueryExpr::try_new(query.parse()?, schema, &accessor)?;
-        let proof_plan = query_expr.proof_expr();
-        let serialized_proof_plan = flexbuffers::to_vec(proof_plan)?;
-        // Send the query to the prover
-        let mut query_context = HashMap::new();
-        let commitment_range = accessor[&table_ref].range();
-        query_context.insert(
-            table_ref.to_string().to_uppercase(),
-            ProverContextRange {
-                start: commitment_range.start as u64,
-                ends: vec![commitment_range.end as u64],
-            },
-        );
-        let prover_query = ProverQuery {
-            proof_plan: serialized_proof_plan,
-            query_context,
-            commitment_scheme: 1,
-        };
+
+        let (prover_query, query_expr) = plan_prover_query_dory(query, &accessor)?;
+
         let client = Client::new();
         let access_token = get_access_token(&self.sxt_api_key, &self.auth_root_url).await?;
         let response = client
@@ -136,15 +111,14 @@ impl SxTClient {
                 &serialized_prover_response
             )
         })?;
-        let stringified_verifiable_result = prover_response.verifiable_result.clone();
-        let verifiable_result: VerifiableQueryResult<DynamicDoryEvaluationProof> =
-            flexbuffers::from_slice(&stringified_verifiable_result)?;
-        // Verify the proof
-        let proof = verifiable_result.proof.unwrap();
-        let serialized_result = verifiable_result.provable_result.unwrap();
-        let owned_table_result = proof
-            .verify(proof_plan, &accessor, &serialized_result, &&verifier_setup)?
-            .table;
+
+        let verified_table_result = verify_prover_response::<DynamicDoryEvaluationProof>(
+            &prover_response,
+            &query_expr,
+            &accessor,
+            &&verifier_setup,
+        )?;
+
         // Apply postprocessing steps
         let postprocessing = query_expr.postprocessing();
         let is_postprocessing_expensive = postprocessing.iter().any(|step| {
@@ -154,10 +128,10 @@ impl SxTClient {
             )
         });
         match (self.postprocessing_level, postprocessing.len(), is_postprocessing_expensive) {
-            (_, 0, false) => Ok(owned_table_result),
+            (_, 0, false) => Ok(verified_table_result),
             (PostprocessingLevel::All, _, _) | (PostprocessingLevel::Cheap, _, false) => {
                 let transformed_result: OwnedTable<DoryScalar> =
-                    apply_postprocessing_steps(owned_table_result, postprocessing)?;
+                    apply_postprocessing_steps(verified_table_result, postprocessing)?;
                 Ok(transformed_result)
             }
             _ => Err("Required postprocessing is not allowed. Please examine your query or change `PostprocessingLevel` using `SxTClient::with_postprocessing`".into()),
