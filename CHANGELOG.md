@@ -1,4 +1,14 @@
-# 0.1.0 (2024-11-22)
+# [0.2.0](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.1.0...v0.2.0) (2024-11-22)
+
+
+### Features
+
+* add javascript client and script to attach it to wasm-pack ([0a7fced](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/commit/0a7fced4b6d877bea20a675f968e63553789744d))
+* set rust toolchain channel to 1.81 ([ed9beba](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/commit/ed9bebad76d27b7d1826b6fc26272e239ee1249c))
+
+
+
+# [0.1.0](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/7aa1610d39d8c9198bf578b1b1c5c7030d9cbabc...v0.1.0) (2024-11-22)
 
 
 ### Bug Fixes
