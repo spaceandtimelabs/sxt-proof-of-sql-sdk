@@ -106,27 +106,8 @@ function getDataViewMemory0() {
     }
     return cachedDataViewMemory0;
 }
-
-function getArrayJsValueFromWasm0(ptr, len) {
-    ptr = ptr >>> 0;
-    const mem = getDataViewMemory0();
-    const result = [];
-    for (let i = ptr; i < ptr + 4 * len; i += 4) {
-        result.push(takeObject(mem.getUint32(i, true)));
-    }
-    return result;
-}
-
-function passArrayJsValueToWasm0(array, malloc) {
-    const ptr = malloc(array.length * 4, 4) >>> 0;
-    const mem = getDataViewMemory0();
-    for (let i = 0; i < array.length; i++) {
-        mem.setUint32(ptr + 4 * i, addHeapObject(array[i]), true);
-    }
-    WASM_VECTOR_LEN = array.length;
-    return ptr;
-}
 /**
+ * Compute the sxt chain storage key for the commitment of the given table.
  * @param {string} table_ref
  * @returns {string}
  */
@@ -157,7 +138,27 @@ export function commitment_storage_key_dory(table_ref) {
     }
 }
 
+function getArrayJsValueFromWasm0(ptr, len) {
+    ptr = ptr >>> 0;
+    const mem = getDataViewMemory0();
+    const result = [];
+    for (let i = ptr; i < ptr + 4 * len; i += 4) {
+        result.push(takeObject(mem.getUint32(i, true)));
+    }
+    return result;
+}
+
+function passArrayJsValueToWasm0(array, malloc) {
+    const ptr = malloc(array.length * 4, 4) >>> 0;
+    const mem = getDataViewMemory0();
+    for (let i = 0; i < array.length; i++) {
+        mem.setUint32(ptr + 4 * i, addHeapObject(array[i]), true);
+    }
+    WASM_VECTOR_LEN = array.length;
+    return ptr;
+}
 /**
+ * Create a query for the prover service from sql query text and commitments.
  * @param {string} query
  * @param {(TableRefAndCommitment)[]} commitments
  * @returns {ProverQueryAndQueryExprAndCommitments}
@@ -183,6 +184,7 @@ export function plan_prover_query_dory(query, commitments) {
 }
 
 /**
+ * Verify a response from the prover service against the provided commitment accessor.
  * @param {any} prover_response_json
  * @param {any} query_expr_json
  * @param {(TableRefAndCommitment)[]} commitments
@@ -217,7 +219,9 @@ function handleError(f, args) {
 const ProverQueryAndQueryExprAndCommitmentsFinalization = (typeof FinalizationRegistry === 'undefined')
     ? { register: () => {}, unregister: () => {} }
     : new FinalizationRegistry(ptr => wasm.__wbg_proverqueryandqueryexprandcommitments_free(ptr >>> 0, 1));
-
+/**
+ * Prover query and intermediate results produced by [`plan_prover_query_dory`].
+ */
 export class ProverQueryAndQueryExprAndCommitments {
 
     static __wrap(ptr) {
@@ -240,6 +244,7 @@ export class ProverQueryAndQueryExprAndCommitments {
         wasm.__wbg_proverqueryandqueryexprandcommitments_free(ptr, 0);
     }
     /**
+     * Prover query json that can be used as the body data of a prover request.
      * @returns {any}
      */
     get prover_query_json() {
@@ -247,12 +252,14 @@ export class ProverQueryAndQueryExprAndCommitments {
         return takeObject(ret);
     }
     /**
+     * Prover query json that can be used as the body data of a prover request.
      * @param {any} arg0
      */
     set prover_query_json(arg0) {
         wasm.__wbg_set_proverqueryandqueryexprandcommitments_prover_query_json(this.__wbg_ptr, addHeapObject(arg0));
     }
     /**
+     * Proof-of-sql query expr (parsed sql) serialized as json.
      * @returns {any}
      */
     get query_expr_json() {
@@ -260,12 +267,18 @@ export class ProverQueryAndQueryExprAndCommitments {
         return takeObject(ret);
     }
     /**
+     * Proof-of-sql query expr (parsed sql) serialized as json.
      * @param {any} arg0
      */
     set query_expr_json(arg0) {
         wasm.__wbg_set_proverqueryandqueryexprandcommitments_query_expr_json(this.__wbg_ptr, addHeapObject(arg0));
     }
     /**
+     * Proof-of-sql commitments passed into [`plan_prover_query_dory`].
+     *
+     * This binding does not logically require taking ownership of the commitments.
+     * However, collections cannot be passed in by reference across the wasm boundary.
+     * Returning the original commitments allows the caller to reuse them without cloning.
      * @returns {(TableRefAndCommitment)[]}
      */
     get commitments() {
@@ -282,6 +295,11 @@ export class ProverQueryAndQueryExprAndCommitments {
         }
     }
     /**
+     * Proof-of-sql commitments passed into [`plan_prover_query_dory`].
+     *
+     * This binding does not logically require taking ownership of the commitments.
+     * However, collections cannot be passed in by reference across the wasm boundary.
+     * Returning the original commitments allows the caller to reuse them without cloning.
      * @param {(TableRefAndCommitment)[]} arg0
      */
     set commitments(arg0) {
@@ -294,7 +312,9 @@ export class ProverQueryAndQueryExprAndCommitments {
 const TableRefAndCommitmentFinalization = (typeof FinalizationRegistry === 'undefined')
     ? { register: () => {}, unregister: () => {} }
     : new FinalizationRegistry(ptr => wasm.__wbg_tablerefandcommitment_free(ptr >>> 0, 1));
-
+/**
+ * A table and its associated commitment.
+ */
 export class TableRefAndCommitment {
 
     static __wrap(ptr) {
@@ -324,6 +344,9 @@ export class TableRefAndCommitment {
         wasm.__wbg_tablerefandcommitment_free(ptr, 0);
     }
     /**
+     * Construct a [`TableRefAndCommitment`].
+     *
+     * Does not perform any validation of the strings.
      * @param {string} table_ref
      * @param {string} table_commitment_hex
      */
