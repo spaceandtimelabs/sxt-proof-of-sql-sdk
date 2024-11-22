@@ -40,10 +40,28 @@ jobs:
           github_token: ${{ secrets.GH_TOKEN }}
           branch: ${{ github.ref }}
 
+      - name: Install stable toolchain
+        run: curl https://sh.rustup.rs -sSf | bash -s -- -y --profile minimal && source ~/.cargo/env
+
+      - name: Install build dependencies
+        run: export DEBIAN_FRONTEND=non-interactive && sudo apt-get update && sudo apt-get install -y clang lld protobuf-compiler
+
+      - name: Install wasm-pack
+        run: cargo install wasm-pack
+
+      - name: Build wasm binary
+        run: wasm-pack build --release --target deno --no-typescript crates/proof-of-sql-sdk-wasm
+
+      - name: Build javascript index
+        run: |
+          chmod +x ./node/src/build_index.sh
+          ./node/src/build_index.sh crates/proof-of-sql-sdk-wasm/pkg
+
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ steps.conventional-changelog.outputs.tag }}
           body: ${{ steps.conventional-changelog.outputs.changelog }}
           token: ${{ secrets.GH_TOKEN }}
+          artifacts: "node/src/index.js,node/src/sxt_proof_of_sql_sdk_wasm_bg.wasm"
           makeLatest: true
