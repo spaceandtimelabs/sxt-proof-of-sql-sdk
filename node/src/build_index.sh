@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
-cat $1/sxt_proof_of_sql_sdk_wasm.js $SCRIPT_DIR/index_tail.js > $SCRIPT_DIR/index.js
-cp $1/sxt_proof_of_sql_sdk_wasm_bg.wasm $SCRIPT_DIR
-
 # Enable error handling
 set -euo pipefail
 
@@ -51,9 +48,9 @@ append_wasm_instantiation_code() {
 
 # Main logic
 main() {
-    local input_js_file="sxt_proof_of_sql_sdk_wasm.js"
-    local wasm_file="sxt_proof_of_sql_sdk_wasm_bg.wasm"
-    local output_js_file="sxt_proof_of_sql_sdk_wasm_modified.js"
+    local input_js_file="$1/sxt_proof_of_sql_sdk_wasm.js"
+    local wasm_file="$1/sxt_proof_of_sql_sdk_wasm_bg.wasm"
+    local output_js_file="$SCRIPT_DIR/index.js"
 
     if [[ ! -f "$input_js_file" ]]; then
         echo "Error: Input JavaScript file '$input_js_file' not found."
@@ -75,6 +72,8 @@ main() {
     append_wasm_instantiation_code "$output_js_file" || return 1
 
     echo "Modified JavaScript file created: $output_js_file"
+
+    cat $1/sxt_proof_of_sql_sdk_wasm.js $SCRIPT_DIR/index_tail.js > $SCRIPT_DIR/index.js
 }
 
 main "$@"
