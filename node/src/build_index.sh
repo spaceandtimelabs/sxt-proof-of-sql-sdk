@@ -71,9 +71,13 @@ main() {
     echo "Appending WebAssembly instantiation code..."
     append_wasm_instantiation_code "$output_js_file" || return 1
 
-    echo "Modified JavaScript file created: $output_js_file"
+    cp $output_js_file $output_js_file.tmp
 
-    cat $1/sxt_proof_of_sql_sdk_wasm.js $SCRIPT_DIR/index_tail.js > $SCRIPT_DIR/index.js
+    cat $output_js_file.tmp $SCRIPT_DIR/index_tail.js > $output_js_file
+    
+    rm $output_js_file.tmp
+    
+    echo "Modified JavaScript file created: $output_js_file"
 }
 
 main "$@"
