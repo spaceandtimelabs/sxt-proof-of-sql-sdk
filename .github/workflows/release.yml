@@ -33,12 +33,36 @@ jobs:
           git-push: false
           skip-on-empty: false # Always create commit
 
+      - name: Bump package.json Version
+        working-directory: ./node
+        run: |
+          TAG=${{ steps.conventional-changelog.outputs.tag }}
+          VERSION=${TAG#v}
+          echo "Bumping npm package version to $VERSION"
+          npm version $VERSION --no-git-tag-version
+
+      - name: Commit package.json Version
+        working-directory: ./node
+        run: |
+          TAG=${{ steps.conventional-changelog.outputs.tag }}
+          VERSION=${TAG#v}
+          git add package.json
+          git commit -m "chore(release): bump npm package version to $VERSION"
+
       - name: Push Conventional Changelog
         uses: ad-m/github-push-action@master
         id: push
         with:
           github_token: ${{ secrets.GH_TOKEN }}
           branch: ${{ github.ref }}
+
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.conventional-changelog.outputs.tag }}
+          body: ${{ steps.conventional-changelog.outputs.changelog }}
+          token: ${{ secrets.GH_TOKEN }}
+          makeLatest: true
 
       - name: Install stable toolchain
         run: curl https://sh.rustup.rs -sSf | bash -s -- -y --profile minimal && source ~/.cargo/env
@@ -57,10 +81,16 @@ jobs:
           chmod +x ./node/src/build_index.sh
           ./node/src/build_index.sh crates/proof-of-sql-sdk-wasm/pkg
 
-      - name: Create Release
-        uses: ncipollo/release-action@v1
+      - name: Set Up Node.js
+        uses: actions/setup-node@v3
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
         with:
-          tag: ${{ steps.conventional-changelog.outputs.tag }}
-          body: ${{ steps.conventional-changelog.outputs.changelog }}
-          token: ${{ secrets.GH_TOKEN }}
-          makeLatest: true
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org/'
+          scope: '@spaceandtimelabs'
+
+      - name: Publish to npm
+        working-directory: ./node
+        run: |
+          npm publish --access public --non-interactive
