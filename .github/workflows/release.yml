@@ -47,7 +47,7 @@ jobs:
           TAG=${{ steps.conventional-changelog.outputs.tag }}
           VERSION=${TAG#v}
           git add package.json
-          git commit -m "chore(release): bump npm package version to $VERSION"
+          git commit -m "chore(release): bump npm package version to $VERSION [skip ci]"
 
       - name: Push Conventional Changelog
         uses: ad-m/github-push-action@master
