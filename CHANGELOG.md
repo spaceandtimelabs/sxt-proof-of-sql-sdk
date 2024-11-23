@@ -1,3 +1,7 @@
+## [0.3.1](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.3.0...v0.3.1) (2024-11-23)
+
+
+
 # [0.3.0](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.2.0...v0.3.0) (2024-11-23)
 
 
