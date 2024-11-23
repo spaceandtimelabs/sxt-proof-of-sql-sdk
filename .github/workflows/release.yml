@@ -63,5 +63,4 @@ jobs:
           tag: ${{ steps.conventional-changelog.outputs.tag }}
           body: ${{ steps.conventional-changelog.outputs.changelog }}
           token: ${{ secrets.GH_TOKEN }}
-          artifacts: "node/src/index.js,node/src/sxt_proof_of_sql_sdk_wasm_bg.wasm"
           makeLatest: true
