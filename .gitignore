@@ -1,6 +1,6 @@
 .env
 **/*.json
-!node/package.json
+!node/src/package.json
 
 
 # Rust
