@@ -34,7 +34,7 @@ jobs:
           skip-on-empty: false # Always create commit
 
       - name: Bump package.json Version
-        working-directory: ./node
+        working-directory: ./node/src
         run: |
           TAG=${{ steps.conventional-changelog.outputs.tag }}
           VERSION=${TAG#v}
@@ -42,7 +42,7 @@ jobs:
           npm version $VERSION --no-git-tag-version
 
       - name: Commit package.json Version
-        working-directory: ./node
+        working-directory: ./node/src
         run: |
           TAG=${{ steps.conventional-changelog.outputs.tag }}
           VERSION=${TAG#v}
@@ -91,6 +91,6 @@ jobs:
           scope: '@spaceandtimelabs'
 
       - name: Publish to npm
-        working-directory: ./node
+        working-directory: ./node/src
         run: |
           npm publish --access public --non-interactive
