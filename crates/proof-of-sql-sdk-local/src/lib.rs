@@ -16,3 +16,5 @@ pub use verify::{verify_prover_response, VerifyProverResponseError};
 pub mod prover {
     tonic::include_proto!("sxt.core");
 }
+
+pub mod attestation;

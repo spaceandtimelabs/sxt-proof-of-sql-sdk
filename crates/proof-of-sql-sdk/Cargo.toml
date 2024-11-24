@@ -21,6 +21,9 @@ subxt = { workspace = true, features = ["jsonrpsee"] }
 sxt-proof-of-sql-sdk-local = { workspace = true, features = ["native", "prover-client"] }
 tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }
 tonic = { workspace = true, features = ["tls", "tls-roots"] }
+sp-core = { workspace = true}
+snafu = { workspace = true }
+itertools = { workspace = true }
 
 [[example]]
 name = "cli"
