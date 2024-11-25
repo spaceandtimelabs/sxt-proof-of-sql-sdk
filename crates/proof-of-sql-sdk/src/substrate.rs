@@ -7,7 +7,7 @@ use proof_of_sql::{
     proof_primitive::dory::DynamicDoryCommitment,
 };
 use proof_of_sql_parser::ResourceId;
-use subxt::{OnlineClient, PolkadotConfig};
+use subxt::{blocks::BlockRef, Config, OnlineClient, PolkadotConfig};
 use sxt_proof_of_sql_sdk_local::{
     resource_id_to_table_id,
     sxt_chain_runtime::api::{
@@ -19,28 +19,38 @@ use sxt_proof_of_sql_sdk_local::{
 };
 
 /// Use the standard PolkadotConfig
-type SxtConfig = PolkadotConfig;
+pub type SxtConfig = PolkadotConfig;
 
-/// Query the commitments pallet to find which commitments
-pub async fn query_commitments(
+/// Get the commitments for the given tables at the given SxT block.
+///
+/// If `block_ref` is `None`, the latest block is used.
+pub async fn query_commitments<BR>(
     resource_ids: &[ResourceId],
     url: &str,
-) -> Result<QueryCommitments<DynamicDoryCommitment>, Box<dyn core::error::Error>> {
+    block_ref: Option<BR>,
+) -> Result<QueryCommitments<DynamicDoryCommitment>, Box<dyn core::error::Error>>
+where
+    BR: Into<BlockRef<<SxtConfig as Config>::Hash>> + Clone,
+{
     let api = OnlineClient::<SxtConfig>::from_insecure_url(url).await?;
 
     // Create a collection of futures
     let futures = resource_ids.iter().map(|id| {
         let api = api.clone();
         let id = *id;
+        let block_ref = block_ref.clone();
         async move {
             let table_id = resource_id_to_table_id(&id);
             let commitments_query = storage()
                 .commitments()
                 .commitment_storage_map(&table_id, &CommitmentScheme::DynamicDory);
-            let table_commitment_bytes: TableCommitmentBytes = api
-                .storage()
-                .at_latest()
-                .await?
+
+            let storage_at_block_ref = match block_ref {
+                Some(block_ref) => api.storage().at(block_ref),
+                None => api.storage().at_latest().await?,
+            };
+
+            let table_commitment_bytes: TableCommitmentBytes = storage_at_block_ref
                 .fetch(&commitments_query)
                 .await?
                 .ok_or("Commitment not found")?;

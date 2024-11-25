@@ -16,7 +16,7 @@ async fn main() -> Result<(), Box<dyn core::error::Error>> {
 
     // Execute the query and verify the result
     let result = client
-        .query_and_verify(&args.query, &args.table_ref)
+        .query_and_verify(&args.query, &args.table_ref, args.block_hash)
         .await?;
 
     // Print the result of the query

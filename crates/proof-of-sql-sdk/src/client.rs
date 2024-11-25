@@ -1,4 +1,4 @@
-use crate::{get_access_token, query_commitments};
+use crate::{get_access_token, query_commitments, substrate::SxtConfig};
 use clap::ValueEnum;
 use proof_of_sql::{
     base::database::{OwnedTable, TableRef},
@@ -7,6 +7,7 @@ use proof_of_sql::{
 };
 use reqwest::Client;
 use std::path::Path;
+use subxt::Config;
 use sxt_proof_of_sql_sdk_local::{
     plan_prover_query_dory, prover::ProverResponse, verify_prover_response,
 };
@@ -74,13 +75,16 @@ impl SxTClient {
         self
     }
 
-    /// Query and verify a SQL query
+    /// Query and verify a SQL query at the given SxT block.
     ///
     /// Run a SQL query and verify the result using Dynamic Dory.
+    ///
+    /// If `block_ref` is `None`, the latest block is used.
     pub async fn query_and_verify(
         &self,
         query: &str,
         table: &str,
+        block_ref: Option<<SxtConfig as Config>::Hash>,
     ) -> Result<OwnedTable<DoryScalar>, Box<dyn core::error::Error>> {
         // Parse table_ref into TableRef struct
         let table_ref = TableRef::new(table.parse()?);
@@ -89,8 +93,12 @@ impl SxTClient {
         let verifier_setup_path = Path::new(&self.verifier_setup);
         let verifier_setup = VerifierSetup::load_from_file(verifier_setup_path)?;
         // Accessor setup
-        let accessor =
-            query_commitments(&[table_ref.resource_id()], &self.substrate_node_url).await?;
+        let accessor = query_commitments(
+            &[table_ref.resource_id()],
+            &self.substrate_node_url,
+            block_ref,
+        )
+        .await?;
 
         let (prover_query, query_expr) = plan_prover_query_dory(query, &accessor)?;
 
