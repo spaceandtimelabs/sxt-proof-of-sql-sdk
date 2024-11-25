@@ -1,0 +1,9 @@
+{
+    "name": "sxt-query-ethereum",
+    "version": "1.0.0",
+    "description": "",
+    "type": "module",
+    "dependencies": {
+        "sxt-proof-of-sql-sdk": "*"
+    }
+}
