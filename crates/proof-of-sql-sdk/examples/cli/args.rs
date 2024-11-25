@@ -1,4 +1,5 @@
 use clap::Parser;
+use subxt::utils::H256;
 use sxt_proof_of_sql_sdk::{PostprocessingLevel, SxTClient};
 
 /// Struct to define and parse command-line arguments for Proof of SQL Client.
@@ -67,6 +68,10 @@ pub struct SdkArgs {
         help = "Table reference in format schema.table"
     )]
     pub table_ref: String,
+
+    /// SxT chain block hash to perform the query at.
+    #[arg(long)]
+    pub block_hash: Option<H256>,
 
     /// Path to the verifier setup binary file
     ///

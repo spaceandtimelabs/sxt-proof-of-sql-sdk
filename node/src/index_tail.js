@@ -25,7 +25,9 @@ export class SxTClient {
     }
     return authResponse.json();
   }
-  async #getCommitment(commitmentKey) {
+  async #getCommitment(commitmentKey, blockHash = null) {
+    const params = blockHash ? [commitmentKey, blockHash] : [commitmentKey]
+
     const commitmentResponse = await postHttpRequest({
       url: this.substrateNodeURL,
       headers: {
@@ -35,7 +37,7 @@ export class SxTClient {
         id: 1,
         jsonrpc: "2.0",
         method: "state_getStorage",
-        params: [commitmentKey],
+        params,
       },
     });
 
@@ -66,11 +68,11 @@ export class SxTClient {
     return proverResponse.json();
   }
 
-  async queryAndVerify(queryString, table) {
+  async queryAndVerify(queryString, table, blockHash = null) {
     const commitmentKey = "0x" + commitment_storage_key_dory(table);
     const authResponse = await this.#getAccessToken();
     const accessToken = authResponse.accessToken;
-    const commitmentResponse = await this.#getCommitment(commitmentKey);
+    const commitmentResponse = await this.#getCommitment(commitmentKey, blockHash);
     const commitment = commitmentResponse.result.slice(2); // remove the 0x prefix
 
     let commitments = [new TableRefAndCommitment(table, commitment)];
