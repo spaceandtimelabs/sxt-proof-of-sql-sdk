@@ -67,8 +67,8 @@ pub async fn query_commitments(
 }
 
 /// Errors that may occur during the attestation process.
-#[allow(dead_code)] 
 #[derive(Debug, Snafu)]
+#[allow(dead_code)]
 pub enum AttestationError {
     /// Represents an error originating from the Subxt library.
     #[snafu(display("Subxt error: {source}"))]
