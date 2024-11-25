@@ -36,7 +36,7 @@ pub enum AttestationError {
     #[snafu(display("Verification error: {:?}", source))]
     VerificationError {
         /// Source of the error.
-        source: VerificationError,
+        source: AttestationVerificationError,
     },
     /// Error related to signing or verifying signatures.
     #[snafu(display("Signature error: {:?}", source))]
@@ -54,7 +54,7 @@ type Result<T, E = AttestationError> = core::result::Result<T, E>;
 
 /// Errors that can occur during verification.
 #[derive(Debug, Snafu)]
-pub enum VerificationError {
+pub enum AttestationVerificationError {
     /// The recovery ID does not match the Ethereum specification.
     #[snafu(display("Invalid recovery ID: {:?}", recovery_id))]
     InvalidRecoveryIdError {
@@ -123,11 +123,11 @@ pub enum SignatureError {
 /// ```
 pub fn verify_eth_signature(msg: &[u8], scalars: &EthereumSignature, pub_key: &[u8]) -> Result<()> {
     let signature = Signature::from_scalars(scalars.r, scalars.s)
-        .map_err(|_| VerificationError::SignatureRecoveryError)
+        .map_err(|_| AttestationVerificationError::SignatureRecoveryError)
         .context(VerificationSnafu)?;
 
     let recovery_id = RecoveryId::try_from(scalars.v)
-        .map_err(|_| VerificationError::InvalidRecoveryIdError {
+        .map_err(|_| AttestationVerificationError::InvalidRecoveryIdError {
             recovery_id: scalars.v,
         })
         .context(VerificationSnafu)?;
@@ -135,17 +135,17 @@ pub fn verify_eth_signature(msg: &[u8], scalars: &EthereumSignature, pub_key: &[
     let digest = hash_eth_msg(msg);
 
     let recovered_pub_key = VerifyingKey::recover_from_digest(digest, &signature, recovery_id)
-        .map_err(|_| VerificationError::KeyRecoveryError)
+        .map_err(|_| AttestationVerificationError::KeyRecoveryError)
         .context(VerificationSnafu)?;
 
     let expected_key = VerifyingKey::from_sec1_bytes(pub_key)
-        .map_err(|_| VerificationError::PublicKeyParsingError)
+        .map_err(|_| AttestationVerificationError::PublicKeyParsingError)
         .context(VerificationSnafu)?;
 
     match recovered_pub_key == expected_key {
         true => Ok(()),
         false => Err(AttestationError::VerificationError {
-            source: VerificationError::InvalidPublicKeyRecovered,
+            source: AttestationVerificationError::InvalidPublicKeyRecovered,
         }),
     }
 }
