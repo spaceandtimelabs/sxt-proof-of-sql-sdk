@@ -1,3 +1,12 @@
+# [0.4.0](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.3.6...v0.4.0) (2024-11-25)
+
+
+### Features
+
+* support querying at particular blocks ([8502fbc](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/commit/8502fbcb4fd17f2eebce50e31ab22d17aa888d17))
+
+
+
 ## [0.3.6](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.3.5...v0.3.6) (2024-11-23)
 
 
@@ -17,10 +26,6 @@
 
 
 ## [0.3.3](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.3.2...v0.3.3) (2024-11-23)
-
-
-
-## [0.3.2](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.3.1...v0.3.2) (2024-11-23)
 
 
 
