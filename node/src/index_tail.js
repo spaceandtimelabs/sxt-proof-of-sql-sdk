@@ -25,10 +25,8 @@ export class SxTClient {
     }
     return authResponse.json();
   }
-  async #getCommitment(commitmentKey, blockHash = null) {
-    const params = blockHash ? [commitmentKey, blockHash] : [commitmentKey]
-
-    const commitmentResponse = await postHttpRequest({
+  async #querySubstrateRpc(method, params = null) {
+    const response = await postHttpRequest({
       url: this.substrateNodeURL,
       headers: {
         "Content-Type": "application/json",
@@ -36,18 +34,32 @@ export class SxTClient {
       data: {
         id: 1,
         jsonrpc: "2.0",
-        method: "state_getStorage",
+        method,
         params,
-      },
+      }
     });
 
-    if (!commitmentResponse.ok) {
+    if (!response.ok) {
       throw new Error(
-        `Error querying RPC node: ${commitmentResponse.status}: ${commitmentResponse.statusText}`,
+        `Error querying RPC node: ${response.status}: ${response.statusText}`,
       );
     }
 
-    return commitmentResponse.json();
+    return response.json()
+  }
+  async #getFinalizedHead() {
+    const response = await this.#querySubstrateRpc("chain_getFinalizedHead");
+
+    return response.result
+  }
+  async #getCommitment(commitmentKey, blockHash = null) {
+    if (!blockHash) {
+      blockHash = await this.#getFinalizedHead();
+    }
+
+    const commitmentResponse = await this.#querySubstrateRpc("state_getStorage", [commitmentKey, blockHash]);
+
+    return commitmentResponse;
   }
   async #getProof(accessToken, proverQuery) {
     const proverResponse = await postHttpRequest({
