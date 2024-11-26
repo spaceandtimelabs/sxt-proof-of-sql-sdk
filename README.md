@@ -59,7 +59,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 ```
 
-Note: Replace "your_sxt_api_key" with your actual SxT API key, and ensure the `verifier_setup.bin` file is correctly specified. You can use the [file here](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/blob/main/verifier_setup.bin) or fetch the files [here](https://github.com/spaceandtimelabs/sxt-proof-of-sql/releases/tag/dory-prover-params-nu-16).
+Note: Replace "your_sxt_api_key" with your actual SxT API key, and ensure the `verifier_setup.bin` file is correctly specified. You can use the [file here](./verifier_setup.bin) or fetch the files [here](https://github.com/spaceandtimelabs/sxt-proof-of-sql/releases/tag/dory-prover-params-nu-16).
+
+## JavaScript Support
+
+See [deno](./examples/deno) and [node](./examples/node) in this repo for examples of JavaScript support.
 
 ## Getting an API Key
 
