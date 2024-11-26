@@ -1,3 +1,12 @@
+## [0.4.1](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.4.0...v0.4.1) (2024-11-26)
+
+
+### Bug Fixes
+
+* only query finalized blocks in javascript client ([8222b5c](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/commit/8222b5c4e733c391fd342cd8e93800b476fdbb16))
+
+
+
 # [0.4.0](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.3.6...v0.4.0) (2024-11-25)
 
 
@@ -22,10 +31,6 @@
 
 
 ## [0.3.4](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.3.3...v0.3.4) (2024-11-23)
-
-
-
-## [0.3.3](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.3.2...v0.3.3) (2024-11-23)
 
 
 
