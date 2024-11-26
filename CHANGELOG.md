@@ -1,3 +1,12 @@
+# [0.5.0](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.4.1...v0.5.0) (2024-11-26)
+
+
+### Features
+
+* javascript and chainlink examples ([d963971](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/commit/d96397163f565becdac5e93d2189e3696d8df8b3))
+
+
+
 ## [0.4.1](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.4.0...v0.4.1) (2024-11-26)
 
 
@@ -27,10 +36,6 @@
 
 
 ## [0.3.5](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.3.4...v0.3.5) (2024-11-23)
-
-
-
-## [0.3.4](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.3.3...v0.3.4) (2024-11-23)
 
 
 
