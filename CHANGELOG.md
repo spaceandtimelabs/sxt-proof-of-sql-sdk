@@ -1,3 +1,12 @@
+# [0.6.0](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.5.0...v0.6.0) (2024-11-27)
+
+
+### Features
+
+* chainlink example ([8164de4](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/commit/8164de45ceeec0a1a603d1fdda32247c47a30865))
+
+
+
 # [0.5.0](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.4.1...v0.5.0) (2024-11-26)
 
 
@@ -32,10 +41,6 @@
 
 * flatten node package ([27473fa](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/commit/27473fa7e8d2ed65f47cff9d5441fa9d348e9a95))
 * skip CI on automated package.json update commits ([0589644](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/commit/0589644dad978ed41325b4012352685318a2a9f5))
-
-
-
-## [0.3.5](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.3.4...v0.3.5) (2024-11-23)
 
 
 
