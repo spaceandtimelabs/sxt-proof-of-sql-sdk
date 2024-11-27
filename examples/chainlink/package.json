@@ -1,0 +1,18 @@
+{
+    "name": "chainlink-example",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "dependencies": {
+        "@chainlink/env-enc": "^1.0.5",
+        "@chainlink/functions-toolkit": "^0.2.7",
+        "ethers": "^5.7.2"
+    },
+    "devDependencies": {
+        "dotenv": "^16.4.5"
+    }
+}
