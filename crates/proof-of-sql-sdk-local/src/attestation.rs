@@ -178,10 +178,12 @@ pub fn sign_eth_message(private_key: &[u8], message: &[u8]) -> Result<EthereumSi
 
     let digest = hash_eth_msg(message);
 
+    // Gross coercion of types below
     let (signature, recovery_id) = signing_key.sign_digest_recoverable(digest).unwrap();
-
-    let r = slice_to_scalar(&signature.r().to_bytes()).unwrap();
-    let s = slice_to_scalar(&signature.s().to_bytes()).unwrap();
+    let r = slice_to_scalar(&signature.r().to_bytes())
+        .expect("r should work from sign_digest_recoverable");
+    let s = slice_to_scalar(&signature.s().to_bytes())
+        .expect("s should work from sign_digest_recoverable");
 
     Ok(EthereumSignature::new(r, s, Some(recovery_id.into())))
 }
