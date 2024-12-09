@@ -8,8 +8,8 @@ use proof_of_sql::{
     proof_primitive::dory::DynamicDoryCommitment,
 };
 use proof_of_sql_parser::ResourceId;
-use subxt::{blocks::BlockRef, Config, OnlineClient, PolkadotConfig};
 use snafu::{ResultExt, Snafu};
+use subxt::{blocks::BlockRef, Config, OnlineClient, PolkadotConfig};
 use sxt_proof_of_sql_sdk_local::{
     attestation::{self, create_attestation_message, verify_signature},
     resource_id_to_table_id,

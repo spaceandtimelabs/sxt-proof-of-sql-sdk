@@ -1,4 +1,7 @@
-use crate::{get_access_token, query_commitments, substrate::SxtConfig};
+use crate::{
+    get_access_token, query_commitments,
+    substrate::{verify_attestations_for_block, AttestationError, SxtConfig},
+};
 use clap::ValueEnum;
 use proof_of_sql::{
     base::database::{OwnedTable, TableRef},
@@ -11,8 +14,6 @@ use subxt::Config;
 use sxt_proof_of_sql_sdk_local::{
     plan_prover_query_dory, prover::ProverResponse, verify_prover_response,
 };
-
-use crate::substrate::{verify_attestations_for_block, AttestationError};
 
 /// Level of postprocessing allowed
 ///
