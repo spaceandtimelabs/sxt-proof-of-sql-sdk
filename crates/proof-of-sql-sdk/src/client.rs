@@ -1,4 +1,7 @@
-use crate::{get_access_token, query_commitments, substrate::SxtConfig};
+use crate::{
+    get_access_token, query_commitments,
+    substrate::{verify_attestations_for_block, AttestationError, SxtConfig},
+};
 use clap::ValueEnum;
 use proof_of_sql::{
     base::database::{OwnedTable, TableRef},
@@ -144,5 +147,22 @@ impl SxTClient {
             }
             _ => Err("Required postprocessing is not allowed. Please examine your query or change `PostprocessingLevel` using `SxTClient::with_postprocessing`".into()),
         }
+    }
+
+    /// Verify attestations for a specific block number
+    ///
+    /// This method uses the `verify_attestations_for_block` function to validate
+    /// attestations for a given block number.
+    ///
+    /// # Arguments
+    ///
+    /// * `block_number` - The block number for which attestations need to be verified.
+    ///
+    /// # Returns
+    ///
+    /// Returns `Ok(())` if all attestations are valid and consistent. Otherwise, it returns an
+    /// `AttestationError` describing the failure.
+    pub async fn verify_attestations(&self, block_number: u32) -> Result<(), AttestationError> {
+        verify_attestations_for_block(&self.substrate_node_url, block_number).await
     }
 }
