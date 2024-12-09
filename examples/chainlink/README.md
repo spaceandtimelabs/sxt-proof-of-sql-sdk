@@ -1,7 +1,7 @@
 # Space and Time (SxT) Proof of SQL SDK
 
 ## Introduction
-This example shows how to use Chainlink functions to access the SxT network API within your ethereum smart contract. See [README](../../README.md) for a overview of the SDK.
+This example shows how to use Chainlink functions to access the SxT network API within your ethereum smart contract. See [README](../../README.md) for an overview of the SDK.
 
 ## Setup
 
