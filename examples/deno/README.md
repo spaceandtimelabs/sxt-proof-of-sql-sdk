@@ -1,7 +1,7 @@
 # Space and Time (SxT) Proof of SQL SDK - Deno Example
 
 ## Introduction
-This is a simple example showing how to use the Deno runtime to query SXTChain and verify the results. See [README](../../README.md) for a overview of the SDK.
+This is a simple example showing how to use the Deno runtime to query SXTChain and verify the results. See [README](../../README.md) for an overview of the SDK.
 
 ## Install Deno
 
