@@ -42,7 +42,7 @@ pub fn plan_prover_query_dory(
     commitments: &QueryCommitments<DynamicDoryCommitment>,
 ) -> Result<(ProverQuery, QueryExpr), PlanProverQueryError> {
     let query_expr: QueryExpr =
-        QueryExpr::try_new(query.parse()?, DEFAULT_SCHEMA.parse()?, commitments)?;
+        QueryExpr::try_new(query.parse()?, DEFAULT_SCHEMA.into(), commitments)?;
     let proof_plan = query_expr.proof_expr();
     let serialized_proof_plan = flexbuffers::to_vec(proof_plan)?;
 

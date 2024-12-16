@@ -3196,9 +3196,8 @@ dependencies = [
 
 [[package]]
 name = "proof-of-sql"
-version = "0.62.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "449d264b050d3c6795ee8c8dfd802b13e558e3cb40a870d02b570b4cf700c5e7"
+version = "0.0.0"
+source = "git+https://github.com/varshith257/sxt-proof-of-sql.git?rev=22bbcfc472373bcf27a5c91fe3ae3d0ab13fdf62#22bbcfc472373bcf27a5c91fe3ae3d0ab13fdf62"
 dependencies = [
  "ahash",
  "ark-bls12-381",
@@ -3240,9 +3239,8 @@ dependencies = [
 
 [[package]]
 name = "proof-of-sql-parser"
-version = "0.62.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "64c045dc919a9a0048f4b036dcd4b406f9997c2eaff191fd9a6dc16b45107965"
+version = "0.0.0"
+source = "git+https://github.com/varshith257/sxt-proof-of-sql.git?rev=22bbcfc472373bcf27a5c91fe3ae3d0ab13fdf62#22bbcfc472373bcf27a5c91fe3ae3d0ab13fdf62"
 dependencies = [
  "arrayvec 0.7.6",
  "bigdecimal",
@@ -4314,6 +4312,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f7bbffee862a796d67959a89859d6b1046bb5016d63e23835ad0da182777bbe0"
 dependencies = [
  "log",
+ "serde",
 ]
 
 [[package]]
@@ -4535,6 +4534,7 @@ dependencies = [
  "serde",
  "sha3",
  "snafu",
+ "sqlparser",
  "subxt",
  "tonic",
  "tonic-build",
