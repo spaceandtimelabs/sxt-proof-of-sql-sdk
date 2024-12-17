@@ -45,14 +45,7 @@ pub fn verify_prover_response<'de, 's, CP: CommitmentEvaluationProof + Deseriali
         flexbuffers::from_slice(&prover_response.verifiable_result)?;
 
     // Verify the proof
-    let proof = verifiable_result.proof.unwrap();
-    let serialized_result = verifiable_result.provable_result.unwrap();
-    Ok(proof
-        .verify(
-            query_expr.proof_expr(),
-            accessor,
-            &serialized_result,
-            verifier_setup,
-        )?
+    Ok(verifiable_result
+        .verify(query_expr.proof_expr(), accessor, verifier_setup)?
         .table)
 }
