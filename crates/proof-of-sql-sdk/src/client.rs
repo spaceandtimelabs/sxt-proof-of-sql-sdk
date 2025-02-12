@@ -4,7 +4,7 @@ use crate::{
 };
 use clap::ValueEnum;
 use proof_of_sql::{
-    base::database::{OwnedTable, TableRef},
+    base::database::OwnedTable,
     proof_primitive::dory::{DoryScalar, DynamicDoryEvaluationProof, VerifierSetup},
     sql::postprocessing::{apply_postprocessing_steps, OwnedTablePostprocessing},
 };
@@ -89,19 +89,14 @@ impl SxTClient {
         table: &str,
         block_ref: Option<<SxtConfig as Config>::Hash>,
     ) -> Result<OwnedTable<DoryScalar>, Box<dyn core::error::Error>> {
-        // Parse table_ref into TableRef struct
-        let table_ref = TableRef::new(table.parse()?);
+        // Parse table into `TableRef` struct
+        let table_ref = table.try_into()?;
 
         // Load verifier setup
         let verifier_setup_path = Path::new(&self.verifier_setup);
         let verifier_setup = VerifierSetup::load_from_file(verifier_setup_path)?;
         // Accessor setup
-        let accessor = query_commitments(
-            &[table_ref.resource_id()],
-            &self.substrate_node_url,
-            block_ref,
-        )
-        .await?;
+        let accessor = query_commitments(&[table_ref], &self.substrate_node_url, block_ref).await?;
 
         let (prover_query, query_expr) = plan_prover_query_dory(query, &accessor)?;
 
