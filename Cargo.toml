@@ -25,8 +25,8 @@ log = "0.4.22"
 indexmap = "2.6.0"
 parity-scale-codec = { version = "3.7.0", default-features = false }
 postcard = { version = "1.0.10", default-features = false }
-proof-of-sql = { version = "0.44.4", default-features = false }
-proof-of-sql-parser = { version = "0.44.4", default-features = false }
+proof-of-sql = { version = "0.72.7", default-features = false }
+proof-of-sql-parser = { version = "0.72.7", default-features = false }
 prost = "0.12"
 prost-build = "0.12"
 reqwest = { version = "0.12", features = ["json"] }
@@ -35,6 +35,7 @@ serde_json = "1.0"
 snafu = { version = "0.8.5", default-features = false }
 subxt = { version = "0.37.0", default-features = false }
 sp-crypto-hashing = { version = "0.1.0", default-features = false }
+sqlparser = { version = "0.45.0", default-features = false }
 sxt-proof-of-sql-sdk-local = { path = "crates/proof-of-sql-sdk-local", default-features = false }
 tokio = { version = "1.0", features = ["rt-multi-thread", "macros"] }
 tonic = { version = "0.11", default-features = false }

@@ -6,10 +6,11 @@ use proof_of_sql::{
 };
 use proof_of_sql_parser::ParseError;
 use snafu::Snafu;
+use sqlparser::ast::Ident;
 
 /// Proof-of-sql requires a default schema to be provided when creating a QueryExpr.
 /// This is used as the schema when tables referenced in the query don't have one.
-const DEFAULT_SCHEMA: &str = "PUBLIC";
+pub const DEFAULT_SCHEMA: &str = "PUBLIC";
 
 /// Errors that can occur when planning a query to the prover.
 #[derive(Snafu, Debug)]
@@ -42,7 +43,7 @@ pub fn plan_prover_query_dory(
     commitments: &QueryCommitments<DynamicDoryCommitment>,
 ) -> Result<(ProverQuery, QueryExpr), PlanProverQueryError> {
     let query_expr: QueryExpr =
-        QueryExpr::try_new(query.parse()?, DEFAULT_SCHEMA.parse()?, commitments)?;
+        QueryExpr::try_new(query.parse()?, Ident::new(DEFAULT_SCHEMA), commitments)?;
     let proof_plan = query_expr.proof_expr();
     let serialized_proof_plan = flexbuffers::to_vec(proof_plan)?;
 

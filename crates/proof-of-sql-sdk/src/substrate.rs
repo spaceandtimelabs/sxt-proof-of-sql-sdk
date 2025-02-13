@@ -7,12 +7,10 @@ use proof_of_sql::{
     },
     proof_primitive::dory::DynamicDoryCommitment,
 };
-use proof_of_sql_parser::ResourceId;
 use snafu::{ResultExt, Snafu};
 use subxt::{blocks::BlockRef, Config, OnlineClient, PolkadotConfig};
 use sxt_proof_of_sql_sdk_local::{
     attestation::{self, create_attestation_message, verify_signature},
-    resource_id_to_table_id,
     sxt_chain_runtime::{
         self,
         api::{
@@ -22,6 +20,7 @@ use sxt_proof_of_sql_sdk_local::{
             storage,
         },
     },
+    table_ref_to_table_id,
 };
 
 /// Use the standard PolkadotConfig
@@ -31,7 +30,7 @@ pub type SxtConfig = PolkadotConfig;
 ///
 /// If `block_ref` is `None`, the latest block is used.
 pub async fn query_commitments<BR>(
-    resource_ids: &[ResourceId],
+    table_refs: &[TableRef],
     url: &str,
     block_ref: Option<BR>,
 ) -> Result<QueryCommitments<DynamicDoryCommitment>, Box<dyn core::error::Error>>
@@ -41,12 +40,12 @@ where
     let api = OnlineClient::<SxtConfig>::from_insecure_url(url).await?;
 
     // Create a collection of futures
-    let futures = resource_ids.iter().map(|id| {
+    let futures = table_refs.iter().map(|table_ref| {
         let api = api.clone();
-        let id = *id;
+        let table_ref = table_ref.clone();
         let block_ref = block_ref.clone();
         async move {
-            let table_id = resource_id_to_table_id(&id);
+            let table_id = table_ref_to_table_id(&table_ref);
             let commitments_query = storage()
                 .commitments()
                 .commitment_storage_map(&table_id, &CommitmentScheme::DynamicDory);
@@ -62,7 +61,7 @@ where
                 .ok_or("Commitment not found")?;
             let table_commitments = postcard::from_bytes(&table_commitment_bytes.data.0)?;
             Ok::<(TableRef, TableCommitment<DynamicDoryCommitment>), Box<dyn core::error::Error>>((
-                TableRef::new(id),
+                table_ref.clone(),
                 table_commitments,
             ))
         }

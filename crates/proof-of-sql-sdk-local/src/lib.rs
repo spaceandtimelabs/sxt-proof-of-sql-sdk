@@ -4,10 +4,10 @@
 pub mod sxt_chain_runtime;
 
 mod substrate_query;
-pub use substrate_query::resource_id_to_table_id;
+pub use substrate_query::table_ref_to_table_id;
 
 mod prover_query;
-pub use prover_query::{plan_prover_query_dory, PlanProverQueryError};
+pub use prover_query::{plan_prover_query_dory, PlanProverQueryError, DEFAULT_SCHEMA};
 
 mod verify;
 pub use verify::{verify_prover_response, VerifyProverResponseError};

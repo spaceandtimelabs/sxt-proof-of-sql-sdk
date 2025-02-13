@@ -3,18 +3,20 @@
 use ark_serialize::{CanonicalDeserialize, Compress, Validate};
 use gloo_utils::format::JsValueSerdeExt;
 use proof_of_sql::{
-    base::commitment::{Commitment, QueryCommitments},
+    base::{
+        commitment::{Commitment, QueryCommitments},
+        database::TableRef,
+    },
     proof_primitive::dory::{DynamicDoryEvaluationProof, VerifierSetup},
 };
-use proof_of_sql_parser::ResourceId;
 use serde::Deserialize;
 use sp_crypto_hashing::{blake2_128, twox_128};
 use subxt::ext::codec::{Decode, Encode};
 use sxt_proof_of_sql_sdk_local::{
-    resource_id_to_table_id,
     sxt_chain_runtime::api::runtime_types::proof_of_sql_commitment_map::{
         commitment_scheme::CommitmentScheme, commitment_storage_map::TableCommitmentBytes,
     },
+    table_ref_to_table_id,
 };
 use wasm_bindgen::prelude::*;
 
@@ -34,11 +36,11 @@ lazy_static::lazy_static! {
 /// Compute the sxt chain storage key for the commitment of the given table.
 #[wasm_bindgen]
 pub fn commitment_storage_key_dory(table_ref: &str) -> Result<String, String> {
-    let resource_id: ResourceId = table_ref
-        .parse()
+    let table_ref: TableRef = table_ref
+        .try_into()
         .map_err(|e| format!("failed to parse table ref: {e}"))?;
 
-    let table_id = resource_id_to_table_id(&resource_id);
+    let table_id = table_ref_to_table_id(&table_ref);
 
     let encoded_table_id = table_id.encode();
 
