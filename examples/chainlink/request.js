@@ -198,7 +198,7 @@ const makeRequestSepolia = async () => {
                     `\n✅ Request ${response.requestId
                     } successfully fulfilled. Cost is ${ethers.utils.formatEther(
                         response.totalCostInJuels
-                    )} LINK.Complete reponse: `,
+                    )} LINK.Complete response: `,
                     response
                 );
             } else if (fulfillmentCode === FulfillmentCode.USER_CALLBACK_ERROR) {
@@ -206,7 +206,7 @@ const makeRequestSepolia = async () => {
                     `\n⚠️ Request ${response.requestId
                     } fulfilled. However, the consumer contract callback failed. Cost is ${ethers.utils.formatEther(
                         response.totalCostInJuels
-                    )} LINK.Complete reponse: `,
+                    )} LINK.Complete response: `,
                     response
                 );
             } else {
@@ -214,7 +214,7 @@ const makeRequestSepolia = async () => {
                     `\n❌ Request ${response.requestId
                     } not fulfilled. Code: ${fulfillmentCode}. Cost is ${ethers.utils.formatEther(
                         response.totalCostInJuels
-                    )} LINK.Complete reponse: `,
+                    )} LINK.Complete response: `,
                     response
                 );
             }

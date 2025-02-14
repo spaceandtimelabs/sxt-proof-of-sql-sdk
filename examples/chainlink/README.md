@@ -122,7 +122,7 @@ Simulation result {
 After the transaction proceeds to the Chainlink network, a successful result might look like this:
 
 ```
-✅ Request XXXX successfully fulfilled. Cost is 0.33235819007569347 LINK.Complete reponse:  {
+✅ Request XXXX successfully fulfilled. Cost is 0.33235819007569347 LINK.Complete response:  {
   requestId: 'XXXX',
   subscriptionId: XXXX,
   totalCostInJuels: 332358190075693470n,

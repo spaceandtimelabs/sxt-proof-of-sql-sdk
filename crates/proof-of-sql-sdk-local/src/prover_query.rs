@@ -12,7 +12,7 @@ use sqlparser::ast::Ident;
 /// This is used as the schema when tables referenced in the query don't have one.
 pub const DEFAULT_SCHEMA: &str = "PUBLIC";
 
-/// Errors that can occur when planning a query to the prover..
+/// Errors that can occur when planning a query to the prover.
 #[derive(Snafu, Debug)]
 pub enum PlanProverQueryError {
     /// Unable to parse sql.
