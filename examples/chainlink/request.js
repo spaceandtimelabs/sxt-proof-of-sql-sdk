@@ -126,7 +126,7 @@ const makeRequestSepolia = async () => {
     const encryptedSecretsObj = await secretsManager.encryptSecrets(secrets);
 
     console.log(
-        `Upload encrypted secret to gateways ${gatewayUrls}. slotId ${slotIdNumber}. Expiration in minutes: ${expirationTimeMinutes}`
+        `Upload encrypted secrets to gateways ${gatewayUrls}. slotId ${slotIdNumber}. Expiration in minutes: ${expirationTimeMinutes}`
     );
     // Upload secrets
     const uploadResult = await secretsManager.uploadEncryptedSecretsToDON({
