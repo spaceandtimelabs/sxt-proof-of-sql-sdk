@@ -1,3 +1,7 @@
+## [0.8.2](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.8.1...v0.8.2) (2025-02-26)
+
+
+
 ## [0.8.1](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.8.0...v0.8.1) (2025-02-14)
 
 
@@ -32,15 +36,6 @@
 
 * add verify attestations function ([fd0a343](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/commit/fd0a343bcde0c0d1c71650827c3ef2265a7549e4))
 * add verify_attestations function to client ([35948c9](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/commit/35948c98580a1d45fb4cede17999ab8f972e41d7))
-
-
-
-# [0.6.0](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.5.0...v0.6.0) (2024-11-27)
-
-
-### Features
-
-* chainlink example ([8164de4](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/commit/8164de45ceeec0a1a603d1fdda32247c47a30865))
 
 
 
