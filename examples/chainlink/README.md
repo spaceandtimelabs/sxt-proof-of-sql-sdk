@@ -97,7 +97,7 @@ const linkTokenAddress = process.env.LINK_TOKEN_ADDRESS;
 // Changed to accept the SXT api key instead of the Coinmarketcap api key
 const secrets = { apiKey: process.env.SXT_API_KEY };
 
-// This is the subscription ID attached to the subscriber of the the LINK address.
+// This is the subscription ID attached to the subscriber of the LINK address.
 // Subscriptions can be managed at https://functions.chain.link/
 const subscriptionId = process.env.SUBSCRIPTION_ID
 ```
