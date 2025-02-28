@@ -26,13 +26,11 @@ pub enum PlanProverQueryError {
     ProvableAst { source: ConversionError },
     /// Unable to serialize proof plan.
     #[snafu(display("unable to serialize proof plan: {error}"))]
-    ProofPlanSerialization {
-        error: flexbuffers::SerializationError,
-    },
+    ProofPlanSerialization { error: bincode::error::EncodeError },
 }
 
-impl From<flexbuffers::SerializationError> for PlanProverQueryError {
-    fn from(error: flexbuffers::SerializationError) -> Self {
+impl From<bincode::error::EncodeError> for PlanProverQueryError {
+    fn from(error: bincode::error::EncodeError) -> Self {
         PlanProverQueryError::ProofPlanSerialization { error }
     }
 }
@@ -45,7 +43,12 @@ pub fn plan_prover_query_dory(
     let query_expr: QueryExpr =
         QueryExpr::try_new(query.parse()?, Ident::new(DEFAULT_SCHEMA), commitments)?;
     let proof_plan = query_expr.proof_expr();
-    let serialized_proof_plan = flexbuffers::to_vec(proof_plan)?;
+    let serialized_proof_plan = bincode::serde::encode_to_vec(
+        proof_plan,
+        bincode::config::legacy()
+            .with_fixed_int_encoding()
+            .with_big_endian(),
+    )?;
 
     let query_context = commitments
         .iter()
