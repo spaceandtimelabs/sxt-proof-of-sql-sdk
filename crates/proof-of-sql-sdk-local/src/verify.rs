@@ -17,9 +17,7 @@ use snafu::Snafu;
 pub enum VerifyProverResponseError {
     /// Unable to deserialize verifiable query result.
     #[snafu(display("unable to deserialize verifiable query result: {error}"))]
-    VerifiableResultDeserialization {
-        error: flexbuffers::DeserializationError,
-    },
+    VerifiableResultDeserialization { error: bincode::error::DecodeError },
     /// Failed to interpret or verify query results.
     #[snafu(
         display("failed to interpret or verify query results: {source}"),
@@ -28,8 +26,8 @@ pub enum VerifyProverResponseError {
     Verification { source: QueryError },
 }
 
-impl From<flexbuffers::DeserializationError> for VerifyProverResponseError {
-    fn from(error: flexbuffers::DeserializationError) -> Self {
+impl From<bincode::error::DecodeError> for VerifyProverResponseError {
+    fn from(error: bincode::error::DecodeError) -> Self {
         VerifyProverResponseError::VerifiableResultDeserialization { error }
     }
 }
@@ -41,8 +39,12 @@ pub fn verify_prover_response<'de, 's, CP: CommitmentEvaluationProof + Deseriali
     accessor: &impl CommitmentAccessor<CP::Commitment>,
     verifier_setup: &CP::VerifierPublicSetup<'s>,
 ) -> Result<OwnedTable<CP::Scalar>, VerifyProverResponseError> {
-    let verifiable_result: VerifiableQueryResult<CP> =
-        flexbuffers::from_slice(&prover_response.verifiable_result)?;
+    let verifiable_result: VerifiableQueryResult<CP> = bincode::serde::decode_borrowed_from_slice(
+        &prover_response.verifiable_result,
+        bincode::config::legacy()
+            .with_fixed_int_encoding()
+            .with_big_endian(),
+    )?;
 
     // Verify the proof
     Ok(verifiable_result
