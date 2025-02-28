@@ -1,3 +1,12 @@
+## [0.8.4](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.8.3...v0.8.4) (2025-02-28)
+
+
+### Bug Fixes
+
+* use bincode for de/serializing proof-of-sql objects ([0c66a37](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/commit/0c66a37dc67c02e4459f83ccc3a30984511498ca))
+
+
+
 ## [0.8.3](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.8.2...v0.8.3) (2025-02-28)
 
 
@@ -21,10 +30,6 @@
 ### Features
 
 * bump Rust to 1.84.0 and proof-of-sql to 0.72.7 ([f994fbd](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/commit/f994fbd6347a43e9391eae6844152f108a585f6a))
-
-
-
-## [0.7.1](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.7.0...v0.7.1) (2024-12-17)
 
 
 
