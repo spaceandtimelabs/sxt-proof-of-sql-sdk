@@ -54,7 +54,7 @@ pub fn plan_prover_query_dory(
         .iter()
         .map(|(table_ref, commitment)| {
             (
-                table_ref.to_string().to_uppercase(),
+                table_ref.to_string(),
                 ProverContextRange {
                     start: commitment.range().start as u64,
                     ends: vec![commitment.range().end as u64],
