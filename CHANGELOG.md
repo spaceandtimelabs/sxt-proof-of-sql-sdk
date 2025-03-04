@@ -1,3 +1,12 @@
+## [0.8.5](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.8.4...v0.8.5) (2025-03-04)
+
+
+### Bug Fixes
+
+* install active toolchain in CI after rustup 1.28 upgrade ([ae80a89](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/commit/ae80a8942c8a4560a6d35ca76fcccf931062a880))
+
+
+
 ## [0.8.4](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.8.3...v0.8.4) (2025-02-28)
 
 
@@ -16,20 +25,6 @@
 
 
 ## [0.8.1](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.8.0...v0.8.1) (2025-02-14)
-
-
-
-# [0.8.0](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.7.1...v0.8.0) (2025-02-12)
-
-
-### Bug Fixes
-
-* allow `cfg("wasm_bindgen_unstable_test_coverage")` ([dd89157](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/commit/dd89157681ec27233ddb577dfe810a66844299ab))
-
-
-### Features
-
-* bump Rust to 1.84.0 and proof-of-sql to 0.72.7 ([f994fbd](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/commit/f994fbd6347a43e9391eae6844152f108a585f6a))
 
 
 
