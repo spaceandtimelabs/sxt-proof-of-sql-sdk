@@ -1,3 +1,12 @@
+## [0.8.7](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.8.6...v0.8.7) (2025-03-04)
+
+
+### Bug Fixes
+
+* coerce input table refs to lowercase ([a342b76](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/commit/a342b76c241eca295e58dbf3af42d0d6ed7044e0))
+
+
+
 ## [0.8.6](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.8.5...v0.8.6) (2025-03-04)
 
 
@@ -26,10 +35,6 @@
 
 
 ## [0.8.3](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.8.2...v0.8.3) (2025-02-28)
-
-
-
-## [0.8.2](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.8.1...v0.8.2) (2025-02-26)
 
 
 
