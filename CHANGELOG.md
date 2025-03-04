@@ -1,3 +1,12 @@
+## [0.8.6](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.8.5...v0.8.6) (2025-03-04)
+
+
+### Bug Fixes
+
+* upgrade to proof-of-sql 0.75.2 ([00944ec](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/commit/00944ec52c622be39b696c6cfb0db7b976166b45))
+
+
+
 ## [0.8.5](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.8.4...v0.8.5) (2025-03-04)
 
 
@@ -21,10 +30,6 @@
 
 
 ## [0.8.2](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.8.1...v0.8.2) (2025-02-26)
-
-
-
-## [0.8.1](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.8.0...v0.8.1) (2025-02-14)
 
 
 
