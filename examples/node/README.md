@@ -23,7 +23,7 @@ const SxTSDK = await import("sxt-proof-of-sql-sdk");
 const queryString = "SELECT SUM(TRANSACTION_COUNT) as t_count, COUNT(*) as b_count FROM ETHEREUM.BLOCKS";
 const table = "ETHEREUM.BLOCKS";
 
-// Initialize the SxTProof instance
+// Initialize the SxTClient instance
 const proof = new SxTSDK.SxTClient(
     "https://api.spaceandtime.dev/v1/prove",
     "https://proxy.api.spaceandtime.dev/auth/apikey",
