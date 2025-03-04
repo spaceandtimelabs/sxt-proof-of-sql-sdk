@@ -840,9 +840,9 @@ dependencies = [
 
 [[package]]
 name = "chrono"
-version = "0.4.38"
+version = "0.4.39"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a21f936df1771bf62b77f047b726c4625ff2e8aa607c01ec06e5a05bd8463401"
+checksum = "7e36cc9d416881d2e24f9a963be5fb1cd90966419ac844274161d10488b3e825"
 dependencies = [
  "num-traits",
  "serde",
@@ -3134,9 +3134,9 @@ dependencies = [
 
 [[package]]
 name = "proof-of-sql"
-version = "0.73.3"
+version = "0.75.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "76b725f6b8a292e1184ac626643685a60058b7bbccc98be0b047e2648c8058b7"
+checksum = "59345f630953114264653d93aa26e38d426269e0b702bb13f95e39b3fb117184"
 dependencies = [
  "ahash",
  "ark-bls12-381",
@@ -3177,9 +3177,9 @@ dependencies = [
 
 [[package]]
 name = "proof-of-sql-parser"
-version = "0.73.3"
+version = "0.75.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2fbb4d6848d1eddf84f81656f7a3658e19632b9678704e35208d926f1faca5c6"
+checksum = "1ce21af1c143dcf3845f8cdedfa5d63d198cb72267c15d1fcdb82dadaabb27f6"
 dependencies = [
  "arrayvec 0.7.6",
  "bigdecimal",
