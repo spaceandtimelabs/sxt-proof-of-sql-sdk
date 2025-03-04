@@ -1,3 +1,12 @@
+# [0.10.0](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.9.0...v0.10.0) (2025-03-04)
+
+
+### Features
+
+* regenerate subxt to pull in SxT Chain runtime upgrades ([212801b](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/commit/212801bc84d5dd88c683f8878e28f22ec212de93))
+
+
+
 # [0.9.0](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.8.8...v0.9.0) (2025-03-04)
 
 
@@ -26,15 +35,6 @@
 ### Bug Fixes
 
 * upgrade to proof-of-sql 0.75.2 ([00944ec](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/commit/00944ec52c622be39b696c6cfb0db7b976166b45))
-
-
-
-## [0.8.5](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.8.4...v0.8.5) (2025-03-04)
-
-
-### Bug Fixes
-
-* install active toolchain in CI after rustup 1.28 upgrade ([ae80a89](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/commit/ae80a8942c8a4560a6d35ca76fcccf931062a880))
 
 
 
