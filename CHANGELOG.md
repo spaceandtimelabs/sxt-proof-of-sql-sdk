@@ -1,3 +1,12 @@
+# [0.11.0](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.10.1...v0.11.0) (2025-03-08)
+
+
+### Features
+
+* upgrade proof-of-sql to 0.76.11 ([9bda106](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/commit/9bda106799b31fcf7dd00e2f7636c3165d99bb55))
+
+
+
 ## [0.10.1](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.10.0...v0.10.1) (2025-03-05)
 
 
@@ -26,15 +35,6 @@
 
 
 ## [0.8.8](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.8.7...v0.8.8) (2025-03-04)
-
-
-
-## [0.8.7](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.8.6...v0.8.7) (2025-03-04)
-
-
-### Bug Fixes
-
-* coerce input table refs to lowercase ([a342b76](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/commit/a342b76c241eca295e58dbf3af42d0d6ed7044e0))
 
 
 
