@@ -25,8 +25,8 @@ log = "0.4.22"
 indexmap = "2.6.0"
 parity-scale-codec = { version = "3.7.0", default-features = false }
 postcard = { version = "1.0.10", default-features = false }
-proof-of-sql = { version = "0.75.2", default-features = false }
-proof-of-sql-parser = { version = "0.75.2", default-features = false }
+proof-of-sql = { version = "0.76.11", default-features = false }
+proof-of-sql-parser = { version = "0.76.11", default-features = false }
 prost = "0.12"
 prost-build = "0.12"
 reqwest = { version = "0.12", features = ["json"] }
