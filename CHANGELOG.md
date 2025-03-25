@@ -1,3 +1,12 @@
+## [0.11.1](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.11.0...v0.11.1) (2025-03-25)
+
+
+### Bug Fixes
+
+* update testnet RPC ([1334ecd](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/commit/1334ecd22bd02d93b931f182a241887d5fc55c1b))
+
+
+
 # [0.11.0](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.10.1...v0.11.0) (2025-03-08)
 
 
@@ -31,10 +40,6 @@
 ### Features
 
 * bump Rust to 1.85.0 ([2d4b6ea](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/commit/2d4b6ea68eb9fa58f86c76d6c0bda85b6102c9dc))
-
-
-
-## [0.8.8](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.8.7...v0.8.8) (2025-03-04)
 
 
 
