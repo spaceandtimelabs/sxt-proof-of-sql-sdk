@@ -1,3 +1,7 @@
+## [0.11.2](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.11.1...v0.11.2) (2025-03-25)
+
+
+
 ## [0.11.1](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.11.0...v0.11.1) (2025-03-25)
 
 
@@ -31,15 +35,6 @@
 ### Features
 
 * regenerate subxt to pull in SxT Chain runtime upgrades ([212801b](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/commit/212801bc84d5dd88c683f8878e28f22ec212de93))
-
-
-
-# [0.9.0](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.8.8...v0.9.0) (2025-03-04)
-
-
-### Features
-
-* bump Rust to 1.85.0 ([2d4b6ea](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/commit/2d4b6ea68eb9fa58f86c76d6c0bda85b6102c9dc))
 
 
 
