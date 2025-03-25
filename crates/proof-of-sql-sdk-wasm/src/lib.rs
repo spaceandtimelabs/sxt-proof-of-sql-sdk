@@ -105,10 +105,14 @@ where
                 )
                 .map_err(|e| format!("failed to decode table commitment bytes: {e}"))?;
 
-                let table_commitment =
-                    postcard::from_bytes(table_commitment_bytes.data.0.as_slice())
-                        .map_err(|e| format!("failed to deserialize table commitment: {e}"))?;
-
+                let table_commitment = bincode::serde::decode_from_slice(
+                    &table_commitment_bytes.data.0,
+                    bincode::config::legacy()
+                        .with_fixed_int_encoding()
+                        .with_big_endian(),
+                )
+                .map_err(|e| format!("failed to deserialize table commitment using bincode: {e}"))?
+                .0;
                 Ok((table_ref, table_commitment))
             },
         )
