@@ -6,7 +6,7 @@ version.workspace = true
 license-file.workspace = true
 
 [dependencies]
-bincode = { workspace = true, features = ["serde", "alloc"] }
+bincode = { workspace = true, default-features = false, features = ["serde", "alloc"] }
 proof-of-sql = { workspace = true }
 proof-of-sql-parser = { workspace = true }
 prost = { workspace = true }

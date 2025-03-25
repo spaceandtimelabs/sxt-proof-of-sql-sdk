@@ -6,13 +6,13 @@ repository = { workspace = true }
 license-file = { workspace = true }
 
 [dependencies]
+bincode = { workspace = true, default-features = false, features = ["serde", "alloc"] }
 clap = { workspace = true, features = ["derive", "env"] }
 dotenv = { workspace = true }
 env_logger = { workspace = true }
 futures = { workspace = true }
 log = { workspace = true }
 indexmap.workspace = true
-postcard = { workspace = true, default-features = false }
 proof-of-sql = { workspace = true, features = ["std"] }
 proof-of-sql-parser = { workspace = true }
 reqwest = { workspace = true, features = ["json"] }

@@ -39,12 +39,13 @@ pub fn verify_prover_response<'de, 's, CP: CommitmentEvaluationProof + Deseriali
     accessor: &impl CommitmentAccessor<CP::Commitment>,
     verifier_setup: &CP::VerifierPublicSetup<'s>,
 ) -> Result<OwnedTable<CP::Scalar>, VerifyProverResponseError> {
-    let verifiable_result: VerifiableQueryResult<CP> = bincode::serde::decode_borrowed_from_slice(
+    let verifiable_result: VerifiableQueryResult<CP> = bincode::serde::borrow_decode_from_slice(
         &prover_response.verifiable_result,
         bincode::config::legacy()
             .with_fixed_int_encoding()
             .with_big_endian(),
-    )?;
+    )?
+    .0;
 
     // Verify the proof
     Ok(verifiable_result

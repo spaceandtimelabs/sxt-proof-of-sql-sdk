@@ -59,7 +59,13 @@ where
                 .fetch(&commitments_query)
                 .await?
                 .ok_or("Commitment not found")?;
-            let table_commitments = postcard::from_bytes(&table_commitment_bytes.data.0)?;
+            let table_commitments = bincode::serde::decode_from_slice(
+                &table_commitment_bytes.data.0,
+                bincode::config::legacy()
+                    .with_fixed_int_encoding()
+                    .with_big_endian(),
+            )?
+            .0;
             Ok::<(TableRef, TableCommitment<DynamicDoryCommitment>), Box<dyn core::error::Error>>((
                 table_ref.clone(),
                 table_commitments,
