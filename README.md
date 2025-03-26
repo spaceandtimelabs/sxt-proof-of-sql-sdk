@@ -8,6 +8,16 @@ The Space and Time Proof of SQL SDK is a Rust crate designed to simplify the pro
 
 ## Installation
 
+Make sure you have the following installed:
+- [protoc](https://protobuf.dev/installation/)
+- OpenSSL
+
+On Debian-based Linux distros you can do the following to install all of them
+```bash
+apt update && apt upgrade -y
+apt install -y protobuf-compiler pkg-config libssl-dev
+```
+
 Add the following to your `Cargo.toml`:
 
 ```toml
