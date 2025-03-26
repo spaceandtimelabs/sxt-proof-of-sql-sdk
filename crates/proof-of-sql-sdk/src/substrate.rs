@@ -175,7 +175,7 @@ pub async fn verify_attestations_for_block(
         .iter()
         .map(|attestation| {
             let sxt_chain_runtime::api::runtime_types::sxt_core::attestation::Attestation::EthereumAttestation { state_root, ..}  = attestation;
-            Some(state_root)
+            Some(state_root.0.as_slice())
         })
         .all_equal()
     {
@@ -186,9 +186,10 @@ pub async fn verify_attestations_for_block(
              let sxt_chain_runtime::api::runtime_types::sxt_core::attestation::Attestation::EthereumAttestation {
                 signature,
                 proposed_pub_key,
-                 state_root,
+                state_root,
+                ..
            } = attestation;
-        let msg = create_attestation_message(state_root, block_number);
+        let msg = create_attestation_message(state_root.0.as_slice(), block_number);
            verify_signature(&msg, signature, proposed_pub_key)
              .map_err(|err| AttestationError::LocalError { source: err })
     })
