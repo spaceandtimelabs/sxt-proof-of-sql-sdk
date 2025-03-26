@@ -1,3 +1,7 @@
+## [0.11.3](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.11.2...v0.11.3) (2025-03-26)
+
+
+
 ## [0.11.2](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.11.1...v0.11.2) (2025-03-25)
 
 
@@ -26,15 +30,6 @@
 ### Bug Fixes
 
 * fix rustup 1.28.0-related issue ([35339f8](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/commit/35339f85aea923c42dba7fb36194fa8de4ab1c89))
-
-
-
-# [0.10.0](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.9.0...v0.10.0) (2025-03-04)
-
-
-### Features
-
-* regenerate subxt to pull in SxT Chain runtime upgrades ([212801b](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/commit/212801bc84d5dd88c683f8878e28f22ec212de93))
 
 
 
