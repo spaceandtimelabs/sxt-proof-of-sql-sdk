@@ -6,7 +6,7 @@ use proof_of_sql::{
     },
     sql::{
         parse::QueryExpr,
-        proof::{QueryError, VerifiableQueryResult},
+        proof::{QueryError, QueryProof},
     },
 };
 use serde::Deserialize;
@@ -39,8 +39,15 @@ pub fn verify_prover_response<'de, 's, CP: CommitmentEvaluationProof + Deseriali
     accessor: &impl CommitmentAccessor<CP::Commitment>,
     verifier_setup: &CP::VerifierPublicSetup<'s>,
 ) -> Result<OwnedTable<CP::Scalar>, VerifyProverResponseError> {
-    let verifiable_result: VerifiableQueryResult<CP> = bincode::serde::borrow_decode_from_slice(
-        &prover_response.verifiable_result,
+    let proof: QueryProof<CP> = bincode::serde::borrow_decode_from_slice(
+        &prover_response.proof,
+        bincode::config::legacy()
+            .with_fixed_int_encoding()
+            .with_big_endian(),
+    )?
+    .0;
+    let result: OwnedTable<CP::Scalar> = bincode::serde::borrow_decode_from_slice(
+        &prover_response.result,
         bincode::config::legacy()
             .with_fixed_int_encoding()
             .with_big_endian(),
@@ -48,7 +55,11 @@ pub fn verify_prover_response<'de, 's, CP: CommitmentEvaluationProof + Deseriali
     .0;
 
     // Verify the proof
-    Ok(verifiable_result
-        .verify(query_expr.proof_expr(), accessor, verifier_setup)?
-        .table)
+    proof.verify(
+        query_expr.proof_expr(),
+        accessor,
+        result.clone(),
+        verifier_setup,
+    )?;
+    Ok(result)
 }
