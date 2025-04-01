@@ -90,7 +90,7 @@ impl SxTClient {
         block_ref: Option<<SxtConfig as Config>::Hash>,
     ) -> Result<OwnedTable<DoryScalar>, Box<dyn core::error::Error>> {
         // Parse table into `TableRef` struct
-        let table_ref = table.to_lowercase().as_str().try_into()?;
+        let table_ref = table.to_uppercase().as_str().try_into()?;
 
         // Load verifier setup
         let verifier_setup_path = Path::new(&self.verifier_setup);
