@@ -2,7 +2,7 @@ use crate::{prover::ProverResponse, uppercase_accessor::UppercaseAccessor};
 use proof_of_sql::{
     base::{
         commitment::CommitmentEvaluationProof,
-        database::{CommitmentAccessor, OwnedTable},
+        database::{CommitmentAccessor, LiteralValue, OwnedTable},
     },
     sql::{
         parse::QueryExpr,
@@ -36,6 +36,7 @@ impl From<bincode::error::DecodeError> for VerifyProverResponseError {
 pub fn verify_prover_response<'de, 's, CP: CommitmentEvaluationProof + Deserialize<'de>>(
     prover_response: &'de ProverResponse,
     query_expr: &QueryExpr,
+    params: &[LiteralValue],
     accessor: &impl CommitmentAccessor<CP::Commitment>,
     verifier_setup: &CP::VerifierPublicSetup<'s>,
 ) -> Result<OwnedTable<CP::Scalar>, VerifyProverResponseError> {
@@ -61,6 +62,7 @@ pub fn verify_prover_response<'de, 's, CP: CommitmentEvaluationProof + Deseriali
         &accessor,
         result.clone(),
         verifier_setup,
+        params,
     )?;
     Ok(result)
 }

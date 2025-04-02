@@ -133,6 +133,7 @@ impl SxTClient {
         let verified_table_result = verify_prover_response::<DynamicDoryEvaluationProof>(
             &prover_response,
             &query_expr,
+            &[],
             &accessor,
             &&verifier_setup,
         )?;
