@@ -36,10 +36,14 @@ cargo build
 To run the provided example that counts entries in the Ethereum core table:
 
 ```bash
-
-cargo run --example cli -- -q "select * from ethereum.blocks" --table-ref "ethereum.blocks" --sxt-api-key "your_sxt_api_key"
+cargo run --example cli -- -q "select * from ethereum.blocks" --sxt-api-key "your_sxt_api_key"
 ```
 Alternatively you may set your SxT API key via the environment variable `SXT_API_KEY`.
+
+For more options, you can view the help text with:
+```bash
+cargo run --example cli -- --help
+```
 
 ### Basic Usage in Code
 
