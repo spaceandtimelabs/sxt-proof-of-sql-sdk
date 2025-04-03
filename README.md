@@ -40,6 +40,11 @@ cargo run --example cli -- -q "select * from ethereum.blocks" --sxt-api-key "you
 ```
 Alternatively you may set your SxT API key via the environment variable `SXT_API_KEY`.
 
+For more options, you can view the help text with:
+```bash
+cargo run --example cli -- --help
+```
+
 ### Basic Usage in Code
 
 Here's how you can use the `SxTClient` in your Rust application:
