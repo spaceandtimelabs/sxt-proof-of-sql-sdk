@@ -1,3 +1,12 @@
+# [0.14.0](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.13.1...v0.14.0) (2025-04-03)
+
+
+### Features
+
+* parse table refs out of query text ([c54fc70](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/commit/c54fc7076590dbd4f2939abd11883c486349a991))
+
+
+
 ## [0.13.1](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.13.0...v0.13.1) (2025-04-03)
 
 
@@ -27,10 +36,6 @@
 
 
 ## [0.11.3](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.11.2...v0.11.3) (2025-03-26)
-
-
-
-## [0.11.2](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.11.1...v0.11.2) (2025-03-25)
 
 
 
