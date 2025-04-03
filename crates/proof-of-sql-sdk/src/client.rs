@@ -9,7 +9,11 @@ use proof_of_sql::{
     sql::postprocessing::{apply_postprocessing_steps, OwnedTablePostprocessing},
 };
 use reqwest::Client;
-use sqlparser::{ast::visit_relations, dialect::GenericDialect, parser::Parser};
+use sqlparser::{
+    ast::{visit_relations, visit_relations_mut, Ident},
+    dialect::GenericDialect,
+    parser::Parser,
+};
 use std::{ops::ControlFlow, path::Path};
 use subxt::Config;
 use sxt_proof_of_sql_sdk_local::{
@@ -90,7 +94,7 @@ impl SxTClient {
         block_ref: Option<<SxtConfig as Config>::Hash>,
     ) -> Result<OwnedTable<DoryScalar>, Box<dyn core::error::Error>> {
         let dialect = GenericDialect {};
-        let query_parsed = Parser::parse_sql(&dialect, query)?[0].clone();
+        let mut query_parsed = Parser::parse_sql(&dialect, query)?[0].clone();
         let mut table_refs = Vec::<TableRef>::new();
         visit_relations(&query_parsed, |object_name| {
             match object_name.to_string().to_uppercase().as_str().try_into() {
@@ -107,10 +111,43 @@ impl SxTClient {
         // Load verifier setup
         let verifier_setup_path = Path::new(&self.verifier_setup);
         let verifier_setup = VerifierSetup::load_from_file(verifier_setup_path)?;
+
         // Accessor setup
         let accessor = query_commitments(&table_refs, &self.substrate_node_url, block_ref).await?;
 
-        let (prover_query, query_expr) = plan_prover_query_dory(query, &accessor)?;
+        // temporary workaround for staging ethereum tables
+        // Their namespace in the database backend is SXT_ETHEREUM, despite being ETHEREUM on-chain
+        visit_relations_mut(&mut query_parsed, |object_name| {
+            if object_name.0[0].value == "ETHEREUM".to_string() {
+                object_name.0.get_mut(0).unwrap().value = "SXT_ETHEREUM".to_string()
+            }
+
+            ControlFlow::<()>::Continue(())
+        });
+        let accessor = accessor
+            .into_iter()
+            .map(|(table_ref, table_commitment)| {
+                let table_ref = TableRef::from_idents(
+                    table_ref.schema_id().cloned().map(|id| {
+                        if id.value == "ETHEREUM".to_string() {
+                            Ident {
+                                value: "SXT_ETHEREUM".to_string(),
+                                ..id
+                            }
+                        } else {
+                            id
+                        }
+                    }),
+                    table_ref.table_id().clone(),
+                );
+
+                (table_ref, table_commitment)
+            })
+            .collect();
+
+        let query = query_parsed.to_string();
+
+        let (prover_query, query_expr) = plan_prover_query_dory(&query, &accessor)?;
 
         let client = Client::new();
         let access_token = get_access_token(&self.sxt_api_key, &self.auth_root_url).await?;
