@@ -82,7 +82,6 @@ pub fn plan_prover_query_dory(
     query: &str,
     commitments: &QueryCommitments<DynamicDoryCommitment>,
 ) -> Result<(ProverQuery, QueryExpr), PlanProverQueryError> {
-    dbg!(&commitments);
     let query_expr: QueryExpr = QueryExpr::try_new(
         query.parse()?,
         Ident::new(DEFAULT_SCHEMA),

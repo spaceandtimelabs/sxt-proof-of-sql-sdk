@@ -61,14 +61,6 @@ pub struct SdkArgs {
     #[arg(short, long, value_name = "QUERY", help = "SQL query to run")]
     pub query: String,
 
-    /// Table reference for the SQL query in the format `schema.table`
-    #[arg(
-        long,
-        value_name = "TABLE_REF",
-        help = "Table reference in format schema.table"
-    )]
-    pub table_ref: String,
-
     /// SxT chain block hash to perform the query at.
     #[arg(long)]
     pub block_hash: Option<H256>,

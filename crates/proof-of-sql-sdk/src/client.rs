@@ -4,12 +4,13 @@ use crate::{
 };
 use clap::ValueEnum;
 use proof_of_sql::{
-    base::database::OwnedTable,
+    base::database::{OwnedTable, TableRef},
     proof_primitive::dory::{DoryScalar, DynamicDoryEvaluationProof, VerifierSetup},
     sql::postprocessing::{apply_postprocessing_steps, OwnedTablePostprocessing},
 };
 use reqwest::Client;
-use std::path::Path;
+use sqlparser::{ast::visit_relations, dialect::GenericDialect, parser::Parser};
+use std::{ops::ControlFlow, path::Path};
 use subxt::Config;
 use sxt_proof_of_sql_sdk_local::{
     plan_prover_query_dory, prover::ProverResponse, verify_prover_response,
@@ -86,17 +87,28 @@ impl SxTClient {
     pub async fn query_and_verify(
         &self,
         query: &str,
-        table: &str,
         block_ref: Option<<SxtConfig as Config>::Hash>,
     ) -> Result<OwnedTable<DoryScalar>, Box<dyn core::error::Error>> {
-        // Parse table into `TableRef` struct
-        let table_ref = table.to_uppercase().as_str().try_into()?;
+        let dialect = GenericDialect {};
+        let query_parsed = Parser::parse_sql(&dialect, query)?[0].clone();
+        let mut table_refs = Vec::<TableRef>::new();
+        visit_relations(&query_parsed, |object_name| {
+            match object_name.to_string().to_uppercase().as_str().try_into() {
+                Ok(table_ref) => {
+                    table_refs.push(table_ref);
+                    ControlFlow::Continue(())
+                }
+                e => ControlFlow::Break(e),
+            }
+        })
+        .break_value()
+        .transpose()?;
 
         // Load verifier setup
         let verifier_setup_path = Path::new(&self.verifier_setup);
         let verifier_setup = VerifierSetup::load_from_file(verifier_setup_path)?;
         // Accessor setup
-        let accessor = query_commitments(&[table_ref], &self.substrate_node_url, block_ref).await?;
+        let accessor = query_commitments(&table_refs, &self.substrate_node_url, block_ref).await?;
 
         let (prover_query, query_expr) = plan_prover_query_dory(query, &accessor)?;
 

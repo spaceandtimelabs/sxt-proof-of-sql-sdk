@@ -27,9 +27,7 @@ async fn count_table(
 ) -> Result<i64, Box<dyn core::error::Error>> {
     let uppercased_table_ref = table_ref.to_uppercase();
     let query = format!("SELECT COUNT(*) FROM {uppercased_table_ref}");
-    let table = client
-        .query_and_verify(&query, &uppercased_table_ref, None)
-        .await?;
+    let table = client.query_and_verify(&query, None).await?;
     assert_eq!(table.num_columns(), 1);
     assert_eq!(table.num_rows(), 1);
 
