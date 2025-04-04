@@ -1,3 +1,12 @@
+# [0.15.0](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.14.0...v0.15.0) (2025-04-04)
+
+
+### Features
+
+* implement more Accessors for UppercaseAccessor ([a66f971](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/commit/a66f9719d176da1920846468f74424fb17163dd3))
+
+
+
 # [0.14.0](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.13.1...v0.14.0) (2025-04-03)
 
 
@@ -32,10 +41,6 @@
 
 * bump `proof-of-sql` to 0.85.2 ([570b655](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/commit/570b655eae8621f40aef30c94914d09e82bd74ae))
 * update proto files and bump proof of sql to 0.86.0 ([fc9bca6](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/commit/fc9bca68d8922c864f61412bb47d36dd777a0db6))
-
-
-
-## [0.11.3](https://github.com/spaceandtimelabs/sxt-proof-of-sql-sdk/compare/v0.11.2...v0.11.3) (2025-03-26)
 
 
 
