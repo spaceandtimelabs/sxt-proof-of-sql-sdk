@@ -24,6 +24,7 @@ tonic-build = { workspace = true }
 
 [dev-dependencies]
 serde_json = { workspace = true }
+rand = { workspace = true }
 
 [features]
 default = ["native", "prover-client"]

@@ -1,9 +1,9 @@
-use crate::prover::{CommitmentScheme, ProverContextRange, ProverQuery};
+use crate::{
+    prover::{CommitmentScheme, ProverContextRange, ProverQuery},
+    uppercase_accessor::UppercaseAccessor,
+};
 use proof_of_sql::{
-    base::{
-        commitment::QueryCommitments,
-        database::{ColumnType, SchemaAccessor, TableRef},
-    },
+    base::commitment::QueryCommitments,
     proof_primitive::dory::DynamicDoryCommitment,
     sql::parse::{ConversionError, QueryExpr},
 };
@@ -38,45 +38,6 @@ impl From<bincode::error::EncodeError> for PlanProverQueryError {
     }
 }
 
-fn uppercase_ident(ident: Ident) -> Ident {
-    Ident {
-        value: ident.value.to_uppercase(),
-        ..ident
-    }
-}
-
-fn uppercase_table_ref(table_ref: TableRef) -> TableRef {
-    TableRef::from_idents(
-        table_ref.schema_id().cloned().map(uppercase_ident),
-        uppercase_ident(table_ref.table_id().clone()),
-    )
-}
-
-struct UppercaseSchemaAccessor<'a, SA>(&'a SA)
-where
-    SA: SchemaAccessor;
-
-impl<SA> SchemaAccessor for UppercaseSchemaAccessor<'_, SA>
-where
-    SA: SchemaAccessor,
-{
-    fn lookup_column(&self, table_ref: TableRef, column_id: Ident) -> Option<ColumnType> {
-        let ident = uppercase_ident(column_id);
-        self.0.lookup_column(uppercase_table_ref(table_ref), ident)
-    }
-
-    fn lookup_schema(&self, table_ref: TableRef) -> Vec<(Ident, ColumnType)> {
-        self.0
-            .lookup_schema(uppercase_table_ref(table_ref))
-            .into_iter()
-            .map(|(ident, column_type)| {
-                let ident = uppercase_ident(ident);
-                (ident, column_type)
-            })
-            .collect()
-    }
-}
-
 /// Create a query for the prover service from sql query text and commitments.
 pub fn plan_prover_query_dory(
     query: &str,
@@ -85,7 +46,7 @@ pub fn plan_prover_query_dory(
     let query_expr: QueryExpr = QueryExpr::try_new(
         query.parse()?,
         Ident::new(DEFAULT_SCHEMA),
-        &UppercaseSchemaAccessor(commitments),
+        &UppercaseAccessor(commitments),
     )?;
     let proof_plan = query_expr.proof_expr();
     let serialized_proof_plan = bincode::serde::encode_to_vec(

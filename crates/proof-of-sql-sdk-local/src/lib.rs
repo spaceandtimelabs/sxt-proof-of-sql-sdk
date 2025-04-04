@@ -7,6 +7,8 @@ pub mod sxt_chain_runtime;
 mod substrate_query;
 pub use substrate_query::table_ref_to_table_id;
 
+mod uppercase_accessor;
+
 mod prover_query;
 pub use prover_query::{plan_prover_query_dory, PlanProverQueryError, DEFAULT_SCHEMA};
 

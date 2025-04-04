@@ -29,6 +29,7 @@ proof-of-sql-parser = { version = "0.86.0", default-features = false }
 prost = "0.12"
 prost-build = "0.12"
 prost-types = "0.12"
+rand = "0.8.5"
 reqwest = { version = "0.12", features = ["json"] }
 serde = { version = "1.0", features = ["serde_derive"] }
 serde_json = "1.0"
