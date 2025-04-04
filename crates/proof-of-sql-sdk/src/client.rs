@@ -152,7 +152,7 @@ impl SxTClient {
         let client = Client::new();
         let access_token = get_access_token(&self.sxt_api_key, &self.auth_root_url).await?;
         let response = client
-            .post(format!("{}/v1/prove", &self.prover_root_url))
+            .post(&self.prover_root_url)
             .bearer_auth(&access_token)
             .json(&prover_query)
             .send()
