@@ -184,6 +184,7 @@ pub fn verify_prover_response_dory(
         sxt_proof_of_sql_sdk_local::verify_prover_response::<DynamicDoryEvaluationProof>(
             &prover_response,
             &query_expr,
+            &[],
             &query_commitments,
             &&*VERIFIER_SETUP,
         )
