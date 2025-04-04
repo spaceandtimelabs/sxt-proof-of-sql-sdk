@@ -1,4 +1,4 @@
-use crate::prover::ProverResponse;
+use crate::{prover::ProverResponse, uppercase_accessor::UppercaseAccessor};
 use proof_of_sql::{
     base::{
         commitment::CommitmentEvaluationProof,
@@ -39,6 +39,7 @@ pub fn verify_prover_response<'de, 's, CP: CommitmentEvaluationProof + Deseriali
     accessor: &impl CommitmentAccessor<CP::Commitment>,
     verifier_setup: &CP::VerifierPublicSetup<'s>,
 ) -> Result<OwnedTable<CP::Scalar>, VerifyProverResponseError> {
+    let accessor = UppercaseAccessor(accessor);
     let proof: QueryProof<CP> = bincode::serde::borrow_decode_from_slice(
         &prover_response.proof,
         bincode::config::legacy()
@@ -57,7 +58,7 @@ pub fn verify_prover_response<'de, 's, CP: CommitmentEvaluationProof + Deseriali
     // Verify the proof
     proof.verify(
         query_expr.proof_expr(),
-        accessor,
+        &accessor,
         result.clone(),
         verifier_setup,
     )?;
