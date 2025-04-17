@@ -14,7 +14,7 @@ futures = { workspace = true }
 log = { workspace = true }
 indexmap.workspace = true
 proof-of-sql = { workspace = true, features = ["std"] }
-proof-of-sql-parser = { workspace = true }
+proof-of-sql-planner = { workspace = true }
 reqwest = { workspace = true, features = ["json"] }
 serde_json.workspace = true
 sqlparser = { workspace = true, features = ["visitor", "std"] }

@@ -2,14 +2,16 @@ use crate::{
     prover::{CommitmentScheme, ProverContextRange, ProverQuery},
     uppercase_accessor::UppercaseAccessor,
 };
+use datafusion::config::ConfigOptions;
 use proof_of_sql::{
-    base::commitment::QueryCommitments,
-    proof_primitive::dory::DynamicDoryCommitment,
-    sql::parse::{ConversionError, QueryExpr},
+    base::commitment::QueryCommitments, proof_primitive::dory::DynamicDoryCommitment,
+    sql::parse::ConversionError,
 };
-use proof_of_sql_parser::ParseError;
+use proof_of_sql_planner::{
+    sql_to_proof_plans_with_postprocessing, PlannerError, ProofPlanWithPostprocessing,
+};
 use snafu::Snafu;
-use sqlparser::ast::Ident;
+use sqlparser::{ast::Statement, parser::ParserError};
 
 /// Proof-of-sql requires a default schema to be provided when creating a QueryExpr.
 /// This is used as the schema when tables referenced in the query don't have one.
@@ -20,7 +22,7 @@ pub const DEFAULT_SCHEMA: &str = "PUBLIC";
 pub enum PlanProverQueryError {
     /// Unable to parse sql.
     #[snafu(display("unable to parse sql: {source}"), context(false))]
-    ParseIdentifier { source: ParseError },
+    ParseIdentifier { source: ParserError },
     /// Unable to create a provable AST from query.
     #[snafu(
         display("unable to create a provable AST from query: {source}"),
@@ -30,6 +32,8 @@ pub enum PlanProverQueryError {
     /// Unable to serialize proof plan.
     #[snafu(display("unable to serialize proof plan: {error}"))]
     ProofPlanSerialization { error: bincode::error::EncodeError },
+    #[snafu(display("unable to produce plan: {source}"), context(false))]
+    ProofPlanGeneration { source: PlannerError },
 }
 
 impl From<bincode::error::EncodeError> for PlanProverQueryError {
@@ -40,17 +44,18 @@ impl From<bincode::error::EncodeError> for PlanProverQueryError {
 
 /// Create a query for the prover service from sql query text and commitments.
 pub fn plan_prover_query_dory(
-    query: &str,
+    query: &Statement,
     commitments: &QueryCommitments<DynamicDoryCommitment>,
-) -> Result<(ProverQuery, QueryExpr), PlanProverQueryError> {
-    let query_expr: QueryExpr = QueryExpr::try_new(
-        query.parse()?,
-        Ident::new(DEFAULT_SCHEMA),
-        &UppercaseAccessor(commitments),
-    )?;
-    let proof_plan = query_expr.proof_expr();
+) -> Result<(ProverQuery, ProofPlanWithPostprocessing), PlanProverQueryError> {
+    let accessor = &UppercaseAccessor(commitments);
+    let proof_plan_with_postprocessing = sql_to_proof_plans_with_postprocessing(
+        &[query.clone()],
+        accessor,
+        &ConfigOptions::default(),
+    )?[0]
+        .clone();
     let serialized_proof_plan = bincode::serde::encode_to_vec(
-        proof_plan,
+        proof_plan_with_postprocessing.plan(),
         bincode::config::legacy()
             .with_fixed_int_encoding()
             .with_big_endian(),
@@ -75,6 +80,6 @@ pub fn plan_prover_query_dory(
             query_context,
             commitment_scheme: CommitmentScheme::DynamicDory.into(),
         },
-        query_expr,
+        proof_plan_with_postprocessing,
     ))
 }
