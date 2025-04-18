@@ -27,12 +27,14 @@ truncate_js_file() {
 append_base64_wasm_to_js() {
     local wasm_file=$1
     local js_file=$2
-    if ! base64 "$wasm_file" > /dev/null 2>&1; then
+
+    local base64_wasm
+    if ! base64_wasm=$(base64 "$wasm_file"); then
         echo "Error: Failed to Base64-encode the WASM file."
         return 1
     fi
-    local base64_wasm=$(base64 "$wasm_file")
-    echo -e "\n// Embedded WASM (Base64 Encoded)" >> "$js_file"
+    
+    printf "\n// Embedded WASM (Base64 Encoded)\n" >> "$js_file"
     echo "let wasmCode = \`$base64_wasm\`;" >> "$js_file"
     echo "const wasmBytes = Uint8Array.from(atob(wasmCode), c => c.charCodeAt(0));" >> "$js_file"
 }
