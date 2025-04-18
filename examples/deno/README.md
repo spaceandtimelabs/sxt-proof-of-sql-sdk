@@ -16,7 +16,7 @@ An API key is required to interact with SxT services. To obtain an API key, plea
 
 ## Running Deno Example
 
-The PoSQL SDK supports features JavaScript support. You can setup a deno environment in the following manner:
+The PoSQL SDK supports features JavaScript. You can setup a deno environment in the following manner:
 
 ```javascript
 // Import the package
