@@ -21,8 +21,8 @@ try {
         table
     );
 
-    let t_count = result.table.t_count.Int[0];
-    let b_count = result.table.b_count.BigInt[0];
+    let t_count = result.t_count.Int[0];
+    let b_count = result.b_count.BigInt[0];
     console.log("Average eth transactions per block: ", t_count / b_count);
 
     console.log("Workflow completed successfully:", result);

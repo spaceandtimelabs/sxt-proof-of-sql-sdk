@@ -2,6 +2,7 @@
 
 use ark_serialize::{CanonicalDeserialize, Compress, Validate};
 use gloo_utils::format::JsValueSerdeExt;
+use indexmap::IndexMap;
 use proof_of_sql::{
     base::{
         commitment::{Commitment, QueryCommitments},
@@ -180,7 +181,7 @@ pub fn verify_prover_response_dory(
     let query_commitments = query_commitments_from_table_ref_and_commitment_iter(&commitments)
         .map_err(|e| format!("failed to construct QueryCommitments: {e}"))?;
 
-    let verified_table_result =
+    let verified_table_result: IndexMap<_, _> =
         sxt_proof_of_sql_sdk_local::verify_prover_response::<DynamicDoryEvaluationProof>(
             &prover_response,
             &query_expr,
@@ -188,7 +189,11 @@ pub fn verify_prover_response_dory(
             &query_commitments,
             &&*VERIFIER_SETUP,
         )
-        .map_err(|e| format!("verification failure: {e}"))?;
+        .map_err(|e| format!("verification failure: {e}"))?
+        .into_inner()
+        .into_iter()
+        .map(|(ident, col)| (ident.to_string(), col))
+        .collect();
 
     let verified_table_result_json = JsValue::from_serde(&verified_table_result)
         .map_err(|e| format!("failed to convert verified table result to json: {e}"))?;
