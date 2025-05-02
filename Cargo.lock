@@ -4504,6 +4504,7 @@ dependencies = [
  "bincode",
  "gloo-utils",
  "hex",
+ "indexmap 2.6.0",
  "lazy_static",
  "parity-scale-codec",
  "proof-of-sql",
