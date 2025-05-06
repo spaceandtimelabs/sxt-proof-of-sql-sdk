@@ -1,8 +1,6 @@
 use proof_of_sql::base::{
     commitment::Commitment,
-    database::{
-        ColumnRef, ColumnType, CommitmentAccessor, MetadataAccessor, SchemaAccessor, TableRef,
-    },
+    database::{ColumnType, CommitmentAccessor, MetadataAccessor, SchemaAccessor, TableRef},
 };
 use sqlparser::ast::Ident;
 
@@ -31,14 +29,15 @@ impl<SA> SchemaAccessor for UppercaseAccessor<'_, SA>
 where
     SA: SchemaAccessor,
 {
-    fn lookup_column(&self, table_ref: TableRef, column_id: Ident) -> Option<ColumnType> {
-        let ident = uppercase_ident(column_id);
-        self.0.lookup_column(uppercase_table_ref(table_ref), ident)
+    fn lookup_column(&self, table_ref: &TableRef, column_id: &Ident) -> Option<ColumnType> {
+        let ident = uppercase_ident(column_id.clone());
+        self.0
+            .lookup_column(&uppercase_table_ref(table_ref.clone()), &ident)
     }
 
-    fn lookup_schema(&self, table_ref: TableRef) -> Vec<(Ident, ColumnType)> {
+    fn lookup_schema(&self, table_ref: &TableRef) -> Vec<(Ident, ColumnType)> {
         self.0
-            .lookup_schema(uppercase_table_ref(table_ref))
+            .lookup_schema(&uppercase_table_ref(table_ref.clone()))
             .into_iter()
             .map(|(ident, column_type)| {
                 let ident = uppercase_ident(ident);
@@ -70,14 +69,11 @@ where
     CA: CommitmentAccessor<C>,
     C: Commitment,
 {
-    fn get_commitment(&self, column: ColumnRef) -> C {
-        let column = ColumnRef::new(
-            uppercase_table_ref(column.table_ref()),
-            uppercase_ident(column.column_id()),
-            *column.column_type(),
-        );
-
-        self.0.get_commitment(column)
+    fn get_commitment(&self, table_ref: &TableRef, column_id: &Ident) -> C {
+        self.0.get_commitment(
+            &uppercase_table_ref(table_ref.clone()),
+            &uppercase_ident(column_id.clone()),
+        )
     }
 }
 
@@ -102,11 +98,6 @@ mod tests {
 
         let lowercase_table_ref: TableRef = "schema.table".parse().unwrap();
         let uppercase_table_ref: TableRef = "SCHEMA.TABLE".parse().unwrap();
-        let lowercase_column_ref = ColumnRef::new(
-            lowercase_table_ref.clone(),
-            lowercase_col.clone(),
-            ColumnType::Boolean,
-        );
 
         let commitment = TableCommitment::try_from_columns_with_offset(
             [(
@@ -124,16 +115,16 @@ mod tests {
         )]);
 
         assert_eq!(
-            accessor.lookup_column(lowercase_table_ref.clone(), lowercase_col.clone()),
+            accessor.lookup_column(&lowercase_table_ref, &lowercase_col),
             None
         );
         assert_eq!(
-            UppercaseAccessor(&accessor).lookup_column(lowercase_table_ref.clone(), lowercase_col),
+            UppercaseAccessor(&accessor).lookup_column(&lowercase_table_ref, &lowercase_col),
             Some(ColumnType::Boolean)
         );
 
         assert_eq!(
-            UppercaseAccessor(&accessor).lookup_schema(lowercase_table_ref.clone()),
+            UppercaseAccessor(&accessor).lookup_schema(&lowercase_table_ref),
             vec![(uppercase_col.clone(), ColumnType::Boolean)]
         );
 
@@ -146,7 +137,7 @@ mod tests {
             0
         );
         assert_eq!(
-            UppercaseAccessor(&accessor).get_commitment(lowercase_column_ref),
+            UppercaseAccessor(&accessor).get_commitment(&lowercase_table_ref, &lowercase_col),
             commitment.column_commitments().commitments()[0]
         );
     }
