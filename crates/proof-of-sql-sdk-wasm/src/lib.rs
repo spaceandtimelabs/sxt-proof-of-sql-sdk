@@ -12,6 +12,7 @@ use proof_of_sql::{
 };
 use serde::Deserialize;
 use sp_crypto_hashing::{blake2_128, twox_128};
+use sqlparser::{dialect::GenericDialect, parser::Parser};
 use subxt::ext::codec::{Decode, Encode};
 use sxt_proof_of_sql_sdk_local::{
     sxt_chain_runtime::api::runtime_types::proof_of_sql_commitment_map::{
@@ -126,7 +127,7 @@ pub struct ProverQueryAndQueryExprAndCommitments {
     /// Prover query json that can be used as the body data of a prover request.
     pub prover_query_json: JsValue,
     /// Proof-of-sql query expr (parsed sql) serialized as json.
-    pub query_expr_json: JsValue,
+    pub proof_plan_json: JsValue,
     /// Proof-of-sql commitments passed into [`plan_prover_query_dory`].
     ///
     /// This binding does not logically require taking ownership of the commitments.
@@ -141,22 +142,26 @@ pub fn plan_prover_query_dory(
     query: &str,
     commitments: Vec<TableRefAndCommitment>,
 ) -> Result<ProverQueryAndQueryExprAndCommitments, String> {
+    let dialect = GenericDialect {};
+    let query_parsed = Parser::parse_sql(&dialect, query)
+        .map_err(|e| format!("failed to parse sql query: {e}"))?[0]
+        .clone();
     let query_commitments = query_commitments_from_table_ref_and_commitment_iter(&commitments)
         .map_err(|e| format!("failed to construct QueryCommitments: {e}"))?;
 
-    let (prover_query, query_expr) =
-        sxt_proof_of_sql_sdk_local::plan_prover_query_dory(query, &query_commitments)
+    let (prover_query, proof_plan_with_post_processing) =
+        sxt_proof_of_sql_sdk_local::plan_prover_query_dory(&query_parsed, &query_commitments)
             .map_err(|e| format!("failed to plan prover query: {e}"))?;
 
     let prover_query_json = JsValue::from_serde(&prover_query)
         .map_err(|e| format!("failed to convert prover query to json: {e}"))?;
 
-    let query_expr_json = JsValue::from_serde(&query_expr)
+    let proof_plan_json = JsValue::from_serde(&proof_plan_with_post_processing.plan())
         .map_err(|e| format!("failed to convert query expr to json: {e}"))?;
 
     let result = ProverQueryAndQueryExprAndCommitments {
         prover_query_json,
-        query_expr_json,
+        proof_plan_json,
         commitments,
     };
 
@@ -167,16 +172,16 @@ pub fn plan_prover_query_dory(
 #[wasm_bindgen]
 pub fn verify_prover_response_dory(
     prover_response_json: JsValue,
-    query_expr_json: JsValue,
+    proof_plan_json: JsValue,
     commitments: Vec<TableRefAndCommitment>,
 ) -> Result<JsValue, String> {
     let prover_response = prover_response_json
         .into_serde()
         .map_err(|e| format!("failed to deserialize prover response json: {e}"))?;
 
-    let query_expr = query_expr_json
+    let proof_plan = proof_plan_json
         .into_serde()
-        .map_err(|e| format!("failed to deserialize query expr json: {e}"))?;
+        .map_err(|e| format!("failed to deserialize proof plan json: {e}"))?;
 
     let query_commitments = query_commitments_from_table_ref_and_commitment_iter(&commitments)
         .map_err(|e| format!("failed to construct QueryCommitments: {e}"))?;
@@ -184,7 +189,7 @@ pub fn verify_prover_response_dory(
     let verified_table_result: IndexMap<_, _> =
         sxt_proof_of_sql_sdk_local::verify_prover_response::<DynamicDoryEvaluationProof>(
             &prover_response,
-            &query_expr,
+            &proof_plan,
             &[],
             &query_commitments,
             &&*VERIFIER_SETUP,
