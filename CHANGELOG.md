@@ -1,3 +1,12 @@
+# [0.17.0](https://github.com/spaceandtimefdn/sxt-proof-of-sql-sdk/compare/v0.16.3...v0.17.0) (2025-05-07)
+
+
+### Features
+
+* rip out parser ([52e6dfd](https://github.com/spaceandtimefdn/sxt-proof-of-sql-sdk/commit/52e6dfdf0b093330e5385749a9644877380e7ef0))
+
+
+
 ## [0.16.3](https://github.com/spaceandtimefdn/sxt-proof-of-sql-sdk/compare/v0.16.2...v0.16.3) (2025-05-06)
 
 
@@ -21,15 +30,6 @@
 ### Features
 
 * bump `proof-of-sql` to `0.91.1` ([1e562c7](https://github.com/spaceandtimefdn/sxt-proof-of-sql-sdk/commit/1e562c7d12caa380357d1bca329886e8e1b568b9))
-
-
-
-# [0.15.0](https://github.com/spaceandtimefdn/sxt-proof-of-sql-sdk/compare/v0.14.0...v0.15.0) (2025-04-04)
-
-
-### Features
-
-* implement more Accessors for UppercaseAccessor ([a66f971](https://github.com/spaceandtimefdn/sxt-proof-of-sql-sdk/commit/a66f9719d176da1920846468f74424fb17163dd3))
 
 
 
