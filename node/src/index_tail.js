@@ -106,13 +106,11 @@ export class SxTClient {
 
 async function postHttpRequest({ url, headers = {}, data = null }) {
   const controller = new AbortController();
-  const id = setTimeout(() => controller.abort(), 3000);
   const response = await fetch(url, {
     method: "POST",
     headers,
     body: data ? JSON.stringify(data) : undefined,
     signal: controller.signal,
   });
-  clearTimeout(id);
   return response;
 }
