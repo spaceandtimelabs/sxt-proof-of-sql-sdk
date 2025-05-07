@@ -7,8 +7,9 @@ license-file.workspace = true
 
 [dependencies]
 bincode = { workspace = true, default-features = false, features = ["serde", "alloc"] }
+datafusion = { workspace = true }
 proof-of-sql = { workspace = true }
-proof-of-sql-parser = { workspace = true }
+proof-of-sql-planner = { workspace = true }
 prost = { workspace = true }
 prost-types = { workspace = true }
 tonic = { workspace = true, features = ["codegen", "prost"] }

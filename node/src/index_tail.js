@@ -90,14 +90,14 @@ export class SxTClient {
     let commitments = [new TableRefAndCommitment(table, commitment)];
     const plannedProverQuery = plan_prover_query_dory(queryString, commitments);
     const proverQuery = plannedProverQuery.prover_query_json;
-    const queryExpr = plannedProverQuery.query_expr_json;
+    const proofPlan = plannedProverQuery.proof_plan_json;
     commitments = plannedProverQuery.commitments;
 
     const proverResponseJson = await this.#getProof(accessToken, proverQuery);
 
     const result = verify_prover_response_dory(
       proverResponseJson,
-      queryExpr,
+      proofPlan,
       commitments,
     );
     return result;

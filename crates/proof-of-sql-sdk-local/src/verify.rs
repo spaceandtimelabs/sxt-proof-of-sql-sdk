@@ -5,8 +5,8 @@ use proof_of_sql::{
         database::{CommitmentAccessor, LiteralValue, OwnedTable},
     },
     sql::{
-        parse::QueryExpr,
         proof::{QueryError, QueryProof},
+        proof_plans::DynProofPlan,
     },
 };
 use serde::Deserialize;
@@ -35,7 +35,7 @@ impl From<bincode::error::DecodeError> for VerifyProverResponseError {
 /// Verify a response from the prover service against the provided commitment accessor.
 pub fn verify_prover_response<'de, 's, CP: CommitmentEvaluationProof + Deserialize<'de>>(
     prover_response: &'de ProverResponse,
-    query_expr: &QueryExpr,
+    proof_plan: &DynProofPlan,
     params: &[LiteralValue],
     accessor: &impl CommitmentAccessor<CP::Commitment>,
     verifier_setup: &CP::VerifierPublicSetup<'s>,
@@ -58,7 +58,7 @@ pub fn verify_prover_response<'de, 's, CP: CommitmentEvaluationProof + Deseriali
 
     // Verify the proof
     proof.verify(
-        query_expr.proof_expr(),
+        proof_plan,
         &accessor,
         result.clone(),
         verifier_setup,

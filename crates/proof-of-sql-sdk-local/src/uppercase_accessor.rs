@@ -2,19 +2,13 @@ use proof_of_sql::base::{
     commitment::Commitment,
     database::{ColumnType, CommitmentAccessor, MetadataAccessor, SchemaAccessor, TableRef},
 };
+use proof_of_sql_planner::uppercase_identifier;
 use sqlparser::ast::Ident;
 
-fn uppercase_ident(ident: Ident) -> Ident {
-    Ident {
-        value: ident.value.to_uppercase(),
-        ..ident
-    }
-}
-
-fn uppercase_table_ref(table_ref: TableRef) -> TableRef {
+pub fn uppercase_table_ref(table_ref: TableRef) -> TableRef {
     TableRef::from_idents(
-        table_ref.schema_id().cloned().map(uppercase_ident),
-        uppercase_ident(table_ref.table_id().clone()),
+        table_ref.schema_id().cloned().map(uppercase_identifier),
+        uppercase_identifier(table_ref.table_id().clone()),
     )
 }
 
@@ -23,6 +17,7 @@ fn uppercase_table_ref(table_ref: TableRef) -> TableRef {
 /// Sxt-chain generally stores identifiers in all uppercase.
 /// The SDK uses accessors in this casing due to using a `QueryCommitments` built from chain data.
 /// So, this wrapper helps bridge the gap between the casing of queries/proof plans to chain data.
+#[derive(Clone)]
 pub struct UppercaseAccessor<'a, A>(pub &'a A);
 
 impl<SA> SchemaAccessor for UppercaseAccessor<'_, SA>
@@ -30,7 +25,7 @@ where
     SA: SchemaAccessor,
 {
     fn lookup_column(&self, table_ref: &TableRef, column_id: &Ident) -> Option<ColumnType> {
-        let ident = uppercase_ident(column_id.clone());
+        let ident = uppercase_identifier(column_id.clone());
         self.0
             .lookup_column(&uppercase_table_ref(table_ref.clone()), &ident)
     }
@@ -40,7 +35,7 @@ where
             .lookup_schema(&uppercase_table_ref(table_ref.clone()))
             .into_iter()
             .map(|(ident, column_type)| {
-                let ident = uppercase_ident(ident);
+                let ident = uppercase_identifier(ident);
                 (ident, column_type)
             })
             .collect()
@@ -72,7 +67,7 @@ where
     fn get_commitment(&self, table_ref: &TableRef, column_id: &Ident) -> C {
         self.0.get_commitment(
             &uppercase_table_ref(table_ref.clone()),
-            &uppercase_ident(column_id.clone()),
+            &uppercase_identifier(column_id.clone()),
         )
     }
 }

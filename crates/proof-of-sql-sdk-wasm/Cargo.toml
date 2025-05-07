@@ -11,16 +11,19 @@ crate-type = ["cdylib"]
 [dependencies]
 ark-serialize = { workspace = true }
 bincode = { workspace = true, default-features = false, features = ["serde"] }
+chrono = { workspace = true }
+datafusion = { workspace = true }
 gloo-utils = { workspace = true }
 hex = { workspace = true, features = ["serde"] }
 indexmap = { workspace = true }
 lazy_static = { workspace = true }
 parity-scale-codec = { workspace = true, features = ["derive"] }
 proof-of-sql = { workspace = true }
-proof-of-sql-parser = { workspace = true }
+proof-of-sql-planner = { workspace = true }
 serde = { workspace = true }
 subxt = { workspace = true }
 sp-crypto-hashing = { workspace = true }
+sqlparser = { workspace = true }
 sxt-proof-of-sql-sdk-local = { workspace = true, features = ["web"] }
 wasm-bindgen = { workspace = true }
 
