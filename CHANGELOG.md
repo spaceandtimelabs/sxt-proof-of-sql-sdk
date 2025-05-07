@@ -1,3 +1,12 @@
+## [0.17.1](https://github.com/spaceandtimefdn/sxt-proof-of-sql-sdk/compare/v0.17.0...v0.17.1) (2025-05-07)
+
+
+### Bug Fixes
+
+* remove timeout from post http request ([d56a6b7](https://github.com/spaceandtimefdn/sxt-proof-of-sql-sdk/commit/d56a6b7fd48caca0143eee2913df5f16f268479f))
+
+
+
 # [0.17.0](https://github.com/spaceandtimefdn/sxt-proof-of-sql-sdk/compare/v0.16.3...v0.17.0) (2025-05-07)
 
 
@@ -21,15 +30,6 @@
 
 
 ## [0.16.1](https://github.com/spaceandtimefdn/sxt-proof-of-sql-sdk/compare/v0.16.0...v0.16.1) (2025-04-29)
-
-
-
-# [0.16.0](https://github.com/spaceandtimefdn/sxt-proof-of-sql-sdk/compare/v0.15.0...v0.16.0) (2025-04-04)
-
-
-### Features
-
-* bump `proof-of-sql` to `0.91.1` ([1e562c7](https://github.com/spaceandtimefdn/sxt-proof-of-sql-sdk/commit/1e562c7d12caa380357d1bca329886e8e1b568b9))
 
 
 
